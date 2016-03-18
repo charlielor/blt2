@@ -3,11 +3,25 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            {% stylesheets
+            '../vendor/components/jqueryui/themes/base/jquery-ui.min.css'
+            '../vendor/twbs/bootstrap/dist/css/bootstrap.min.css' filter='cssrewrite' %}
+
+            <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            {% javascripts
+            '../vendor/components/jquery/jquery.min.js'
+            '../vendor/components/jqueryui/jquery-ui.min.js'
+            '../vendor/twbs/bootstrap/dist/js/bootstrap.min.js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock %}
     </body>
 </html>

@@ -16,19 +16,6 @@
             "Tests\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "jquery/jquery",
-                "version": "1.11.1",
-                "dist": {
-                    "url": "https://code.jquery.com/jquery-1.11.1.js",
-                    "type": "file"
-                }
-            }
-        }
-    ],
     "require": {
         "php": ">=5.5.9",
         "symfony/symfony": "3.0.*,<3.5",
@@ -43,13 +30,14 @@
         "beberlei/DoctrineExtensions": "^1.0",
         "braincrafted/bootstrap-bundle": "~2.0",
         "twbs/bootstrap": "3.3.*",
-        "jquery/jquery":  "1.11.*",
         "oyejorge/less.php": "~1.7.0.9",
         "select2/select2": "3.5.*",
         "datatables/datatables": "^1.10",
         "needim/noty": "^2.3",
         "silverfire/select2-bootstrap3-css": "^1.5",
-        "symfony/assetic-bundle": "^2.8"
+        "symfony/assetic-bundle": "^2.8",
+        "components/jqueryui": "^1.11",
+        "components/jquery": "^2.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

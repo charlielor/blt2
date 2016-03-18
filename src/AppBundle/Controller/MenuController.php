@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MenuController extends Controller {
     /**
-     * @Route("/menu", name="menu")
+     * @Route("/", name="menu")
      */
     public function indexAction() {
         return new Response();

@@ -5,7 +5,7 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             {% stylesheets
-            '../vendor/components/jqueryui/themes/base/jquery-ui.min.css'
+            '../components/jquery-ui/themes/base/jquery-ui.min.css'
             '../vendor/twbs/bootstrap/dist/css/bootstrap.min.css' filter='cssrewrite' %}
 
             <link rel="stylesheet" href="{{ asset_url }}" />
@@ -17,8 +17,8 @@
         {% block body %}{% endblock %}
         {% block javascripts %}
             {% javascripts
-            '../vendor/components/jquery/jquery.min.js'
-            '../vendor/components/jqueryui/jquery-ui.min.js'
+            '../components/jquery/jquery.min.js'
+            '../components/jquery-ui/jquery-ui.min.js'
             '../vendor/twbs/bootstrap/dist/js/bootstrap.min.js' %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}

@@ -6,9 +6,9 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             {% stylesheets
-            '../components/jquery-ui/themes/base/jquery-ui.min.css'
-            '../vendor/twbs/bootstrap/dist/css/bootstrap.min.css' filter='cssrewrite' %}
-
+            'css/bootstrap.css'
+            'components/jquery-ui/themes/base/jquery-ui.min.css'
+            output="css/compiled/blt.css" filter="cssrewrite"%}
             <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
         {% endblock %}
@@ -43,9 +43,10 @@
 
         {% block javascripts %}
             {% javascripts
-            '../components/jquery/jquery.min.js'
-            '../components/jquery-ui/jquery-ui.min.js'
-            '../vendor/twbs/bootstrap/dist/js/bootstrap.min.js' %}
+            'components/jquery/jquery.min.js'
+            'components/jquery-ui/jquery-ui.min.js'
+            'js/bootstrap.js'
+            output="js/compiled/blt.js" %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
         {% endblock %}

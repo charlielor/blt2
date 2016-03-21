@@ -24,10 +24,12 @@
         "doctrine/doctrine-cache-bundle": "^1.2",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/monolog-bundle": "^2.8",
+        "symfony/assetic-bundle": "^2.8",
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
         "beberlei/DoctrineExtensions": "^1.0",
+        "robloach/component-installer": "^0.2.3",
         "braincrafted/bootstrap-bundle": "~2.0",
         "twbs/bootstrap": "3.3.*",
         "oyejorge/less.php": "~1.7.0.9",
@@ -35,7 +37,6 @@
         "datatables/datatables": "^1.10",
         "needim/noty": "^2.3",
         "silverfire/select2-bootstrap3-css": "^1.5",
-        "symfony/assetic-bundle": "^2.8",
         "components/jqueryui": "^1.11",
         "components/jquery": "^2.2"
     },
@@ -64,7 +65,8 @@
     "config": {
         "platform": {
             "php": "5.5.9"
-        }
+        },
+        "component-dir": "web/components"
     },
     "extra": {
         "symfony-app-dir": "app",

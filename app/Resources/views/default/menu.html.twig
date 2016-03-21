@@ -1,1 +1,27 @@
 {% extends 'base.html.twig' %}
+
+{% block userActions %}
+    <li><a href="view" tabindex="-1">View Packages</a></li>
+    <li><a href="maintenance" tabindex="-1">Maintenance</a></li>
+    <li><a href="report" tabindex="-1">Report</a></li>
+    {#<li><a href="dashboard" tabindex="-1">Dashboard</a></li>#}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <button type="button" id="receiving" class="center-block btn btn-lg btn-block">Receiving</button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" id="delivering" class="center-block btn btn-lg btn-block">Delivering</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="updateSchemaLog" class="center">
+
+    </div>
+{% endblock %}

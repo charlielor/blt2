@@ -112,6 +112,7 @@ fabric.properties
 !bin/console
 !bin/symfony_requirements
 /vendor/
+/components/*
 
 # Assets and user uploads
 /web/bundles/
@@ -129,9 +130,6 @@ fabric.properties
 
 # Composer PHAR
 /composer.phar
-
-# Components
-/components/*
 
 ### Symfony Patch ###
 /web/css/

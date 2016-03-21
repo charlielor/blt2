@@ -11,6 +11,6 @@ class MenuController extends Controller {
      * @Route("/", name="menu")
      */
     public function indexAction() {
-        return new Response();
+        return $this->render('default/menu.html.twig');
     }
 }

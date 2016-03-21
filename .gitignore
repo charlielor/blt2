@@ -113,7 +113,7 @@ fabric.properties
 !bin/console
 !bin/symfony_requirements
 /vendor/
-/components/*
+/components/
 
 # Assets and user uploads
 /web/bundles/
@@ -131,10 +131,6 @@ fabric.properties
 
 # Composer PHAR
 /composer.phar
-
-### Symfony Patch ###
-/web/css/
-/web/js/
 
 ### TextMate ###
 *.tmproj

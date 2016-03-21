@@ -3,7 +3,7 @@
 {% block userActions %}
     <li><a href="view" tabindex="-1">View Packages</a></li>
     <li><a href="maintenance" tabindex="-1">Maintenance</a></li>
-    <li><a href="report" tabindex="-1">Report</a></li>
+    <li><a href="reporting" tabindex="-1">Reporting</a></li>
     {#<li><a href="dashboard" tabindex="-1">Dashboard</a></li>#}
 {% endblock %}
 
@@ -13,10 +13,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <button type="button" id="receiving" class="center-block btn btn-lg btn-block">Receiving</button>
+                <a href="receiving" class="center-block btn btn-lg btn-block btn-primary">Receiving</a>
             </div>
+
             <div class="col-md-6">
-                <button type="button" id="delivering" class="center-block btn btn-lg btn-block">Delivering</button>
+                <a href="delivering" class="center-block btn btn-lg btn-block btn-primary">Delivering</a>
             </div>
         </div>
     </div>

@@ -10,7 +10,7 @@ class VendorEntityTest extends \PHPUnit_Framework_TestCase
         $vendor = new Vendor("University of Wisconsin - Madison", "VendorTest");
 
         $this->assertEquals("University of Wisconsin - Madison", $vendor->getName());
-        $this->assertEquals(true, $vendor->getEnabled());
+        $this->assertTrue($vendor->getEnabled());
 
         $this->assertInstanceOf(Vendor::class, $vendor);
     }
@@ -31,14 +31,14 @@ class VendorEntityTest extends \PHPUnit_Framework_TestCase
     public function testGetEnabled() {
         $vendor = new Vendor("University of Wisconsin - Madison", "VendorTest");
 
-        $this->assertEquals(true, $vendor->getEnabled());
+        $this->assertTrue($vendor->getEnabled());
     }
 
     public function testSetEnabled()  {
         $vendor = new Vendor("University of Wisconsin - Madison", "VendorTest");
         $vendor->setEnabled(false);
 
-        $this->assertEquals(false, $vendor->getEnabled());
+        $this->assertNotTrue($vendor->getEnabled());
     }
 
     public function testDateCreated() {

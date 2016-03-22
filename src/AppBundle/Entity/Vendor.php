@@ -50,7 +50,7 @@ class Vendor
      * Vendor constructor.
      * @param $name - Name of the Vendor
      */
-    public function __construct($name) {
+    public function __construct($name, $user) {
         $this->name = $name;
         $this->enabled = TRUE;
 
@@ -58,6 +58,8 @@ class Vendor
         $now = new \DateTime("NOW");
         $this->dateCreated = $now;
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
     }
 
     /**

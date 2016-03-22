@@ -52,7 +52,7 @@ class Receiver {
      * @param $name
      * @param $deliveryRoom
      */
-    public function __construct($name, $deliveryRoom) {
+    public function __construct($name, $deliveryRoom, $user) {
         $this->name = $name;
         $this->deliveryRoom = $deliveryRoom;
         $this->enabled = TRUE;
@@ -61,6 +61,8 @@ class Receiver {
         $now = new \DateTime("NOW");
         $this->dateCreated = $now;
         $this->dateModified = $now;
+        
+        $this->userLastModified = $user;
     }
 
     /**

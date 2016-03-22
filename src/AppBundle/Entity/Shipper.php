@@ -45,7 +45,7 @@ class Shipper
     /**
      * Shipper constructor.
      */
-    public function __construct($name) {
+    public function __construct($name, $user) {
         $this->name = $name;
         $this->enabled = TRUE;
 
@@ -53,6 +53,8 @@ class Shipper
         $now = new \DateTime("NOW");
         $this->dateCreated = $now;
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
     }
 
     /**

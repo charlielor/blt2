@@ -241,6 +241,10 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package->removePackingSlips($packingSlip);
 
         $this->assertCount(1, $package->getPackingSlips());
+
+        $package->removePackingSlips($packingSlip2);
+
+        $this->assertCount(0, $package->getPackingSlips());
     }
 
     public function testGetDelivered() {

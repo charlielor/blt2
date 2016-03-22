@@ -1,15 +1,17 @@
 <?php
 
+
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class MenuController extends Controller {
+class ViewController extends Controller
+{
     /**
-     * @Route("/", name="menu")
+     * @Route("/view", name="view")
      */
     public function renderTemplateAction() {
-        return $this->render('menu.html.twig');
+        return $this->render('view.html.twig');
     }
 }

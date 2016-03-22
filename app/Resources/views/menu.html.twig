@@ -18,23 +18,15 @@
 {% block body %}
     {{ parent() }}
 
-    <div class="container">
+    <div id="menu" class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div id="receivingDiv" class="col-md-6">
                 <a href="receiving" class="center-block btn btn-lg btn-block btn-primary menuMainButtons">Receiving</a>
             </div>
 
-            <div class="col-md-6">
+            <div id="deliveringDiv" class="col-md-6">
                 <a href="delivering" class="center-block btn btn-lg btn-block btn-primary menuMainButtons">Delivering</a>
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% javascripts
-    'js/menu.js'%}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}

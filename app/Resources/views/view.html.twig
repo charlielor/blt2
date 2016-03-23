@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block userActions %}
-    <li><a href="#" id="goToToday" role="button" tabindex="-1">Go to Today</a></li>
+    <li><a id="goToToday" role="button" tabindex="-1">Go to Today</a></li>
     <li><a href="/" tabindex="-1">Back to Menu</a></li>
 {% endblock %}
 
@@ -25,12 +25,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 text-center">
                             <div id="datepicker">
 
                             </div>
                         </div>
                     </div>
+
 
                 </div>
                 <div class="modal-footer">

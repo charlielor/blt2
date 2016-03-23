@@ -15,5 +15,11 @@ class ViewControllerTest extends WebTestCase
 
         # Testing response code for /
         $this->assertTrue($client->getResponse()->isSuccessful());
+
+        # Back to Menu link
+        $client->click($crawler->selectLink("Back to Menu")->link());
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
+        $client->back();
     }
 }

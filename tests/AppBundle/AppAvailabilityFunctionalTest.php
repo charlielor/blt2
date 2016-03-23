@@ -27,6 +27,7 @@ class AppAvailabilityFunctionalTest extends WebTestCase
             array('/view'),
             array('/maintenance'),
             array('/reporting'),
+//            array('/dashboard'),
 
             array('/download'),
             array('/preview'),
@@ -53,9 +54,7 @@ class AppAvailabilityFunctionalTest extends WebTestCase
             array('/vendor/search'),
             array('/user/search'),
 
-            array('/delivering'),
             array('/delivering/barcode'),
-//            array('/dashboard'),
         );
     }
 }

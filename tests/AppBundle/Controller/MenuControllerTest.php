@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class MenuControllerTest extends WebTestCase {
 
     
-    public function testMenu() {
+    public function testMenuPage() {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/');

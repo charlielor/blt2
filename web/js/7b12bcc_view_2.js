@@ -11,6 +11,13 @@ $(document).ready(function() {
 
     // An AJAX DataTable for the page with columns defined
     var dataTable = $('#dataTable').DataTable({
+        dom: "<'row'<'col-sm-6 hidden-xs'l><'col-sm-6'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5 hidden-xs'i><'col-sm-7 hidden-xs'p>>" +
+        "<'row'<'col-sm-12 text-center'B>>",
+        buttons: [
+            'csv', 'pdf'
+        ],
         responsive: true,
         ajax: {
             url: 'getPackagesForDate',

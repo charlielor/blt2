@@ -26,6 +26,8 @@ class AppAvailabilityFunctionalTest extends WebTestCase
             array('/delivering'),
             array('/view'),
             array('/maintenance'),
+            array('/maintenance/switch'),
+            array('/maintenance/search'),
             array('/reporting'),
 //            array('/dashboard'),
 
@@ -47,12 +49,6 @@ class AppAvailabilityFunctionalTest extends WebTestCase
             array('/receiver/like'),
             array('/vendor/like'),
             array('/user/like'),
-
-            array('/package/search'),
-            array('/shipper/search'),
-            array('/receiver/search'),
-            array('/vendor/search'),
-            array('/user/search'),
 
             array('/delivering/barcode'),
         );

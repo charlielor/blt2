@@ -11,24 +11,24 @@ $(document).ready(function() {
 
     // An AJAX DataTable for the page with columns defined
     var dataTable = $('#dataTable').DataTable({
-        'autoWidth': false,
-        'ajax': {
-            'url': 'getPackagesForDate',
-            'data': {
-                'date': "now"
+        responsive: true,
+        ajax: {
+            url: 'getPackagesForDate',
+            data: {
+                date: "now"
             },
             'dataSrc': 'object'
         },
-        'columns': [
-            {'data': 'trackingNumber'},
-            {'data': 'vendor.name'},
-            {'data': 'shipper.name'},
-            {'data': 'receiver.name'},
-            {'data': 'numberOfPackages'},
-            {'data': 'userWhoReceived'},
+        columns: [
+            {data: 'trackingNumber'},
+            {data: 'vendor.name'},
+            {data: 'shipper.name'},
+            {data: 'receiver.name'},
+            {data: 'numberOfPackages'},
+            {data: 'userWhoReceived'},
             {
-                'data': 'packingSlips',
-                'render': function(data) {
+                data: 'packingSlips',
+                render: function(data) {
                     // Create links for all packing slips
                     var packingSlipLinks = 'None';
                     if (data.length != 0) {
@@ -43,8 +43,8 @@ $(document).ready(function() {
 
             },
             {
-                'data': 'dateReceived.timestamp',
-                'render': function(data) {
+                data: 'dateReceived.timestamp',
+                render: function(data) {
                     // There is no check for data because for each package, there has to be a date received
                     var selectedDate = new Date(data * 1000);
 
@@ -58,8 +58,8 @@ $(document).ready(function() {
                 }
             },
             {
-                'data': 'dateDelivered.timestamp',
-                'render': function(data) {
+                data: 'dateDelivered.timestamp',
+                render: function(data) {
                     // If data, display the date otherwise display 'Not Delivered'
                     if (data) {
                         // Create a new date object and format it for the column
@@ -79,9 +79,9 @@ $(document).ready(function() {
                 }
             },
             {
-                'data': 'datePickedUp.timestamp',
+                data: 'datePickedUp.timestamp',
                 // If data, display the date otherwise display 'Not Picked Up'
-                'render': function(data) {
+                render: function(data) {
                     if (data) {
                         // Create a new date object and format it for the column
                         var selectedDate = new Date(data * 1000);
@@ -111,7 +111,7 @@ $(document).ready(function() {
         maxDate: new Date(),
         onSelect: function(selectedDate) {
             var date = {
-                'date': new Date(selectedDate).toDateString()
+                date: new Date(selectedDate).toDateString()
             };
 
             // When the user selects a date, send a request to the server to get data for that date
@@ -149,7 +149,7 @@ $(document).ready(function() {
     // Will only appear if the date on the current page is different from the actual current date
     goToTodayButton.on("click", function() {
         var date = {
-            'date': "now"
+            date: "now"
         };
 
         dataTable.clear().draw();

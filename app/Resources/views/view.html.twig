@@ -9,7 +9,7 @@
     {{ parent() }}
     {% stylesheets
     'css/view.less'
-    '../vendor/datatables/datatables/media/css/dataTables.bootstrap.min.css' filter='cssrewrite'
+    'css/DataTables/datatables.min.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -42,13 +42,13 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div id="selectDateDiv" class="col-md-12">
                 <button type="button" id="selectDateButton" class="btn btn-primary center-block">{{ "now"|date("m/d/Y") }}</button>
             </div>
         </div>
 
         <div class="row">
-            <div class="table-responsive">
+            <div>
                 <table id="dataTable" class="table table-bordered">
                     <thead>
                     <tr>
@@ -91,9 +91,7 @@
     {{ parent() }}
 
     {% javascripts
-    '../vendor/datatables/datatables/media/js/jquery.dataTables.min.js'
-    '../vendor/datatables/datatables/media/js/dataTables.bootstrap.min.js'
-    'js/datatables/datatables.responsive.min.js'
+    'js/DataTables/datatables.min.js'
     'js/view.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

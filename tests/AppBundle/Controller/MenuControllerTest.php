@@ -6,24 +6,30 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MenuControllerTest extends WebTestCase {
 
-    
-    public function testMenuPage() {
+    public function testRoute() {
+        $client = static::createClient();
+
+        $client->request('GET', '/');
+
+        # Testing response code for /
+        $this->assertTrue($client->getResponse()->isSuccessful());
+    }
+
+
+    public function testRenderTemplateAction() {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/');
 
-        # Testing response code for /
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
         # View link
         $client->click($crawler->selectLink("View Packages")->link());
-//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/view', $client->getRequest()->getRequestUri());
         $client->back();
 
         # Maintenance link
         $client->click($crawler->selectLink("Maintenance")->link());
-//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/maintenance', $client->getRequest()->getRequestUri());
         $client->back();
 

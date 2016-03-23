@@ -26,7 +26,7 @@ class MaintenanceControllerTest extends WebTestCase
 
         # Back to Menu link
         $client->click($crawler->selectLink("Back to Menu")->link());
-//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
         $client->back();
     }

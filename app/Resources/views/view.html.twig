@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block userActions %}
+    <li><a id="goToToday" role="button" tabindex="-1">Go to Today</a></li>
+    <li><a href="/" tabindex="-1">Back to Menu</a></li>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    'css/view.less'
+    'css/DataTables/datatables.min.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <div id="datepickerModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="datepickerModal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="datepickerTitle">Select a Date</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div id="datepicker">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div id="selectDateDiv" class="col-md-12">
+                <button type="button" id="selectDateButton" class="btn btn-primary center-block">{{ "now"|date("m/d/Y") }}</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <table id="dataTable" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Tracking Number</th>
+                        <th>Vendor</th>
+                        <th>Shipper</th>
+                        <th>Receiver</th>
+                        <th>Number of Packages</th>
+                        <th>User (who received)</th>
+                        <th>Packing Slip</th>
+                        <th>Date Received</th>
+                        <th>Date Delivered</th>
+                        <th>Date Picked Up</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-striped table-hover text-center">
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Tracking Number</th>
+                        <th>Vendor</th>
+                        <th>Shipper</th>
+                        <th>Receiver</th>
+                        <th>Number of Packages</th>
+                        <th>User (who received)</th>
+                        <th>Packing Slip</th>
+                        <th>Date Received</th>
+                        <th>Date Delivered</th>
+                        <th>Date Picked Up</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    'js/DataTables/datatables.min.js'
+    'js/view.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

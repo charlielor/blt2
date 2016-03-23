@@ -5,14 +5,14 @@ namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ViewControllerTest extends WebTestCase
+class MaintenanceControllerTest extends WebTestCase
 {
-    public function testViewPage() {
+    public function testMaintenancePage() {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/view');
-
-        # Testing response code for /view
+        $crawler = $client->request('GET', '/maintenance');
+        var_dump($client->getResponse());
+        # Testing response code for /maintenance
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         # Back to Menu link

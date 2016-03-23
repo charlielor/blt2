@@ -1,0 +1,241 @@
+{% extends 'base.html.twig' %}
+
+{% block userActions %}
+    <li><a href="menu" tabindex="-1">Back to Menu</a></li>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    'components/select2/select2.css'
+    'components/select2/select2-bootstrap.css'
+    'css/reporting.less' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <div id="emptySetModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="emptySet">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="emptySetTitle">Empty set</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="center-block text-center">No results found</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="queryDatabaseErrorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="queryDatabase">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="queryDatabaseErrorTitle">Error</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger center-block text-center">Error in querying the database</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dateBeginModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="dateBeginModal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="dateBeginTitle">Select a Date</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="dateBegin">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dateEndModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="dateEndModal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="dateEndTitle">Select a Date</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="dateEnd">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div id="runAReportHeader" class="col-sm-3">
+                <h3>Run a Report</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="request" class="control-label">Request Type</label>
+                <select id="request" class="form-control">
+                    <option value="r-0-vendor">Packages ordered from Vendor</option>
+                    <option value="r-1-user">Packages checked in by User</option>
+                    <option value="r-2-shipper">Packages shipped by Shipper</option>
+                    <option value="-----" disabled>-----</option>
+                    <option value="d-0-receiver">Packages delivered to Receiver</option>
+                    <option value="-----" disabled>-----</option>
+                    <option value="r-3-none">Get all packages received</option>
+                    <option value="d-1-none">Get all packages delivered</option>
+                    <option value="-----" disabled>-----</option>
+                    <option value="p-0-none">Get all picked up packages</option>
+                    <option value="-----" disabled>-----</option>
+                    <option value="o-0-none">Packages NOT delivered or picked up</option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label for="select2-Shipper" class="control-label shipperSelect text-center">Shipper</label>
+                <label for="select2-Vendor" class="control-label vendorSelect text-center">Vendor</label>
+                <label for="select2-Receiver" class="control-label receiverSelect text-center">Receiver</label>
+                <label for="select2-User" class="control-label userSelect text-center">User</label>
+                <div class="shipperSelect">
+                    <input type="hidden" name="shipper" id="select2-Shipper" />
+                </div>
+                <div class="vendorSelect">
+                    <input type="hidden" name="vendor" id="select2-Vendor" />
+                </div>
+                <div class="receiverSelect">
+                    <input type="hidden" name="receiver" id="select2-Receiver" />
+                </div>
+                <div class="userSelect">
+                    <select id="select2-User"></select>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <label class="control-label">Date Begin</label>
+                <button type="button" id="dateBeginButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
+            </div>
+            <div class="col-sm-1">
+                <label class="control-label">Date End</label>
+                <button type="button" id="dateEndButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" id="submitReportRequest" class="btn btn-primary center-block">Go!</button>
+            </div>
+        </div>
+
+        <div id="graphQueryResults">
+            <div class="row">
+                <div class="col-sm-12">
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 id="queryResultsText" class="text-center">Query Results</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    {% image 'images/spinner.gif' %}
+                    <img src="{{ asset_url }}" id="spinnerGraph" class="center-block"/>
+                    {% endimage %}
+                    <div id="reportResultsTitle"></div>
+                    <canvas id="reportResultsGraph" class="img-responsive center-block"></canvas>
+
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" id="graphToTable" class="btn btn-primary center-block">Graph to Table</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tableQueryResults">
+            <div class="row">
+                <div class="col-sm-12">
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <table id="reportResultsTable" class="table table-condensed table-hover table-striped">
+                            <thead id="reportResultsTableHead">
+                            <tr>
+                                <th>Tracking Number</th>
+                                <th>Vendor</th>
+                                <th>Shipper</th>
+                                <th>Receiver</th>
+                                <th>Number of Packages</th>
+                                <th>User (who received)</th>
+                                <th>Date Received</th>
+                                <th>Delivered</th>
+                                <th>Date Delivered</th>
+                                <th>User (who delivered)</th>
+                                <th>Picked Up</th>
+                                <th>Date Picked Up</th>
+                                <th>Name of Who Picked Up</th>
+                                <th>User of Who Authorized Pick Up</th>
+                            </tr>
+                            </thead>
+                            <tbody id="reportResultsTableBody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-primary center-block" id="tableToCSV">Table to CSV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    'js/chartsjs/Chart.min.js'
+    'components/select2/select2.js'
+    'js/reporting.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -221,6 +221,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For users.
      */
     select2Shipper.select2({
+        dropdownCssClass: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Shipper",
         width: 355,
@@ -260,6 +261,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Vendor.
      */
     select2Vendor.select2({
+        dropdownCssClass: "bootstrap",
         minimumInputLength: 3,
         placeholder: "Search for a Vendor",
         width: 355,
@@ -299,6 +301,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Receiver.
      */
     select2Receiver.select2({
+        dropdownCssClass: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Receiver",
         width: 355,
@@ -338,6 +341,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For User.
      */
     select2User.select2({
+        dropdownCssClass: "bootstrap",
         placeholder: "Select a User",
         width: 355
     }).on("select2-close", function() {

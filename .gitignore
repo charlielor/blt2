@@ -117,7 +117,7 @@ fabric.properties
 # Assets and user uploads
 /web/bundles/
 /web/uploads/
-/web/components/
+/web/components
 
 # Assets managed by Bower
 /web/assets/vendor/

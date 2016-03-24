@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block userActions %}
-    <li><a href="menu" tabindex="-1">Back to Menu</a></li>
+    <li><a href="/" tabindex="-1">Back to Menu</a></li>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
-    'components/select2/select2.css'
-    'components/select2/select2-bootstrap.css'
+    'components/select2/select2-built.css'
+    'css/select2-bootstrap-theme/dist/select2-bootstrap.min.css'
     'css/reporting.less' filter='cssrewrite'
     %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
@@ -127,13 +127,13 @@
                 <label for="select2-Receiver" class="control-label receiverSelect text-center">Receiver</label>
                 <label for="select2-User" class="control-label userSelect text-center">User</label>
                 <div class="shipperSelect">
-                    <input type="hidden" name="shipper" id="select2-Shipper" />
+                    <select name="shipper" id="select2-Shipper"></select>
                 </div>
                 <div class="vendorSelect">
-                    <input type="hidden" name="vendor" id="select2-Vendor" />
+                    <select name="vendor" id="select2-Vendor"></select>
                 </div>
                 <div class="receiverSelect">
-                    <input type="hidden" name="receiver" id="select2-Receiver" />
+                    <select name="receiver" id="select2-Receiver"></select>
                 </div>
                 <div class="userSelect">
                     <select id="select2-User"></select>
@@ -234,7 +234,7 @@
 
     {% javascripts
     'js/chartsjs/Chart.min.js'
-    'components/select2/select2.js'
+    'components/select2/select2-built.js'
     'js/reporting.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

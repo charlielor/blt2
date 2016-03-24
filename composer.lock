@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5592a9743df3fa6fea0d0117ad1da8ab",
-    "content-hash": "32cb16c7037a66afb89fe108a419fa4b",
+    "hash": "ea523cb35543e0d9bf8b02a565347dcc",
+    "content-hash": "62fb2b7ed0211c1ef6d5a9d6d5ff6a7e",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1075,6 +1075,47 @@
             "time": "2015-11-10 17:04:01"
         },
         {
+            "name": "ivaynberg/select2",
+            "version": "4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/select2/select2.git",
+                "reference": "622a619d25358b86a93c2335f88e1884acc9ccb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/select2/select2/zipball/622a619d25358b86a93c2335f88e1884acc9ccb8",
+                "reference": "622a619d25358b86a93c2335f88e1884acc9ccb8",
+                "shasum": ""
+            },
+            "require": {
+                "robloach/component-installer": "*"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "dist/js/select2.js"
+                    ],
+                    "styles": [
+                        "dist/css/select2.css"
+                    ],
+                    "files": [
+                        "dist/js/select2.js",
+                        "dist/js/i18n/*.js",
+                        "dist/css/select2.css"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Select2 is a jQuery based replacement for select boxes.",
+            "homepage": "https://select2.github.io/",
+            "time": "2016-03-09 01:33:38"
+        },
+        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -1512,49 +1553,6 @@
             ],
             "description": "Allows installation of Components via Composer.",
             "time": "2015-08-10 12:35:38"
-        },
-        {
-            "name": "select2/select2",
-            "version": "3.5.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/select2/select2.git",
-                "reference": "95a977f674b6938af55ec5f28b7772df93786c5c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/select2/select2/zipball/95a977f674b6938af55ec5f28b7772df93786c5c",
-                "reference": "95a977f674b6938af55ec5f28b7772df93786c5c",
-                "shasum": ""
-            },
-            "require": {
-                "components/jquery": ">=1.7.1",
-                "robloach/component-installer": "*"
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "select2.js"
-                    ],
-                    "files": [
-                        "select2.js",
-                        "select2_locale_*.js",
-                        "select2.css",
-                        "select2-bootstrap.css",
-                        "select2-spinner.gif",
-                        "select2.png",
-                        "select2x2.png"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "Select2 is a jQuery based replacement for select boxes.",
-            "homepage": "http://ivaynberg.github.io/select2/",
-            "time": "2015-08-30 17:30:38"
         },
         {
             "name": "sensio/distribution-bundle",

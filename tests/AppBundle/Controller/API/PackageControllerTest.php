@@ -4,15 +4,26 @@
 namespace Tests\AppBundle\Controller\API;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use AppBundle\Entity\PackingSlip;
+use AppBundle\Entity\Vendor;
+use AppBundle\Entity\Receiver;
+use AppBundle\Entity\Shipper;
 
 class PackageControllerTest extends WebTestCase
 {
     public function testNewPackageRoute() {
+        $vendor = new Vendor("University of Wisconsin - Madison", "PackageTest");
+        $shipper = new Shipper("USPS", "PackageTest");
+        $receiver = new Receiver("Office", 111, "PackageTest");
+
         $client = static::createClient();
 
         $client->request('POST', '/package/new', array(
-            "name" => "testPackage",
-            "deliveryRoom" => 111
+            "trackingNumber" => "1Z2345",
+            "numOfPackages" => 4,
+            "shipper" => json_encode($shipper),
+            "vendor" => json_encode($vendor),
+            "receiver" => json_encode($receiver)
         ));
 
         # Testing response code for /package/new
@@ -30,43 +41,10 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('PUT', '/package/0/update', array(
-            "name" => "updatePackage",
-            "deliveryRoom" => 1212
+            "name" => "updatePackage"
         ));
 
         # Testing response code for /package/update
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
-
-    public function testEnablePackageRoute() {
-        $client = static::createClient();
-
-        $client->request('PUT', '/package/0/enable');
-
-        # Testing response code for /package/0/enable
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
-
-    public function testDisablePackageRoute() {
-        $client = static::createClient();
-
-        $client->request('PUT', '/package/0/disable');
-
-        # Testing response code for /package/0/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(

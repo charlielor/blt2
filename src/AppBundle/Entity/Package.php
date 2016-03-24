@@ -137,7 +137,7 @@ class Package {
      * Set trackingNumber
      *
      * @param string $trackingNumber
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setTrackingNumber($trackingNumber, $user)
     {
@@ -165,7 +165,7 @@ class Package {
      * Set numberOfPackages
      *
      * @param integer $numberOfPackages
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setNumberOfPackages($numberOfPackages, $user)
     {
@@ -193,7 +193,7 @@ class Package {
      * Set dateDelivered
      *
      * @param \DateTime $dateDelivered
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setDateDelivered($dateDelivered, $user)
     {
@@ -221,7 +221,7 @@ class Package {
      * Set dateReceived
      *
      * @param \DateTime $dateReceived
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setDateReceived($dateReceived, $user)
     {
@@ -249,7 +249,7 @@ class Package {
      * Set delivered
      *
      * @param boolean $delivered
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setDelivered($delivered, $user)
     {
@@ -277,7 +277,7 @@ class Package {
      * Set shipper
      *
      * @param \AppBundle\Entity\Shipper $shipper
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setShipper(\AppBundle\Entity\Shipper $shipper = null, $user)
     {
@@ -305,7 +305,7 @@ class Package {
      * Set receiver
      *
      * @param \AppBundle\Entity\Receiver $receiver
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setReceiver(\AppBundle\Entity\Receiver $receiver = null, $user)
     {
@@ -333,7 +333,7 @@ class Package {
      * Set vendor
      *
      * @param \AppBundle\Entity\Vendor $vendor
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setVendor(\AppBundle\Entity\Vendor $vendor = null, $user)
     {
@@ -361,7 +361,7 @@ class Package {
      * Set userWhoReceived
      *
      * @param string $userWhoReceived
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setUserWhoReceived($userWhoReceived, $user)
     {
@@ -389,7 +389,7 @@ class Package {
      * Set userWhoDelivered
      *
      * @param string $userWhoDelivered
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setUserWhoDelivered($userWhoDelivered, $user)
     {
@@ -417,7 +417,7 @@ class Package {
      * Set datePickedUp
      *
      * @param \DateTime $datePickedUp
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setDatePickedUp($datePickedUp, $user)
     {
@@ -445,7 +445,7 @@ class Package {
      * Set userWhoPickedUp
      *
      * @param string $userWhoPickedUp
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setUserWhoPickedUp($userWhoPickedUp, $user)
     {
@@ -473,7 +473,7 @@ class Package {
      * Set userWhoAuthorizedPickUp
      *
      * @param string $userWhoAuthorizedPickUp
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setUserWhoAuthorizedPickUp($userWhoAuthorizedPickUp, $user)
     {
@@ -501,7 +501,7 @@ class Package {
      * Set pickedUp
      *
      * @param boolean $pickedUp
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setPickedUp($pickedUp, $user)
     {
@@ -529,7 +529,7 @@ class Package {
      * Set dateModified
      *
      * @param \DateTime $dateModified
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setDateModified($dateModified, $user)
     {
@@ -554,7 +554,7 @@ class Package {
      * Set userLastModified
      *
      * @param string $userLastModified
-     * @return ReceivedPackage
+     * @return Package
      */
     public function setUserLastModified($userLastModified)
     {

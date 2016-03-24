@@ -23,7 +23,7 @@ class VenderController extends Controller
         // Get the Vendor repository
         $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
 
-        // Does the new vendor's name already exists in database
+        // Does the new Vendor's name already exists in database
         $existingVendorGivenName = $vendorRepository->findBy(array('name' => $nameOfNewVendor));
 
         // If the query is not empty, a Vendor with the given name already exists

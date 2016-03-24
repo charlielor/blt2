@@ -26,7 +26,7 @@ class ReceiverController extends Controller
         // Get the Receiver repository
         $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
 
-        // Does the new receiver's name already exists in database
+        // Does the new Receiver's name already exists in database
         $existingReceiverGivenName = $receiverRepository->findBy(array('name' => $nameOfNewReceiver));
 
         // If the query is not empty, a Receiver with the given name already exists

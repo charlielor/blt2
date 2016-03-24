@@ -23,7 +23,7 @@ class ShipperController extends Controller
         // Get the Shipper repository
         $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
 
-        // Does the new shipper's name already exists in database
+        // Does the new Shipper's name already exists in database
         $existingShipperGivenName = $shipperRepository->findBy(array('name' => $nameOfNewShipper));
 
         // If the query is not empty, a Shipper with the given name already exists

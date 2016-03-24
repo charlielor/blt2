@@ -81,7 +81,7 @@ class Receiver {
      * @param string $name
      * @return Receiver
      */
-    public function setName($name)
+    public function setName($name, $user)
     {
         $this->name = $name;
 
@@ -107,7 +107,7 @@ class Receiver {
      * @param integer $deliveryRoom
      * @return Receiver
      */
-    public function setDeliveryRoom($deliveryRoom)
+    public function setDeliveryRoom($deliveryRoom, $user)
     {
         $this->deliveryRoom = $deliveryRoom;
 
@@ -133,7 +133,7 @@ class Receiver {
      * @param boolean $enabled
      * @return Receiver
      */
-    public function setEnabled($enabled)
+    public function setEnabled($enabled, $user)
     {
         $this->enabled = $enabled;
 
@@ -159,7 +159,7 @@ class Receiver {
      * @param \DateTime $dateCreated
      * @return Receiver
      */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated($dateCreated, $user)
     {
         $this->dateCreated = $dateCreated;
 
@@ -182,7 +182,7 @@ class Receiver {
      * @param \DateTime $dateModified
      * @return Receiver
      */
-    public function setDateModified($dateModified)
+    public function setDateModified($dateModified, $user)
     {
         $this->dateModified = $dateModified;
 

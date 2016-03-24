@@ -225,7 +225,7 @@ $(document).ready(function() {
         placeholder: "Search for a Shipper",
         width: 355,
         ajax: {
-            url: 'getShippersLikeTerm',
+            url: 'shipper/search',
             quietMillis: 100,
             dataType: 'json',
             data: function (term) {
@@ -264,7 +264,7 @@ $(document).ready(function() {
         placeholder: "Search for a Vendor",
         width: 355,
         ajax: {
-            url: 'getVendorsLikeTerm',
+            url: 'vendor/search',
             quietMillis: 100,
             dataType: 'json',
             data: function (term) {
@@ -303,7 +303,7 @@ $(document).ready(function() {
         placeholder: "Search for a Receiver",
         width: 355,
         ajax: {
-            url: 'getReceiversLikeTerm',
+            url: 'receiver/search',
             quietMillis: 100,
             dataType: 'json',
             data: function (term) {

@@ -78,12 +78,14 @@ class Vendor
      * @param string $name
      * @return Vendor
      */
-    public function setName($name)
+    public function setName($name, $user)
     {
         $this->name = $name;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -104,12 +106,14 @@ class Vendor
      * @param boolean $enabled
      * @return Vendor
      */
-    public function setEnabled($enabled)
+    public function setEnabled($enabled, $user)
     {
         $this->enabled = $enabled;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -130,10 +134,11 @@ class Vendor
      * @param \DateTime $dateCreated
      * @return Vendor
      */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated($dateCreated, $user)
     {
         $this->dateCreated = $dateCreated;
 
+        $this->userLastModified = $user;
         return $this;
     }
 
@@ -153,9 +158,11 @@ class Vendor
      * @param \DateTime $dateModified
      * @return Vendor
      */
-    public function setDateModified($dateModified)
+    public function setDateModified($dateModified, $user)
     {
         $this->dateModified = $dateModified;
+
+        $this->userLastModified = $user;
 
         return $this;
     }

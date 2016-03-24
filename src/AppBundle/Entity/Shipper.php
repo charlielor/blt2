@@ -73,12 +73,14 @@ class Shipper
      * @param string $name
      * @return Shipper
      */
-    public function setName($name)
+    public function setName($name, $user)
     {
         $this->name = $name;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -99,13 +101,14 @@ class Shipper
      * @param boolean $enabled
      * @return Shipper
      */
-    public function setEnabled($enabled)
+    public function setEnabled($enabled, $user)
     {
         $this->enabled = $enabled;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
 
+        $this->userLastModified = $user;
         return $this;
     }
 
@@ -125,9 +128,11 @@ class Shipper
      * @param \DateTime $dateCreated
      * @return Shipper
      */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated($dateCreated, $user)
     {
         $this->dateCreated = $dateCreated;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -148,9 +153,11 @@ class Shipper
      * @param \DateTime $dateModified
      * @return Shipper
      */
-    public function setDateModified($dateModified)
+    public function setDateModified($dateModified, $user)
     {
         $this->dateModified = $dateModified;
+
+        $this->userLastModified = $user;
 
         return $this;
     }

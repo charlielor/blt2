@@ -139,12 +139,14 @@ class Package {
      * @param string $trackingNumber
      * @return ReceivedPackage
      */
-    public function setTrackingNumber($trackingNumber)
+    public function setTrackingNumber($trackingNumber, $user)
     {
         $this->trackingNumber = $trackingNumber;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -165,12 +167,14 @@ class Package {
      * @param integer $numberOfPackages
      * @return ReceivedPackage
      */
-    public function setNumberOfPackages($numberOfPackages)
+    public function setNumberOfPackages($numberOfPackages, $user)
     {
         $this->numberOfPackages = $numberOfPackages;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -191,12 +195,14 @@ class Package {
      * @param \DateTime $dateDelivered
      * @return ReceivedPackage
      */
-    public function setDateDelivered($dateDelivered)
+    public function setDateDelivered($dateDelivered, $user)
     {
         $this->dateDelivered = $dateDelivered;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -217,12 +223,14 @@ class Package {
      * @param \DateTime $dateReceived
      * @return ReceivedPackage
      */
-    public function setDateReceived($dateReceived)
+    public function setDateReceived($dateReceived, $user)
     {
         $this->dateReceived = $dateReceived;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -243,12 +251,14 @@ class Package {
      * @param boolean $delivered
      * @return ReceivedPackage
      */
-    public function setDelivered($delivered)
+    public function setDelivered($delivered, $user)
     {
         $this->delivered = $delivered;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -269,12 +279,14 @@ class Package {
      * @param \AppBundle\Entity\Shipper $shipper
      * @return ReceivedPackage
      */
-    public function setShipper(\AppBundle\Entity\Shipper $shipper = null)
+    public function setShipper(\AppBundle\Entity\Shipper $shipper = null, $user)
     {
         $this->shipper = $shipper;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -295,12 +307,14 @@ class Package {
      * @param \AppBundle\Entity\Receiver $receiver
      * @return ReceivedPackage
      */
-    public function setReceiver(\AppBundle\Entity\Receiver $receiver = null)
+    public function setReceiver(\AppBundle\Entity\Receiver $receiver = null, $user)
     {
         $this->receiver = $receiver;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -321,12 +335,14 @@ class Package {
      * @param \AppBundle\Entity\Vendor $vendor
      * @return ReceivedPackage
      */
-    public function setVendor(\AppBundle\Entity\Vendor $vendor = null)
+    public function setVendor(\AppBundle\Entity\Vendor $vendor = null, $user)
     {
         $this->vendor = $vendor;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -347,12 +363,14 @@ class Package {
      * @param string $userWhoReceived
      * @return ReceivedPackage
      */
-    public function setUserWhoReceived($userWhoReceived)
+    public function setUserWhoReceived($userWhoReceived, $user)
     {
         $this->userWhoReceived = $userWhoReceived;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -373,12 +391,14 @@ class Package {
      * @param string $userWhoDelivered
      * @return ReceivedPackage
      */
-    public function setUserWhoDelivered($userWhoDelivered)
+    public function setUserWhoDelivered($userWhoDelivered, $user)
     {
         $this->userWhoDelivered = $userWhoDelivered;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -399,12 +419,14 @@ class Package {
      * @param \DateTime $datePickedUp
      * @return ReceivedPackage
      */
-    public function setDatePickedUp($datePickedUp)
+    public function setDatePickedUp($datePickedUp, $user)
     {
         $this->datePickedUp = $datePickedUp;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -425,12 +447,14 @@ class Package {
      * @param string $userWhoPickedUp
      * @return ReceivedPackage
      */
-    public function setUserWhoPickedUp($userWhoPickedUp)
+    public function setUserWhoPickedUp($userWhoPickedUp, $user)
     {
         $this->userWhoPickedUp = $userWhoPickedUp;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -451,12 +475,14 @@ class Package {
      * @param string $userWhoAuthorizedPickUp
      * @return ReceivedPackage
      */
-    public function setUserWhoAuthorizedPickUp($userWhoAuthorizedPickUp)
+    public function setUserWhoAuthorizedPickUp($userWhoAuthorizedPickUp, $user)
     {
         $this->userWhoAuthorizedPickUp = $userWhoAuthorizedPickUp;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -477,12 +503,14 @@ class Package {
      * @param boolean $pickedUp
      * @return ReceivedPackage
      */
-    public function setPickedUp($pickedUp)
+    public function setPickedUp($pickedUp, $user)
     {
         $this->pickedUp = $pickedUp;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -503,9 +531,11 @@ class Package {
      * @param \DateTime $dateModified
      * @return ReceivedPackage
      */
-    public function setDateModified($dateModified)
+    public function setDateModified($dateModified, $user)
     {
         $this->dateModified = $dateModified;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -549,12 +579,14 @@ class Package {
      * @param \AppBundle\Entity\PackingSlip $packingSlip
      * @return Package
      */
-    public function addPackingSlip(\AppBundle\Entity\PackingSlip $packingSlip)
+    public function addPackingSlip(\AppBundle\Entity\PackingSlip $packingSlip, $user)
     {
         $this->packingSlips[] = $packingSlip;
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -564,12 +596,16 @@ class Package {
      *
      * @param \AppBundle\Entity\PackingSlip $packingSlip
      */
-    public function removePackingSlips(\AppBundle\Entity\PackingSlip $packingSlip)
+    public function removePackingSlips(\AppBundle\Entity\PackingSlip $packingSlip, $user)
     {
         $this->packingSlips->removeElement($packingSlip);
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
+
+        return $this;
     }
 
     /**

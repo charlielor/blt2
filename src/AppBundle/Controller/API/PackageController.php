@@ -25,38 +25,42 @@ class PackageController extends Controller
         $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
 
         // Does the new Package's tracking number already exists in database
-        $existingPackageGivenTrackingNumber = $packageRepository->findBy(array('trackingNumber' => $trackingNumberOfNewPackage));
+        $existingPackageGivenTrackingNumber = $packageRepository->findBy([
+            "trackingNumber" => $trackingNumberOfNewPackage
+        ]);
 
         // If the query is not empty, a Package with the given name already exists
         if (!empty($existingPackageGivenTrackingNumber)) {
-            // If it is disabled, return response letting the user know the Package is disabled
-            // else return saying that the Package already exists
-            if ($existingPackageGivenTrackingNumber[0]->getEnabled() == false) {
-                // Set up the response
-                $results = array(
-                    'result' => 'error',
-                    'message' => '\'' . $trackingNumberOfNewPackage . '\' already exists; disabled',
-                    'object' => NULL
-                );
+            // Package already exists
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => '\'' . $trackingNumberOfNewPackage . '\' already exists',
+                'object' => $existingPackageGivenTrackingNumber
+            );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-            } else {
-                // Set up the response
-                $results = array(
-                    'result' => 'error',
-                    'message' => '\'' . $trackingNumberOfNewPackage . '\' already exists',
-                    'object' => NULL
-                );
-
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-            }
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else { // Create a new Package
 
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
 
+            // Get the shipper
+            $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")
+                ->find($request->request->get("shipperId"));
+
+            // Get the receiver
+            $receiver = $this->getDoctrine()->getRepository("AppBundle:Receiver")
+                ->find($request->request->get("receiverId"));
+
+            // Get the shipper
+            $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
+                ->find($request->request->get("vendorId"));
+
+            $numOfPackagesFromPOST = $request->request->get("numOfPackages");
+
             // Create a new Package entity and set its properties
-            $newPackage = new Package($trackingNumberOfNewPackage, $user);
+            $newPackage = new Package($trackingNumberOfNewPackage, $numOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');

@@ -12,18 +12,18 @@ use AppBundle\Entity\Shipper;
 class PackageControllerTest extends WebTestCase
 {
     public function testNewPackageRoute() {
-        $vendor = new Vendor("University of Wisconsin - Madison", "PackageTest");
-        $shipper = new Shipper("USPS", "PackageTest");
-        $receiver = new Receiver("Office", 111, "PackageTest");
+        $vendor = 1; // testVendor
+        $shipper = 1; // testShipper
+        $receiver = 1; // testReceiver
 
         $client = static::createClient();
 
         $client->request('POST', '/package/new', array(
-            "trackingNumber" => "1Z2345",
+            "trackingNumber" => "testPackage",
             "numOfPackages" => 4,
-            "shipper" => json_encode($shipper),
-            "vendor" => json_encode($vendor),
-            "receiver" => json_encode($receiver)
+            "shipperId" => $shipper,
+            "receiverId" => $receiver,
+            "vendorId" => $vendor
         ));
 
         # Testing response code for /package/new
@@ -40,8 +40,8 @@ class PackageControllerTest extends WebTestCase
     public function testUpdatePackageRoute() {
         $client = static::createClient();
 
-        $client->request('PUT', '/package/0/update', array(
-            "name" => "updatePackage"
+        $client->request('PUT', '/package/testPackage/update', array(
+            "numOfPackage" => 1
         ));
 
         # Testing response code for /package/update
@@ -58,7 +58,7 @@ class PackageControllerTest extends WebTestCase
     public function testDeletePackageRoute() {
         $client = static::createClient();
 
-        $client->request('PUT', '/package/0/delete');
+        $client->request('DELETE', '/package/testPackage/delete');
 
         # Testing response code for /package/0/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
@@ -75,7 +75,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/package/search', array(
-            "term" => "test"
+            "term" => "testPackage"
         ));
 
         # Testing response code for /package/search

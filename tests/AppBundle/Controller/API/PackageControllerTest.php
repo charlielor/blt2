@@ -5,9 +5,6 @@ namespace Tests\AppBundle\Controller\API;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\PackingSlip;
-use AppBundle\Entity\Vendor;
-use AppBundle\Entity\Receiver;
-use AppBundle\Entity\Shipper;
 
 class PackageControllerTest extends WebTestCase
 {

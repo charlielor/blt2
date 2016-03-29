@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Package;
+use AppBundle\Entity\PackingSlip;
 
 class PackageController extends Controller
 {
@@ -62,6 +63,8 @@ class PackageController extends Controller
             // Create a new Package entity and set its properties
             $newPackage = new Package($trackingNumberOfNewPackage, $numOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
+            // TODO: Add picture and uploaded files to Package object
+
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
 
@@ -103,50 +106,177 @@ class PackageController extends Controller
 
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
-            $newPackageName = $request->request->get("trackingNumber");
+            // Cannot update tracking number --> ID
 
-            // Existing Package with the same name
-            $existingPackageGivenName = $packageRepository->findBy(array('name' => $newPackageName));
+            // Get all that has been submitted through PUT
+            $packageFromPost = $request->request->get('packageObject');
 
-            // If no other Package has the same name, then update it
-            if (empty($existingPackageGivenName)) {
-                $packageOldName = $package->getName();
+            // Get user | anon. is temp for testing
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
-                // Get user | anon. is temp for testing
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+            // Get the entity manager
+            $em = $this->get('doctrine.orm.entity_manager');
 
-                // Set the current Package to its new name
-                $package->setName($request->get('name'), $user);
+            // Set the current Package to its new name
+            $package->setUserLastModified($user);
 
-                // Updating a Package will automatically enable it
-                $package->enabled(TRUE);
+            if (!((empty($username)) && (empty($vendorFromPost)) && (empty($receiverFromPost)) && (empty($shipperFromPost)) && (empty($numberOfPackagesFromPost)))) {
+                $deletedPackingSlipIDs = $packageFromPost->deletedPackingSlips;
 
-                // Get entity manager
-                $em = $this->get('doctrine.orm.entity_manager');
+                $packingSlipRepository = $this->getDoctrine()->getRepository("UWLogisticsBundle:PackingSlip");
 
-                // Push the updated Package to database
-                $em->persist($package);
+                foreach ($deletedPackingSlipIDs as $id) {
+                    $deletedPackingSlip = $packingSlipRepository->find($id);
+
+                    // Get the location of where the file should be uploaded to
+                    $originalPathToPackingSlip = $this->container->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+
+                    $generatedDeletedPackingSlipName = ($this->generateDeletedFileName($deletedPackingSlip->getPath(), $deletedPackingSlip->getCompleteFileName(), 0));
+
+                    $deletedPackingSlip->renamePackingSlipToDeleted($generatedDeletedPackingSlipName);
+
+                    $deletedPathToPackingSlip = $this->container->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+
+                    // Make sure the entity manager sees the entity as a new entity
+                    $em->persist($deletedPackingSlip);
+
+                    rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
+
+                    $package->removePackingSlips($deletedPackingSlip);
+                }
+
+                // Commit deleted packing slips to the server
                 $em->flush();
 
-                // Set up the response
+                // If there are pictures that were uploaded, put them in an array
+                $uploadedPictures = $packageFromPost->packingSlips;
+
+                // Get an array of what the uploaded file object is
+                $uploadedFiles = $_FILES["attachedPackingSlips"];
+
+                // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
+                $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
+
+                // Remove any duplicates
+                $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+
+                // If there are any pictures taken, move them to the uploadedFiles array
+                if (!(empty($uploadedPictures))) {
+                    $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+                }
+
+                // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
+                if (!(empty($uploadedFiles))) {
+
+                    $numberOfUploadedFiles = count($uploadedFiles);
+
+                    for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
+                        $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $id, $i, $currentDate->format('Ymd'));
+
+                        if ($moveUploadedFileLocation != NULL) {
+                            $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['deleted'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
+
+                            $em->persist($packingSlip);
+
+                            $package->addPackingSlip($packingSlip);
+
+                        } else {
+                            $results = array(
+                                'result' => 'error',
+                                'message' => 'Error in moving uploaded file',
+                                'object' => NULL
+                            );
+
+                            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                        }
+                    }
+
+                    // Flush packing slips to database
+                    $em->flush();
+                }
+
+                // Get the vendor
+                $vendor = $this->getDoctrine()->getRepository('UWLogisticsBundle:Vendor')->find($vendorFromPost->id);
+
+                // Get the receiver
+                $receiver = $this->getDoctrine()->getRepository('UWLogisticsBundle:Receiver')->find($receiverFromPost->id);
+
+                // Get the Shipper
+                $shipper = $this->getDoctrine()->getRepository('UWLogisticsBundle:Shipper')->find($shipperFromPost->id);
+
+                // If the Shipper changed, update the Shipper
+                if ($package->getShipper() != $shipper) {
+                    $package->setShipper($shipper);
+                }
+
+                // If the receiver changed, update the receiver
+                if ($package->getReceiver() != $receiver) {
+                    $package->setReceiver($receiver);
+                }
+
+                // If the vendor changed, update the vendor
+                if ($package->getVendor() != $vendor) {
+                    $package->setVendor($vendor);
+                }
+
+                // If the number of packages changed, then update the number of packages
+                if ($package->getNumberOfPackages() != $numberOfPackagesFromPost) {
+                    $package->setNumberOfPackages($numberOfPackagesFromPost);
+                }
+
+                // Update the userLastModified to the current user
+                $package->setUserLastModified($username);
+
+                // Make sure the entity manager sees the entity as a new entity
+                $em->persist($package);
+
+                // Commit changes to the server
+                $em->flush();
+
                 $results = array(
                     'result' => 'success',
-                    'message' => 'Successfully updated ' . $packageOldName . ' to ' . $package->getName(),
+                    'message' => 'Successfully updated package',
                     'object' => $package
                 );
 
+                // Return the results
                 return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
 
             } else {
-                // Set up the response
                 $results = array(
                     'result' => 'error',
-                    'message' => 'Another Package already has update name: ' . $newPackageName,
+                    'message' => 'Error in submitting data',
                     'object' => NULL
                 );
 
+                // Return the results
                 return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             }
+
+        $results = array(
+            'result' => 'error',
+            'message' => 'Error in submitting data',
+            'object' => NULL
+        );
+
+        // Return the results
+        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+
+            // Get entity manager
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            // Push the updated Package to database
+            $em->persist($package);
+            $em->flush();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully updated ' . $id,
+                'object' => $package
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 
@@ -236,5 +366,373 @@ class PackageController extends Controller
             // Return response as JSON
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
+    }
+
+    /**
+     * Resort $_FILES array so that each element has its own information
+     *
+     * @param $uploadedFilesArray - An array with information about files uploaded
+     * @return array - A reorganized array
+     */
+    private function reorganizeUploadedFiles($uploadedFilesArray) {
+        $organizedUploadedFilesArray[] = array();
+
+        for ($i = 0; $i < count($uploadedFilesArray["name"]); $i++) {
+            if ($uploadedFilesArray["name"][$i] != "") {
+                $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray["name"][$i];
+                $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
+                $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
+                $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
+                $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
+            }
+        }
+
+        return array_values(array_filter($organizedUploadedFilesArray));
+    }
+
+    /**
+     * Find duplicate uploaded files
+     *
+     * @param $uploadedFilesArray - An array with information about files uploaded
+     * @return array - An array without any duplicates
+     */
+    private function removeDuplicates($uploadedFilesArray) {
+        $uniqueArray = array();
+
+        foreach ($uploadedFilesArray as $uploadedFile) {
+            $unique = TRUE;
+            $numberOfUniqueFiles = count($uniqueArray);
+
+            for ($i = 0; $i < $numberOfUniqueFiles; $i++) {
+                if (md5_file($uniqueArray[$i]["tmp_name"]) === md5_file($uploadedFile["tmp_name"])) {
+                    $unique = FALSE;
+                    break;
+                }
+            }
+
+            if ($unique) {
+                array_push($uniqueArray, $uploadedFile);
+            }
+        }
+
+        return $uniqueArray;
+    }
+
+    /**
+     * Add pictures into the uploadedFiles array
+     *
+     * @param $uploadedFilesArray - An array with information about files uploaded
+     * @param $uploadedPicturesArray - An array with information about pictures uploaded
+     * @return array - An array with both files and pictures uploaded
+     */
+    private function addPicturesToUploadedFilesArray($uploadedFilesArray, $uploadedPicturesArray) {
+        /*
+         * For each picture, do the following
+         *
+         * 1) Create a temp file in the tmp folder on the server
+         * 2) Dump base64 code into the file
+         * 3) Rename the file to include .png
+         * 4) Add to the uploaded file array with information
+         *
+         */
+
+        for ($i = 0; $i < count($uploadedPicturesArray); $i++) {
+            $tmpFile = tempnam(sys_get_temp_dir(), "img");
+            $image = explode(",", $uploadedPicturesArray[$i]);
+            file_put_contents($tmpFile, base64_decode($image[1]));
+
+            if (!file_exists($tmpFile)) {
+                break;
+            } else {
+                $tmpFileName = explode("/", $tmpFile);
+                $tmpFileToAddToArray = array(
+                    "name" => $tmpFileName[count($tmpFileName) - 1] . ".png",
+                    "type" => "image/png",
+                    "tmp_name" => $tmpFile,
+                    "error" => 0,
+                    "size" => filesize($tmpFile)
+                );
+
+                array_push($uploadedFilesArray, $tmpFileToAddToArray);
+            }
+        }
+
+        return array_values(array_filter($uploadedFilesArray));
+    }
+
+    /**
+     * Check uploaded file for errors and file type validation then move it to the upload folder
+     *
+     * @param $uploadedFile
+     * @param $trackingNumber
+     * @param $count
+     * @param $date
+     *
+     * @return Array = $results
+     */
+    private function moveUploadedFile($uploadedFile, $trackingNumber, $count, $date) {
+        // Get the location of where the file should be uploaded to
+        $dirRoot = $this->container->get('kernel')->getRootDir() . '/../';
+
+        $path = "upload/" . $date . "/" . $trackingNumber . "/";
+
+        $uploadedFileResults = array(
+            "filename" => "",
+            "extension" => "",
+            "deleted" => FALSE,
+            "md5" => "",
+            "path" => ""
+        );
+
+        if (!(empty($uploadedFile) && empty($trackingNumber) && ($count < 0) && empty($dirRoot))) {
+            if (!($this->checkUploadedFileForErrors($uploadedFile)) && ($this->checkUploadedFileForValidFileType($uploadedFile))) {
+                // If the number of uploaded files are higher than one, then edit the destination directory
+                $moveDir = $dirRoot . $path;
+                // If that folder doesn't exist, create it
+                if (!file_exists($moveDir)) {
+                    if (!(mkdir($moveDir, 0755, true))) {
+                        $folderWithoutRootDirectory = strstr($moveDir, '/upload');
+                        $this->logger->error('Unable to create ...' . $folderWithoutRootDirectory . ' on the server');
+                        return FALSE;
+                    }
+                }
+
+                // Add path to results
+                $uploadedFileResults["path"] = $path;
+
+                // File name is the tracking number uploaded
+                $filename = $this->generateFileName($moveDir, $trackingNumber, $uploadedFile, 0);
+
+                // If generating the filename results in false, return false
+                if ($filename === FALSE) {
+                    return FALSE;
+                }
+
+                // Add filename to results
+                $uploadedFileResults["filename"] = $filename;
+
+                // Attach the folder directory to the file name
+                $moveToDir = $moveDir . $filename;
+
+                /*
+                 * Move the uploaded file to the correct directory.
+                 * If the file is an uploaded file (VIA POST), then move it.
+                 * Else if it's an image, then manually move it and change permissions on the image to read-write, read, read.
+                 */
+                if (is_uploaded_file($uploadedFile["tmp_name"])) {
+                    if (!(move_uploaded_file($uploadedFile["tmp_name"], $moveToDir))) {
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
+                        return FALSE;
+                    }
+                } else if (($uploadedFile["type"] == "image/png") || ($uploadedFile["type"] == "image/jpeg")) {
+                    if (!(rename($uploadedFile["tmp_name"], $moveToDir))) {
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
+                        return FALSE;
+                    }
+
+                    if (!chmod($moveToDir, 0644)) {
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
+                        return FALSE;
+                    }
+                }
+
+                // Add extension to results
+                if (($uploadedFile["type"] == "image/png")) {
+                    $uploadedFileResults["extension"] = "png";
+                } else if ($uploadedFile["type"] == "image/jpeg") {
+                    $uploadedFileResults["extension"] = "jpeg";
+                } else if (($uploadedFile["type"] == "application/pdf")) {
+                    $uploadedFileResults["extension"] = "pdf";
+                } else {
+                    return FALSE;
+                }
+
+
+                // Existence of file
+                if (!file_exists($moveToDir)) {
+                    $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                    $this->logger->error('The file that got uploaded does not exist at location ...' . $folderWithoutRootDirectory);
+                    return FALSE;
+                }
+
+                $uploadedFileResults["md5"] = md5_file($moveToDir);
+
+                return $uploadedFileResults;
+            }
+        } else {
+            return FALSE;
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * Check uploaded file from form for errors
+     *
+     * @param $uploadedFile
+     * @return Boolean
+     */
+    private function checkUploadedFileForErrors($uploadedFile) {
+        // Check to see if there are any errors with the uploaded file
+        if ($uploadedFile["error"] > 0 ) {
+            // If there's an error, return the error to the page and log the error
+            switch ($uploadedFile["error"]) {
+                case UPLOAD_ERR_INI_SIZE:
+                    $this->logger->error('Error: The file is too big: (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $this->logger->error('Error: The form submitted is too big: (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $this->logger->error('Error: The file was partially uploaded. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $this->logger->error('Error:  No file was uploaded. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $this->logger->error('Error: Missing temporary folder for uploads. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+                case UPLOAD_ERR_CANT_WRITE:
+                    $this->logger->error('Error: Can not save file onto server. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+                case UPLOAD_ERR_EXTENSION:
+                    $this->logger->error('Error: Invalid extension. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+                default:
+                    $this->logger->error('Error: Invalid document. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+
+                    break;
+            }
+
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * Check the uploaded file to see if its a valid file type
+     *
+     * @param $uploadedFile
+     * @return Boolean
+     */
+    private function checkUploadedFileForValidFileType($uploadedFile) {
+        // Files MIME types that are allowed
+        $allowedFiles = array(
+            "application/pdf",
+            "image/png",
+            "image/jpeg"
+        );
+
+        // Validate files base on MIME types on server side
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+        // Check to see if the file type is allowed to be uploaded
+        if (!(in_array(finfo_file($finfo, $uploadedFile["tmp_name"]), $allowedFiles))) {
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    public function removeDuplicatesFromServer($packingSlipString) {
+        // Get the location of where the files are
+        $dirRoot = $this->container->get('kernel')->getRootDir() . '/../';
+
+        $packingSlipsArray = explode(',', $packingSlipString);
+
+        $numberOfPackingSlips = count($packingSlipsArray);
+
+        for ($i = 0; $i < $numberOfPackingSlips; $i++) {
+            $packingSlip1 = $dirRoot . $packingSlipsArray[$i];
+
+            for ($j = $i + 1; $j < $numberOfPackingSlips; $j++) {
+                $packingSlip2 = $dirRoot . $packingSlipsArray[$j];
+
+                if (file_exists($packingSlip1) && file_exists($packingSlip2)) {
+                    if (md5_file($packingSlip1) === md5_file($packingSlip2)) {
+                        unlink($packingSlip2);
+                    }
+                }
+            }
+        }
+
+        for ($i = 0; $i < $numberOfPackingSlips; $i++) {
+            $packingSlip1 = $dirRoot . $packingSlipsArray[$i];
+
+            if (!file_exists($packingSlip1)) {
+                unset($packingSlipsArray[$i]);
+            }
+        }
+
+        return array_values($packingSlipsArray);
+    }
+
+    private function generateFileName($moveDir, $trackingNumber, $uploadedFile, $count) {
+        $filename = $trackingNumber;
+
+        if ($count > 0) {
+            $filename .= '_' . $count;
+        }
+
+        /*
+         * Set up the directory to where the file is going to move to and
+         * change the filename of the uploaded file to the type of file it is
+         * PDF = "trackingnumber".pdf
+         * PNG = "trackingnumber".png
+         * JPEG = "trackingnumber".jpeg
+         *
+         * Will need to be edited for other files, such as .tiff or .gif
+         */
+        switch ($uploadedFile["type"]){
+            case "application/pdf":
+                $filename .= ".pdf";
+                break;
+            case "image/png":
+                $filename .= ".png";
+                break;
+            case "image/jpeg":
+                $filename .= ".jpeg";
+                break;
+            default:
+                return FALSE;
+        }
+
+        if (file_exists($moveDir . $filename)) {
+            $count++;
+            return $this->generateFileName($moveDir, $trackingNumber, $uploadedFile, $count);
+        }
+
+        return $filename;
+    }
+
+    public function generateDeletedFileName($path, $file, $count) {
+        $fileNameArray = explode('.', $file);
+
+        $filename = $fileNameArray[0] . '_DELETED';
+
+        if ($count != 0) {
+            $filename .= '(' . $count . ')';
+        }
+
+        $dirRoot = $this->container->get('kernel')->getRootDir() . '/../';
+
+        if (file_exists($dirRoot . $path . $filename . '.' . $fileNameArray[1])) {
+            $count++;
+
+            return $this->generateDeletedFileName($path, $file, $count);
+        }
+
+        return $filename;
     }
 }

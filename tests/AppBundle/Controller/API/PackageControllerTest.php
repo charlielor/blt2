@@ -41,7 +41,7 @@ class PackageControllerTest extends WebTestCase
             "numOfPackage" => 1
         ));
 
-        # Testing response code for /package/update
+        # Testing response code for /package/{id}/update
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -57,7 +57,7 @@ class PackageControllerTest extends WebTestCase
 
         $client->request('DELETE', '/package/testPackage/delete');
 
-        # Testing response code for /package/0/disable
+        # Testing response code for /package/{id}/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(

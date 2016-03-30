@@ -40,7 +40,7 @@ class PackageController extends Controller
                 'object' => $existingPackageGivenTrackingNumber
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else { // Create a new Package
 
             // Get user | anon. is temp for testing
@@ -63,10 +63,58 @@ class PackageController extends Controller
             // Create a new Package entity and set its properties
             $newPackage = new Package($trackingNumberOfNewPackage, $numOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
-            // TODO: Add picture and uploaded files to Package object
+            // If there are pictures that were uploaded, put them in an array
+            $uploadedPictures = $request->request->get("packingSlips");
 
-            // Get entity manager
+            // Get an array of what the uploaded file object is
+            $uploadedFiles = $_FILES["attachedPackingSlips"];
+
+            // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
+            $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
+
+            // Remove any duplicates
+            $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+
+            // If there are any pictures taken, move them to the uploadedFiles array
+            if (!(empty($uploadedPictures))) {
+                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+            }
+
+            // Get the current date
+            $currentDate = new \DateTime("NOW");
+
+            // Get the entity manager
             $em = $this->get('doctrine.orm.entity_manager');
+
+            // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
+            if (!(empty($uploadedFiles))) {
+
+                $numberOfUploadedFiles = count($uploadedFiles);
+
+                for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
+                    $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $trackingNumberOfNewPackage, $i, $currentDate->format('Ymd'));
+
+                    if ($moveUploadedFileLocation != NULL) {
+                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
+
+                        $em->persist($packingSlip);
+
+                        $newPackage->addPackingSlip($packingSlip, $user);
+
+                    } else {
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Error in moving uploaded file',
+                            'object' => NULL
+                        );
+
+                        return new JsonResponse($results);
+                    }
+                }
+
+                // Flush packing slips to database
+                $em->flush();
+            }
 
             // Push the new Package to database
             $em->persist($newPackage);
@@ -79,7 +127,9 @@ class PackageController extends Controller
                 'object' => $newPackage
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
+
+
         }
 
 
@@ -96,6 +146,7 @@ class PackageController extends Controller
         // Get the package by id
         $package = $packageRepository->find($id);
 
+        // If package given tracking number isn't found in the repository, package doesn't exist
         if (empty($package)) {
             // Set up the response
             $results = array(
@@ -104,12 +155,12 @@ class PackageController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Cannot update tracking number --> ID
 
             // Get all that has been submitted through PUT
-            $packageFromPost = $request->request->get('packageObject');
+            $updatePackage = $request->request->get('packageObject');
 
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -117,11 +168,16 @@ class PackageController extends Controller
             // Get the entity manager
             $em = $this->get('doctrine.orm.entity_manager');
 
-            // Set the current Package to its new name
-            $package->setUserLastModified($user);
+            $vendorFromPost = $updatePackage->vendor;
+            $receiverFromPost = $updatePackage->receiver;
+            $shipperFromPost = $updatePackage->shipper;
+            $numberOfPackagesFromPost = $updatePackage->numberOfPackages;
 
-            if (!((empty($username)) && (empty($vendorFromPost)) && (empty($receiverFromPost)) && (empty($shipperFromPost)) && (empty($numberOfPackagesFromPost)))) {
-                $deletedPackingSlipIDs = $packageFromPost->deletedPackingSlips;
+            // Get the current date
+            $currentDate = new \DateTime("NOW");
+
+            if (!((empty($user)) && (empty($vendorFromPost)) && (empty($receiverFromPost)) && (empty($shipperFromPost)) && (empty($numberOfPackagesFromPost)))) {
+                $deletedPackingSlipIDs = $updatePackage->deletedPackingSlips;
 
                 $packingSlipRepository = $this->getDoctrine()->getRepository("UWLogisticsBundle:PackingSlip");
 
@@ -149,7 +205,7 @@ class PackageController extends Controller
                 $em->flush();
 
                 // If there are pictures that were uploaded, put them in an array
-                $uploadedPictures = $packageFromPost->packingSlips;
+                $uploadedPictures = $updatePackage->packingSlips;
 
                 // Get an array of what the uploaded file object is
                 $uploadedFiles = $_FILES["attachedPackingSlips"];
@@ -187,7 +243,7 @@ class PackageController extends Controller
                                 'object' => NULL
                             );
 
-                            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                            return new JsonResponse($results);
                         }
                     }
 
@@ -224,9 +280,6 @@ class PackageController extends Controller
                     $package->setNumberOfPackages($numberOfPackagesFromPost);
                 }
 
-                // Update the userLastModified to the current user
-                $package->setUserLastModified($username);
-
                 // Make sure the entity manager sees the entity as a new entity
                 $em->persist($package);
 
@@ -240,7 +293,7 @@ class PackageController extends Controller
                 );
 
                 // Return the results
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
 
             } else {
                 $results = array(
@@ -250,7 +303,7 @@ class PackageController extends Controller
                 );
 
                 // Return the results
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
 
         $results = array(
@@ -260,7 +313,7 @@ class PackageController extends Controller
         );
 
         // Return the results
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
 
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -276,7 +329,7 @@ class PackageController extends Controller
                 'object' => $package
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -300,7 +353,7 @@ class PackageController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -316,7 +369,7 @@ class PackageController extends Controller
                 'object' => $package
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -333,38 +386,34 @@ class PackageController extends Controller
 
         // Set up query the database for packages that is like terms
         $query = $em->createQuery(
-            'SELECT v FROM AppBundle:Package v
-            WHERE v.name LIKE :term
-            AND v.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            'SELECT p FROM AppBundle:Package p
+            WHERE p.trackingNumber LIKE :trackingNumber'
+        )->setParameter('trackingNumber', $term.'%');
 
         // Run query and save it
-        $package = $query->getResult();
+        $packages = $query->getResult();
 
         // If $package is not null, then set up $results to reflect successful query
         if (!(empty($package))) {
             // Set up response
             $results = array(
                 'result' => 'success',
-                'message' => 'Retrieved ' . count($package) . ' Package(s) like \'' . $term . '\'',
-                'object' => $package
+                'message' => 'Retrieved ' . count($packages) . ' Package(s) like \'' . $term . '\'',
+                'object' => $packages
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
                 'result' => 'error',
-                'message' => 'Was not able to query database',
+                'message' => 'Did not find packages with tracking number like: ' . $term,
                 'object' => NULL
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 

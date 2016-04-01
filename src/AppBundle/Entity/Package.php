@@ -595,6 +595,7 @@ class Package {
      * Remove a packingSlips
      *
      * @param \AppBundle\Entity\PackingSlip $packingSlip
+     * @parem $user
      */
     public function removePackingSlips(\AppBundle\Entity\PackingSlip $packingSlip, $user)
     {

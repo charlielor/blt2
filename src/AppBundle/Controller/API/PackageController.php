@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Monolog\Logger;
 use AppBundle\Entity\Package;
 use AppBundle\Entity\PackingSlip;
 
@@ -160,7 +161,7 @@ class PackageController extends Controller
             // Cannot update tracking number --> ID
 
             // Get all that has been submitted through PUT
-            $updatePackage = $request->request->get('packageObject');
+            $updatePackage = $request->request->all();
 
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -168,167 +169,146 @@ class PackageController extends Controller
             // Get the entity manager
             $em = $this->get('doctrine.orm.entity_manager');
 
-            $vendorFromPost = $updatePackage->vendor;
-            $receiverFromPost = $updatePackage->receiver;
-            $shipperFromPost = $updatePackage->shipper;
-            $numberOfPackagesFromPost = $updatePackage->numberOfPackages;
-
             // Get the current date
             $currentDate = new \DateTime("NOW");
 
-            if (!((empty($user)) && (empty($vendorFromPost)) && (empty($receiverFromPost)) && (empty($shipperFromPost)) && (empty($numberOfPackagesFromPost)))) {
-                $deletedPackingSlipIDs = $updatePackage->deletedPackingSlips;
+            $deletedPackingSlipIDs = $updatePackage['removedPackingSlipIds'];
 
-                $packingSlipRepository = $this->getDoctrine()->getRepository("UWLogisticsBundle:PackingSlip");
+            $packingSlipRepository = $this->getDoctrine()->getRepository("AppBundle:PackingSlip");
 
-                foreach ($deletedPackingSlipIDs as $id) {
-                    $deletedPackingSlip = $packingSlipRepository->find($id);
 
+            // Remove packing slips from package
+            foreach ($deletedPackingSlipIDs as $id) {
+                $deletedPackingSlip = $packingSlipRepository->find($id);
+
+                if (!empty($deletedPackingSlip)) {
                     // Get the location of where the file should be uploaded to
-                    $originalPathToPackingSlip = $this->container->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+                    $originalPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
 
                     $generatedDeletedPackingSlipName = ($this->generateDeletedFileName($deletedPackingSlip->getPath(), $deletedPackingSlip->getCompleteFileName(), 0));
 
                     $deletedPackingSlip->renamePackingSlipToDeleted($generatedDeletedPackingSlipName);
 
-                    $deletedPathToPackingSlip = $this->container->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+                    $deletedPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
 
                     // Make sure the entity manager sees the entity as a new entity
                     $em->persist($deletedPackingSlip);
+
+                    // Commit deleted packing slips to the server
+                    $em->flush();
 
                     rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
 
                     $package->removePackingSlips($deletedPackingSlip);
                 }
+            }
 
-                // Commit deleted packing slips to the server
-                $em->flush();
+            var_dump($updatePackage["packingSlipPictures"]);
 
-                // If there are pictures that were uploaded, put them in an array
-                $uploadedPictures = $updatePackage->packingSlips;
+            // If there are pictures that were uploaded, put them in an array
+            if (!empty($updatePackage["packingSlipPictures"])) {
+                $uploadedPictures = $updatePackage["packingSlipPictures"];
+            }
 
-                // Get an array of what the uploaded file object is
-                $uploadedFiles = $_FILES["attachedPackingSlips"];
+            echo $uploadedPictures;
 
+            // Get an array of what the uploaded file object is
+            $uploadedFiles = $_FILES["attachedPackingSlips"];
+
+            if (!(empty($uploadedFiles))) {
                 // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
                 $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
 
                 // Remove any duplicates
                 $uploadedFiles = $this->removeDuplicates($uploadedFiles);
-
-                // If there are any pictures taken, move them to the uploadedFiles array
-                if (!(empty($uploadedPictures))) {
-                    $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
-                }
-
-                // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
-                if (!(empty($uploadedFiles))) {
-
-                    $numberOfUploadedFiles = count($uploadedFiles);
-
-                    for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
-                        $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $id, $i, $currentDate->format('Ymd'));
-
-                        if ($moveUploadedFileLocation != NULL) {
-                            $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['deleted'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
-
-                            $em->persist($packingSlip);
-
-                            $package->addPackingSlip($packingSlip);
-
-                        } else {
-                            $results = array(
-                                'result' => 'error',
-                                'message' => 'Error in moving uploaded file',
-                                'object' => NULL
-                            );
-
-                            return new JsonResponse($results);
-                        }
-                    }
-
-                    // Flush packing slips to database
-                    $em->flush();
-                }
-
-                // Get the vendor
-                $vendor = $this->getDoctrine()->getRepository('UWLogisticsBundle:Vendor')->find($vendorFromPost->id);
-
-                // Get the receiver
-                $receiver = $this->getDoctrine()->getRepository('UWLogisticsBundle:Receiver')->find($receiverFromPost->id);
-
-                // Get the Shipper
-                $shipper = $this->getDoctrine()->getRepository('UWLogisticsBundle:Shipper')->find($shipperFromPost->id);
-
-                // If the Shipper changed, update the Shipper
-                if ($package->getShipper() != $shipper) {
-                    $package->setShipper($shipper);
-                }
-
-                // If the receiver changed, update the receiver
-                if ($package->getReceiver() != $receiver) {
-                    $package->setReceiver($receiver);
-                }
-
-                // If the vendor changed, update the vendor
-                if ($package->getVendor() != $vendor) {
-                    $package->setVendor($vendor);
-                }
-
-                // If the number of packages changed, then update the number of packages
-                if ($package->getNumberOfPackages() != $numberOfPackagesFromPost) {
-                    $package->setNumberOfPackages($numberOfPackagesFromPost);
-                }
-
-                // Make sure the entity manager sees the entity as a new entity
-                $em->persist($package);
-
-                // Commit changes to the server
-                $em->flush();
-
-                $results = array(
-                    'result' => 'success',
-                    'message' => 'Successfully updated package',
-                    'object' => $package
-                );
-
-                // Return the results
-                return new JsonResponse($results);
-
-            } else {
-                $results = array(
-                    'result' => 'error',
-                    'message' => 'Error in submitting data',
-                    'object' => NULL
-                );
-
-                // Return the results
-                return new JsonResponse($results);
             }
 
-        $results = array(
-            'result' => 'error',
-            'message' => 'Error in submitting data',
-            'object' => NULL
-        );
+            // If there are any pictures taken, move them to the uploadedFiles array
+            if (!(empty($uploadedPictures))) {
+                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+            }
 
-        // Return the results
-        return new JsonResponse($results);
+            
+            // If there are any pictures taken, move them to the uploadedFiles array
+            if (!(empty($uploadedPictures))) {
+                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+            }
 
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
+            // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
+            if (!(empty($uploadedFiles))) {
 
-            // Push the updated Package to database
+                $numberOfUploadedFiles = count($uploadedFiles);
+
+                for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
+                    $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $id, $i, $currentDate->format('Ymd'));
+
+                    if ($moveUploadedFileLocation != NULL) {
+                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['deleted'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
+
+                        $em->persist($packingSlip);
+
+                        $package->addPackingSlip($packingSlip, $user);
+
+                    } else {
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Error in moving uploaded file',
+                            'object' => NULL
+                        );
+
+                        return new JsonResponse($results);
+                    }
+                }
+
+                // Flush packing slips to database
+                $em->flush();
+            }
+
+            // If the vendor changed, update the vendor
+            if (!empty($updatePackage["vendorId"])) {
+                $vendor = $this->getDoctrine()->getRepository('AppBundle:Vendor')->find($updatePackage["vendorId"]);
+
+                if ($package->getVendor() != $vendor) {
+                    $package->setVendor($vendor, $user);
+                }
+            }
+
+            // If the receiver changed, update the receiver
+            if (!empty($updatePackage["receiverId"])) {
+                $receiver = $this->getDoctrine()->getRepository('AppBundle:Receiver')->find($updatePackage["receiverId"]);
+
+                if ($package->getReceiver() != $receiver) {
+                    $package->setReceiver($receiver, $user);
+                }
+            }
+
+            // If the Shipper changed, update the Shipper
+            if (!empty($updatePackage["shipperId"])) {
+                $shipper = $this->getDoctrine()->getRepository('AppBundle:Shipper')->find($updatePackage["shipperId"]);
+
+                if ($package->getShipper() != $shipper) {
+                    $package->setShipper($shipper, $user);
+                }
+            }
+
+            // If the number of packages changed, then update the number of packages
+            if (!empty($updatePackage["numOfPackages"])) {
+                $package->setNumberOfPackages($updatePackage["numOfPackages"], $user);
+            }
+
+            // Make sure the entity manager sees the entity as a new entity
             $em->persist($package);
+
+            // Commit changes to the server
             $em->flush();
 
-            // Set up the response
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully updated ' . $id,
                 'object' => $package
             );
 
+            // Return the results
             return new JsonResponse($results);
         }
     }
@@ -521,7 +501,7 @@ class PackageController extends Controller
      */
     private function moveUploadedFile($uploadedFile, $trackingNumber, $count, $date) {
         // Get the location of where the file should be uploaded to
-        $dirRoot = $this->container->get('kernel')->getRootDir() . '/../';
+        $dirRoot = $this->get('kernel')->getRootDir() . '/../';
 
         $path = "upload/" . $date . "/" . $trackingNumber . "/";
 
@@ -696,7 +676,7 @@ class PackageController extends Controller
 
     public function removeDuplicatesFromServer($packingSlipString) {
         // Get the location of where the files are
-        $dirRoot = $this->container->get('kernel')->getRootDir() . '/../';
+        $dirRoot = $this->get('kernel')->getRootDir() . '/../';
 
         $packingSlipsArray = explode(',', $packingSlipString);
 
@@ -774,7 +754,7 @@ class PackageController extends Controller
             $filename .= '(' . $count . ')';
         }
 
-        $dirRoot = $this->container->get('kernel')->getRootDir() . '/../';
+        $dirRoot = $this->get('kernel')->getRootDir() . '/../';
 
         if (file_exists($dirRoot . $path . $filename . '.' . $fileNameArray[1])) {
             $count++;

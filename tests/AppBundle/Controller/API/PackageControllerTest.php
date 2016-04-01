@@ -38,7 +38,10 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('PUT', '/package/testPackage/update', array(
-            "numOfPackage" => 1
+            "numOfPackage" => 1,
+            "removedPackingSlipIds" => array(
+                "removePackingSlipOne", "removePackingSlipTwo"
+            )
         ));
 
         # Testing response code for /package/{id}/update

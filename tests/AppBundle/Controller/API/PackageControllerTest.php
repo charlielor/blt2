@@ -32,13 +32,31 @@ class PackageControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        # Testing against duplicates
+        $client->request('POST', '/package/new', array(
+            "trackingNumber" => "testPackage",
+            "numOfPackages" => 4,
+            "shipperId" => $shipper,
+            "receiverId" => $receiver,
+            "vendorId" => $vendor
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
     }
 
     public function testUpdatePackageRoute() {
         $client = static::createClient();
 
         $client->request('PUT', '/package/testPackage/update', array(
-            "numOfPackage" => 1,
+            "numOfPackages" => 1,
             "removedPackingSlipIds" => array(
                 "removePackingSlipOne", "removePackingSlipTwo"
             )

@@ -65,16 +65,28 @@ class PackageController extends Controller
             $newPackage = new Package($trackingNumberOfNewPackage, $numOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
             // If there are pictures that were uploaded, put them in an array
-            $uploadedPictures = $request->request->get("packingSlips");
+            if (!empty($request->request->get("packingSlipPictures"))) {
+                $uploadedPictures = $request->request->get("packingSlipPictures");
+            }
 
-            // Get an array of what the uploaded file object is
-            $uploadedFiles = $_FILES["attachedPackingSlips"];
+            if (!empty($_FILES["attachedPackingSlips"])) {
+                // Get an array of what the uploaded file object is
+                $uploadedFiles = $_FILES["attachedPackingSlips"];
+            }
 
-            // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
-            $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
+            if (!(empty($uploadedFiles))) {
+                // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
+                $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
 
-            // Remove any duplicates
-            $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+                // Remove any duplicates
+                $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+            }
+
+            // If there are any pictures taken, move them to the uploadedFiles array
+            if (!(empty($uploadedPictures))) {
+                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+            }
+
 
             // If there are any pictures taken, move them to the uploadedFiles array
             if (!(empty($uploadedPictures))) {
@@ -176,7 +188,6 @@ class PackageController extends Controller
 
             $packingSlipRepository = $this->getDoctrine()->getRepository("AppBundle:PackingSlip");
 
-
             // Remove packing slips from package
             foreach ($deletedPackingSlipIDs as $id) {
                 $deletedPackingSlip = $packingSlipRepository->find($id);
@@ -203,17 +214,15 @@ class PackageController extends Controller
                 }
             }
 
-            var_dump($updatePackage["packingSlipPictures"]);
-
             // If there are pictures that were uploaded, put them in an array
             if (!empty($updatePackage["packingSlipPictures"])) {
                 $uploadedPictures = $updatePackage["packingSlipPictures"];
             }
 
-            echo $uploadedPictures;
-
-            // Get an array of what the uploaded file object is
-            $uploadedFiles = $_FILES["attachedPackingSlips"];
+            if (!empty($_FILES["attachedPackingSlips"])) {
+                // Get an array of what the uploaded file object is
+                $uploadedFiles = $_FILES["attachedPackingSlips"];
+            }
 
             if (!(empty($uploadedFiles))) {
                 // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
@@ -314,46 +323,6 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/{id}/delete", name="deletePackage")
-     * @Method({"PUT"})
-     *
-     */
-    public function deletePackageAction(Request $request, $id) {
-        // Get the Package repository
-        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
-
-        // Get the package by id
-        $package = $packageRepository->find($id);
-
-        if (empty($package)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not find package given id: ' . $id,
-                'object' => NULL
-            );
-
-            return new JsonResponse($results);
-        } else {
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // Push the updated Package to database
-            $em->remove($package);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Package: ' . $package->getName(),
-                'object' => $package
-            );
-
-            return new JsonResponse($results);
-        }
-    }
-
-    /**
      * @Route("/package/search", name="searchPackage")
      * @Method({"GET"})
      */
@@ -393,6 +362,46 @@ class PackageController extends Controller
             );
 
             // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/package/{id}/delete", name="deletePackage")
+     * @Method({"DELETE"})
+     *
+     */
+    public function deletePackageAction(Request $request, $id) {
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        if (empty($package)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not find package given id: ' . $id,
+                'object' => NULL
+            );
+
+            return new JsonResponse($results);
+        } else {
+            // Get entity manager
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            // Push the updated Package to database
+            $em->remove($package);
+            $em->flush();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully deleted Package: ' . $package->getTrackingNumber(),
+                'object' => $package
+            );
+
             return new JsonResponse($results);
         }
     }

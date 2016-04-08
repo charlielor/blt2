@@ -75,12 +75,14 @@ class VendorControllerTest extends WebTestCase
         );
     }
 
-    public function testDeleteVendorRoute() {
+    public function testSearchVendorRoute() {
         $client = static::createClient();
 
-        $client->request('PUT', '/vendor/0/delete');
+        $client->request('GET', '/vendor/search', array(
+            "term" => "update"
+        ));
 
-        # Testing response code for /vendor/0/disable
+        # Testing response code for /vendor/search
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -90,15 +92,13 @@ class VendorControllerTest extends WebTestCase
             )
         );
     }
-
-    public function testSearchVendorRoute() {
+    
+    public function testDeleteVendorRoute() {
         $client = static::createClient();
 
-        $client->request('GET', '/vendor/search', array(
-            "term" => "update"
-        ));
+        $client->request('PUT', '/vendor/0/delete');
 
-        # Testing response code for /vendor/search
+        # Testing response code for /vendor/0/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(

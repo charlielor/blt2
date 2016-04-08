@@ -73,12 +73,14 @@ class PackageControllerTest extends WebTestCase
         );
     }
 
-    public function testDeletePackageRoute() {
+    public function testSearchPackageRoute() {
         $client = static::createClient();
 
-        $client->request('DELETE', '/package/testPackage/delete');
+        $client->request('GET', '/package/search', array(
+            "term" => "testPackage"
+        ));
 
-        # Testing response code for /package/{id}/disable
+        # Testing response code for /package/search
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -89,14 +91,12 @@ class PackageControllerTest extends WebTestCase
         );
     }
 
-    public function testSearchPackageRoute() {
+    public function testDeletePackageRoute() {
         $client = static::createClient();
 
-        $client->request('GET', '/package/search', array(
-            "term" => "testPackage"
-        ));
+        $client->request('DELETE', '/package/testPackage/delete');
 
-        # Testing response code for /package/search
+        # Testing response code for /package/{id}/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(

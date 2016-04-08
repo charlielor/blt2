@@ -75,12 +75,14 @@ class ShipperControllerTest extends WebTestCase
         );
     }
 
-    public function testDeleteShipperRoute() {
+    public function testSearchShipperRoute() {
         $client = static::createClient();
 
-        $client->request('PUT', '/shipper/0/delete');
+        $client->request('GET', '/shipper/search', array(
+            "term" => "update"
+        ));
 
-        # Testing response code for /shipper/0/disable
+        # Testing response code for /shipper/search
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -90,15 +92,13 @@ class ShipperControllerTest extends WebTestCase
             )
         );
     }
-
-    public function testSearchShipperRoute() {
+    
+    public function testDeleteShipperRoute() {
         $client = static::createClient();
 
-        $client->request('GET', '/shipper/search', array(
-            "term" => "update"
-        ));
+        $client->request('PUT', '/shipper/0/delete');
 
-        # Testing response code for /shipper/search
+        # Testing response code for /shipper/0/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(

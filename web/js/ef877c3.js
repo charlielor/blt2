@@ -5712,7 +5712,7 @@ $(document).ready(function() {
         // Get the entity requested
         var requestSplit = request.val().split("-");
 
-        $.get('getListOfUsers', function(response) {
+        $.get('user/all', function(response) {
             // Parse through JSON data and return array
             var results = JSON && JSON.parse(response) || $.parseJSON(response);
 
@@ -5813,12 +5813,11 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For users.
      */
     select2Shipper.select2({
-        dropdownCssClass: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Shipper",
         width: 355,
         ajax: {
-            url: 'getShippersLikeTerm',
+            url: 'shipper/search',
             quietMillis: 100,
             dataType: 'json',
             data: function (term) {
@@ -5853,12 +5852,11 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Vendor.
      */
     select2Vendor.select2({
-        dropdownCssClass: "bootstrap",
         minimumInputLength: 3,
         placeholder: "Search for a Vendor",
         width: 355,
         ajax: {
-            url: 'getVendorsLikeTerm',
+            url: 'vendor/search',
             quietMillis: 100,
             dataType: 'json',
             data: function (term) {
@@ -5893,12 +5891,11 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Receiver.
      */
     select2Receiver.select2({
-        dropdownCssClass: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Receiver",
         width: 355,
         ajax: {
-            url: 'getReceiversLikeTerm',
+            url: 'receiver/search',
             quietMillis: 100,
             dataType: 'json',
             data: function (term) {
@@ -5933,7 +5930,6 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For User.
      */
     select2User.select2({
-        dropdownCssClass: "bootstrap",
         placeholder: "Select a User",
         width: 355
     }).on("select2-close", function() {

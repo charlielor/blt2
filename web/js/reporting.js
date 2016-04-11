@@ -120,7 +120,7 @@ $(document).ready(function() {
         // Get the entity requested
         var requestSplit = request.val().split("-");
 
-        $.get('getListOfUsers', function(response) {
+        $.get('user/all', function(response) {
             // Parse through JSON data and return array
             var results = JSON && JSON.parse(response) || $.parseJSON(response);
 

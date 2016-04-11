@@ -93,19 +93,19 @@ class VendorControllerTest extends WebTestCase
         );
     }
     
-    public function testDeleteVendorRoute() {
-        $client = static::createClient();
-
-        $client->request('PUT', '/vendor/0/delete');
-
-        # Testing response code for /vendor/0/disable
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
+//    public function testDeleteVendorRoute() {
+//        $client = static::createClient();
+//
+//        $client->request('PUT', '/vendor/0/delete');
+//
+//        # Testing response code for /vendor/0/disable
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertTrue(
+//            $client->getResponse()->headers->contains(
+//                'Content-Type',
+//                'application/json'
+//            )
+//        );
+//    }
 }

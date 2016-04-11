@@ -108,7 +108,7 @@ class Package {
      */
     protected $vendor;
 
-    public function __construct($trackingNumber, $numOfPackages, Shipper $shipper, Receiver $receiver, Vendor $vendor, $user) {
+    public function __construct($trackingNumber, $numOfPackages, $shipper, $receiver, $vendor, $user) {
         $this->trackingNumber = $trackingNumber;
         $this->numberOfPackages = $numOfPackages;
 

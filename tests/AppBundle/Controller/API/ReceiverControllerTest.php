@@ -110,19 +110,19 @@ class ReceiverControllerTest extends WebTestCase
         );
     }
 
-    public function testDeleteReceiverRoute() {
-        $client = static::createClient();
-
-        $client->request('PUT', '/receiver/1/delete');
-
-        # Testing response code for /receiver/1/disable
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
+//    public function testDeleteReceiverRoute() {
+//        $client = static::createClient();
+//
+//        $client->request('PUT', '/receiver/1/delete');
+//
+//        # Testing response code for /receiver/1/disable
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertTrue(
+//            $client->getResponse()->headers->contains(
+//                'Content-Type',
+//                'application/json'
+//            )
+//        );
+//    }
 }

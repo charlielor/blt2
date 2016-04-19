@@ -70,7 +70,7 @@ class UserController extends Controller {
         $users = $query->getResult();
 
         // If $receiver is not null, then set up $results to reflect successful query
-        if (!(is_null($users))) {
+        if (!(empty($users))) {
             // Set up response
             $results = array(
                 'result' => 'success',
@@ -78,7 +78,6 @@ class UserController extends Controller {
                 'object' => $users
             );
 
-            var_dump($results);
         } else {
             // Set up response
             $results = array(

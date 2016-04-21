@@ -117,9 +117,6 @@ $(document).ready(function() {
     }
 
     function getListOfUsers() {
-        // Get the entity requested
-        var requestSplit = request.val().split("-");
-
         $.get('user/all', function(response) {
             // Parse through JSON data and return array
             var results = JSON && JSON.parse(response) || $.parseJSON(response);
@@ -226,24 +223,28 @@ $(document).ready(function() {
         placeholder: "Search for a Shipper",
         width: "auto",
         ajax: {
-            url: 'shipper/search',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            url: 'vendor/search',
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
+                // Parse through JSON data and return array
+                var response = JSON && JSON.parse(data) || $.parseJSON(data);
+
                 var results = [];
 
-                if (data['object'] !== null) {
-                    var shippers = data['object'];
+                if (response['object'] !== null) {
+                    var vendors = response['object'];
 
-                    $.each(shippers, function(index) {
+                    $.each(vendors, function(index) {
                         results.push({
-                            id: shippers[index]['id'],
-                            text: shippers[index]['name']
+                            id: vendors[index]['id'],
+                            text: vendors[index]['name']
                         })
                     });
                 }
@@ -267,18 +268,22 @@ $(document).ready(function() {
         width: "auto",
         ajax: {
             url: 'vendor/search',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
+                // Parse through JSON data and return array
+                var response = JSON && JSON.parse(data) || $.parseJSON(data);
+
                 var results = [];
 
-                if (data['object'] !== null) {
-                    var vendors = data['object'];
+                if (response['object'] !== null) {
+                    var vendors = response['object'];
 
                     $.each(vendors, function(index) {
                         results.push({
@@ -306,24 +311,28 @@ $(document).ready(function() {
         placeholder: "Search for a Receiver",
         width: "auto",
         ajax: {
-            url: 'receiver/search',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            url: 'vendor/search',
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
+                // Parse through JSON data and return array
+                var response = JSON && JSON.parse(data) || $.parseJSON(data);
+
                 var results = [];
 
-                if (data['object'] !== null) {
-                    var receivers = data['object'];
+                if (response['object'] !== null) {
+                    var vendors = response['object'];
 
-                    $.each(receivers, function(index) {
+                    $.each(vendors, function(index) {
                         results.push({
-                            id: receivers[index]['id'],
-                            text: receivers[index]['name'] + ' | ' + receivers[index]['deliveryRoom']
+                            id: vendors[index]['id'],
+                            text: vendors[index]['name']
                         })
                     });
                 }
@@ -407,6 +416,8 @@ $(document).ready(function() {
             alert("Can't pick a date earlier than date begin");
             return;
         }
+
+        console.log(tokenId);
 
         requestQuery = {
             "request": request.val(),

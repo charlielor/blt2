@@ -371,20 +371,20 @@ $(document).ready(function() {
         try {
             switch (entityRequested) {
                 case "receiver":
-                    tokenId = select2Receiver.select2('data').id;
-                    tokenName = select2Receiver.select2('data').text;
+                    tokenId = select2Receiver.select2().val();
+                    tokenName = select2Receiver.select2().text();
                     break;
                 case "shipper":
-                    tokenId = select2Shipper.select2('data').id;
-                    tokenName = select2Shipper.select2('data').text;
+                    tokenId = select2Shipper.select2().val();
+                    tokenName = select2Shipper.select2().text();
                     break;
                 case "vendor":
-                    tokenId = select2Vendor.select2('data').id;
-                    tokenName = select2Vendor.select2('data').text;
+                    tokenId = select2Vendor.select2().val();
+                    tokenName = select2Vendor.select2().text();
                     break;
                 case "user":
-                    tokenId = select2User.select2('data').id;
-                    tokenName = select2User.select2('data').text;
+                    tokenId = select2User.select2().val();
+                    tokenName = select2User.select2().text();
                     break;
                 default:
                     break;
@@ -417,7 +417,7 @@ $(document).ready(function() {
             return;
         }
 
-        console.log(tokenId);
+        console.log(tokenName);
 
         requestQuery = {
             "request": request.val(),

@@ -56,17 +56,11 @@ $(document).ready(function() {
 
     function showSelect2Input() {
         // Clear all select2 inputs
-        select2Receiver.select2("val", "");
-        select2Shipper.select2("val", "");
-        select2Vendor.select2("val", "");
-        select2User.select2("val", "");
-
-        // Disable all select2 inputs
-        select2Receiver.select2("enable", false);
-        select2Shipper.select2("enable", false);
-        select2Vendor.select2("enable", false);
-        select2User.select2("enable", false);
-
+        select2Receiver.val(null).trigger("change");
+        select2Shipper.val(null).trigger("change");
+        select2Vendor.val(null).trigger("change");
+        select2User.val(null).trigger("change");
+        
         // Get the entity requested
         var requestSplit = request.val().split("-");
         // Always the last element
@@ -76,7 +70,7 @@ $(document).ready(function() {
         switch (entityRequested) {
             case "receiver":
                 receiverSelect.show();
-                select2Receiver.select2("enable", true);
+                select2Receiver.prop("disabled", false);
 
                 shipperSelect.hide();
                 vendorSelect.hide();
@@ -84,7 +78,7 @@ $(document).ready(function() {
                 break;
             case "shipper":
                 shipperSelect.show();
-                select2Shipper.select2("enable", true);
+                select2Shipper.prop("disabled", false);
 
                 receiverSelect.hide();
                 vendorSelect.hide();
@@ -92,7 +86,7 @@ $(document).ready(function() {
                 break;
             case "vendor":
                 vendorSelect.show();
-                select2Vendor.select2("enable", true);
+                select2Vendor.prop("disabled", false);
 
                 receiverSelect.hide();
                 shipperSelect.hide();
@@ -100,17 +94,17 @@ $(document).ready(function() {
                 break;
             case "user":
                 userSelect.show();
-                select2User.select2("enable", true);
+                select2User.prop("disabled", false);
 
                 receiverSelect.hide();
                 shipperSelect.hide();
                 vendorSelect.hide();
                 break;
             default:
-                select2Receiver.select2("enable", false);
-                select2Shipper.select2("enable", false);
-                select2Vendor.select2("enable", false);
-                select2User.select2("enable", false);
+                select2Receiver.prop("disabled", true);
+                select2Shipper.prop("disabled", true);
+                select2Vendor.prop("disabled", true);
+                select2User.prop("disabled", true);
                 requestQuery["tokenId"] = null;
                 break;
         }
@@ -223,7 +217,7 @@ $(document).ready(function() {
         placeholder: "Search for a Shipper",
         width: "auto",
         ajax: {
-            url: 'vendor/search',
+            url: 'shipper/search',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -311,7 +305,7 @@ $(document).ready(function() {
         placeholder: "Search for a Receiver",
         width: "auto",
         ajax: {
-            url: 'vendor/search',
+            url: 'receiver/search',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -352,7 +346,7 @@ $(document).ready(function() {
     select2User.select2({
         theme: "bootstrap",
         placeholder: "Select a User",
-        width: "auto",
+        width: "auto"
     }).on("select2-close", function() {
         select2User.blur();
     });
@@ -368,41 +362,42 @@ $(document).ready(function() {
         var tokenId = null;
         var tokenName = null;
 
-        try {
-            switch (entityRequested) {
-                case "receiver":
-                    tokenId = select2Receiver.select2().val();
-                    tokenName = select2Receiver.select2().text();
-                    break;
-                case "shipper":
-                    tokenId = select2Shipper.select2().val();
-                    tokenName = select2Shipper.select2().text();
-                    break;
-                case "vendor":
-                    tokenId = select2Vendor.select2().val();
-                    tokenName = select2Vendor.select2().text();
-                    break;
-                case "user":
-                    tokenId = select2User.select2().val();
-                    tokenName = select2User.select2().text();
-                    break;
-                default:
-                    break;
-            }
-        } catch (e) {
+        switch (entityRequested) {
+            case "receiver":
+                tokenId = select2Receiver.select2().val();
+                tokenName = select2Receiver.select2().text();
+                break;
+            case "shipper":
+                tokenId = select2Shipper.select2().val();
+                tokenName = select2Shipper.select2().text();
+                break;
+            case "vendor":
+                tokenId = select2Vendor.select2().val();
+                tokenName = select2Vendor.select2().text();
+                break;
+            case "user":
+                tokenId = select2User.select2().val();
+                tokenName = select2User.select2().text();
+                break;
+            default:
+                break;
+        }
+
+        if (tokenId === "" || tokenId === null) {
+            $("#emptyTokenModal").modal('show');
             // Must have selecting from a null select2
             switch (entityRequested) {
                 case "receiver":
-                    select2Receiver.select2("focus");
+                    select2Receiver.focus();
                     break;
                 case "shipper":
-                    select2Shipper.select2("focus");
+                    select2Shipper.focus();
                     break;
                 case "vendor":
-                    select2Vendor.select2("focus");
+                    select2Vendor.focus();
                     break;
                 case "user":
-                    select2User.select2("focus");
+                    select2User.focus();
                     break;
                 default:
                     break;
@@ -416,8 +411,6 @@ $(document).ready(function() {
             alert("Can't pick a date earlier than date begin");
             return;
         }
-
-        console.log(tokenName);
 
         requestQuery = {
             "request": request.val(),

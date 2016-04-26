@@ -641,8 +641,6 @@ class ReportingController extends Controller
                 return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
 
-        var_dump($dateTimeEnd);
-
         // Get the results and filter them
         $packages = $query->getResult();
 

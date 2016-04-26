@@ -161,7 +161,7 @@ $(document).ready(function() {
 
         requestDownload["type"] = "d-csv";
 
-        window.location.href = "report/getRequestedQuery?" + "request=" + requestDownload["request"] + "&tokenId=" + requestDownload["tokenId"] + "&dateBegin=" + requestDownload["dateBegin"] + "&dateEnd=" + requestDownload["dateEnd"] + "&type=" + requestDownload["type"];
+        window.location.href = "reporting/queryRequest?" + "request=" + requestDownload["request"] + "&tokenId=" + requestDownload["tokenId"] + "&dateBegin=" + requestDownload["dateBegin"] + "&dateEnd=" + requestDownload["dateEnd"] + "&type=" + requestDownload["type"];
     });
 
     $(request).on("change", request, function() {

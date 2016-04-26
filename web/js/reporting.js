@@ -383,7 +383,7 @@ $(document).ready(function() {
                 break;
         }
 
-        if (tokenId === "" || tokenId === null) {
+        if ((tokenId === "" || tokenId === null) && entityRequested !== "none") {
             $("#emptyTokenModal").modal('show');
             // Must have selecting from a null select2
             switch (entityRequested) {
@@ -578,13 +578,15 @@ $(document).ready(function() {
 
         }
 
+        console.log(requestTable);
+
         if (valid) {
 
             tableQueryResults.hide();
 
             clearTable();
 
-            $.get("report/getRequestedQuery", requestTable, function(data) {
+            $.get("reporting/queryRequest", requestTable, function(data) {
                 var results = JSON && JSON.parse(data) || $.parseJSON(data);
 
                 var packagesFromServer = null;
@@ -595,7 +597,6 @@ $(document).ready(function() {
                     packagesFromServer = results['object'];
 
                     $.each(packagesFromServer, function(index, element) {
-
 
                         // Create string-friendly dateReceived
                         var dateReceived = new Date(element["dateReceived"]["timestamp"] * 1000);

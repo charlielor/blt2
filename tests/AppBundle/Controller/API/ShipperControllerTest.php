@@ -93,19 +93,19 @@ class ShipperControllerTest extends WebTestCase
         );
     }
     
-//    public function testDeleteShipperRoute() {
-//        $client = static::createClient();
-//
-//        $client->request('PUT', '/shipper/0/delete');
-//
-//        # Testing response code for /shipper/0/disable
-//        $this->assertTrue($client->getResponse()->isSuccessful());
-//
-//        $this->assertTrue(
-//            $client->getResponse()->headers->contains(
-//                'Content-Type',
-//                'application/json'
-//            )
-//        );
-//    }
+    public function testDeleteShipperRoute() {
+        $client = static::createClient();
+
+        $client->request('PUT', '/shipper/1/delete');
+
+        # Testing response code for /shipper/0/disable
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
 }

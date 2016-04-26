@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Frontend;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ReportingController extends Controller
@@ -21,16 +21,6 @@ class ReportingController extends Controller
      * @Route("/reporting/queryRequest", name="queryRequest")
      */
     public function queryRequestAction(Request $request) {
-        if (!($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))) {
-            $results = array(
-                'result' => 'error',
-                'message' => 'Session authentication error',
-                'object' => NULL
-            );
-
-            return new Response($this->get('serializer')->serialize($results, 'json'));
-        }
-
         $requestQuery = $request->get("request");
 
         $typeOfRequest = $request->get("type");
@@ -358,7 +348,7 @@ class ReportingController extends Controller
                             'object' => NULL
                         );
 
-                        return new Response($this->get('serializer')->serialize($results, 'json'));
+                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
 
                 }
 
@@ -648,9 +638,10 @@ class ReportingController extends Controller
                     'object' => NULL
                 );
 
-                return new Response($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
 
+        var_dump($dateTimeEnd);
 
         // Get the results and filter them
         $packages = $query->getResult();
@@ -661,7 +652,7 @@ class ReportingController extends Controller
 
 
                 // Create a new response
-                $response = new Response();
+                $response = new JsonResponse();
 
                 // Set the response content type and content disposition
                 $response->headers->set('Content-Type', 'text/xml');
@@ -676,7 +667,7 @@ class ReportingController extends Controller
                 $jsonOutput = $this->get('serializer')->serialize($packages, 'json');
 
                 // Create a new response
-                $response = new Response();
+                $response = new JsonResponse();
 
                 // Set the response content type and content disposition
                 $response->headers->set('Content-Type', 'application/json');
@@ -715,7 +706,7 @@ class ReportingController extends Controller
                 fclose($handle);
 
                 // Create a new response
-                $response = new Response();
+                $response = new JsonResponse();
 
                 // Set the response content
                 $response->setContent(file_get_contents($tmpFileName));
@@ -811,7 +802,7 @@ class ReportingController extends Controller
             }
 
 
-            return new Response($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else if (count($packages) == 0) {
             $results = array(
                 'result' => 'success',
@@ -822,7 +813,7 @@ class ReportingController extends Controller
                 'type' => $typeOfRequest,
             );
 
-            return new Response($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             $results = array(
                 'result' => 'error',
@@ -830,7 +821,7 @@ class ReportingController extends Controller
                 'object' => NULL
             );
 
-            return new Response($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 }

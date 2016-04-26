@@ -91,19 +91,19 @@ class PackageControllerTest extends WebTestCase
         );
     }
 
-//    public function testDeletePackageRoute() {
-//        $client = static::createClient();
-//
-//        $client->request('DELETE', '/package/testPackage/delete');
-//
-//        # Testing response code for /package/{id}/disable
-//        $this->assertTrue($client->getResponse()->isSuccessful());
-//
-//        $this->assertTrue(
-//            $client->getResponse()->headers->contains(
-//                'Content-Type',
-//                'application/json'
-//            )
-//        );
-//    }
+    public function testDeletePackageRoute() {
+        $client = static::createClient();
+
+        $client->request('DELETE', '/package/testPackage/delete');
+
+        # Testing response code for /package/{id}/disable
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
 }

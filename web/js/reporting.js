@@ -248,8 +248,6 @@ $(document).ready(function() {
                 };
             }
         }
-    }).on("select2-close", function() {
-        select2Shipper.blur();
     });
 
     /*
@@ -292,8 +290,6 @@ $(document).ready(function() {
                 };
             }
         }
-    }).on("select2-close", function() {
-        select2Vendor.blur();
     });
 
     /*
@@ -336,8 +332,6 @@ $(document).ready(function() {
                 };
             }
         }
-    }).on("select2-close", function() {
-        select2Receiver.blur();
     });
 
     /*
@@ -347,8 +341,6 @@ $(document).ready(function() {
         theme: "bootstrap",
         placeholder: "Select a User",
         width: "auto"
-    }).on("select2-close", function() {
-        select2User.blur();
     });
 
 
@@ -386,29 +378,29 @@ $(document).ready(function() {
         if ((tokenId === "" || tokenId === null) && entityRequested !== "none") {
             $("#emptyTokenModal").modal('show');
             // Must have selecting from a null select2
-            switch (entityRequested) {
-                case "receiver":
-                    select2Receiver.focus();
-                    break;
-                case "shipper":
-                    select2Shipper.focus();
-                    break;
-                case "vendor":
-                    select2Vendor.focus();
-                    break;
-                case "user":
-                    select2User.focus();
-                    break;
-                default:
-                    break;
-            }
+            // switch (entityRequested) {
+            //     case "receiver":
+            //         select2Receiver.focus();
+            //         break;
+            //     case "shipper":
+            //         select2Shipper.focus();
+            //         break;
+            //     case "vendor":
+            //         select2Vendor.focus();
+            //         break;
+            //     case "user":
+            //         select2User.focus();
+            //         break;
+            //     default:
+            //         break;
+            // }
             return;
         }
 
 
         // Make sure dates are in chronological order
         if (dateBegin.datepicker("getDate") > dateEnd.datepicker("getDate")) {
-            alert("Can't pick a date earlier than date begin");
+            $("#dateRangeErrorModal").modal('show');
             return;
         }
 

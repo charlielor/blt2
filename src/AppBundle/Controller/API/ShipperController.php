@@ -273,7 +273,7 @@ class ShipperController extends Controller
                 'object' => $shipper
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 

@@ -41,7 +41,7 @@ class PackageController extends Controller
                 'object' => $existingPackageGivenTrackingNumber
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else { // Create a new Package
 
             // Get user | anon. is temp for testing
@@ -70,7 +70,7 @@ class PackageController extends Controller
                     'object' => $request->request->all()
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             }
 
             // Create a new Package entity and set its properties
@@ -133,7 +133,7 @@ class PackageController extends Controller
                             'object' => NULL
                         );
 
-                        return new JsonResponse($results);
+                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
                     }
                 }
 
@@ -152,7 +152,7 @@ class PackageController extends Controller
                 'object' => $newPackage
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
 
 
         }
@@ -180,7 +180,7 @@ class PackageController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Cannot update tracking number --> ID
 
@@ -277,7 +277,7 @@ class PackageController extends Controller
                             'object' => NULL
                         );
 
-                        return new JsonResponse($results);
+                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
                     }
                 }
 
@@ -330,7 +330,7 @@ class PackageController extends Controller
             );
 
             // Return the results
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 
@@ -364,7 +364,7 @@ class PackageController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Set up response
             $results = array(
@@ -374,7 +374,7 @@ class PackageController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 
@@ -398,7 +398,7 @@ class PackageController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -414,7 +414,7 @@ class PackageController extends Controller
                 'object' => $package
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 

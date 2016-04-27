@@ -41,7 +41,7 @@ class ReceiverController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             } else {
                 // Set up the response
                 $results = array(
@@ -50,7 +50,7 @@ class ReceiverController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             }
         } else { // Create a new Receiver
 
@@ -74,7 +74,7 @@ class ReceiverController extends Controller
                 'object' => $newReceiver
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
 
 
@@ -99,7 +99,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             $newReceiverName = $request->request->get("name");
 
@@ -133,7 +133,7 @@ class ReceiverController extends Controller
                     'object' => $receiver
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
 
             } else {
                 // Set up the response
@@ -143,7 +143,7 @@ class ReceiverController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             }
         }
     }
@@ -167,7 +167,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -189,7 +189,7 @@ class ReceiverController extends Controller
                 'object' => $receiver
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
 
     }
@@ -213,7 +213,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -235,7 +235,7 @@ class ReceiverController extends Controller
                 'object' => $receiver
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 
@@ -260,7 +260,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -276,7 +276,7 @@ class ReceiverController extends Controller
                 'object' => $receiver
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 
@@ -314,7 +314,7 @@ class ReceiverController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Set up response
             $results = array(
@@ -324,7 +324,7 @@ class ReceiverController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 }

@@ -38,7 +38,7 @@ class VenderController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             } else {
                 // Set up the response
                 $results = array(
@@ -47,7 +47,7 @@ class VenderController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             }
         } else { // Create a new Vendor
 
@@ -71,7 +71,7 @@ class VenderController extends Controller
                 'object' => $newVendor
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
 
 
@@ -96,7 +96,7 @@ class VenderController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             $newVendorName = $request->request->get("name");
 
@@ -130,7 +130,7 @@ class VenderController extends Controller
                     'object' => $vendor
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
 
             } else {
                 // Set up the response
@@ -140,7 +140,7 @@ class VenderController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($results);
+                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
             }
         }
     }
@@ -164,7 +164,7 @@ class VenderController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -186,7 +186,7 @@ class VenderController extends Controller
                 'object' => $vendor
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
 
     }
@@ -210,7 +210,7 @@ class VenderController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -232,7 +232,7 @@ class VenderController extends Controller
                 'object' => $vendor
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 
@@ -257,7 +257,7 @@ class VenderController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -273,7 +273,7 @@ class VenderController extends Controller
                 'object' => $vendor
             );
 
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 
@@ -311,7 +311,7 @@ class VenderController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
             // Set up response
             $results = array(
@@ -321,7 +321,7 @@ class VenderController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($results);
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
 }

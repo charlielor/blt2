@@ -9,11 +9,29 @@ use AppBundle\Entity\PackingSlip;
 class PackageControllerTest extends WebTestCase
 {
     public function testNewPackageRoute() {
-        $vendor = 1; // testVendor
-        $shipper = 1; // testShipper
-        $receiver = 1; // testReceiver
-
         $client = static::createClient();
+
+        // Setting up the database with fake entities
+        $client->request('POST', '/receiver/new', array(
+            "name" => "testPackageReceiver",
+            "deliveryRoom" => 112
+        ));
+
+        $receiver = json_decode($client->getResponse()->getContent(), true);
+
+        var_dump($receiver);
+
+        $client->request('POST', '/shipper/new', array(
+            "name" => "testPackageShipper"
+        ));
+
+        $shipper = $client->getResponse()->getContent();
+
+        $client->request('POST', '/vendor/new', array(
+            "name" => "testPackageVendor"
+        ));
+
+        $vendor = $client->getResponse()->getContent();
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
@@ -33,6 +51,14 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
+        $newPackage = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $newPackage);
+        $this->assertArrayHasKey('message', $newPackage);
+        $this->assertArrayHasKey('object', $newPackage);
+
+        $this->assertEquals('success', $newPackage['results']);
+
         # Testing against duplicates
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
@@ -50,6 +76,16 @@ class PackageControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        $newPackage = json_decode($client->getResponse()->getContent());
+
+        var_dump($newPackage);
+
+        $this->assertArrayHasKey('results', $newPackage);
+        $this->assertArrayHasKey('message', $newPackage);
+        $this->assertArrayHasKey('object', $newPackage);
+
+        $this->assertEqual('success', $newPackage['results']);
     }
 
     public function testUpdatePackageRoute() {
@@ -91,19 +127,28 @@ class PackageControllerTest extends WebTestCase
         );
     }
 
-    public function testDeletePackageRoute() {
-        $client = static::createClient();
-
-        $client->request('DELETE', '/package/testPackage/delete');
-
-        # Testing response code for /package/{id}/disable
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
+//    public function testDeletePackageRoute() {
+//        $client = static::createClient();
+//
+//        $client->request('GET', '/package/search', array(
+//            "term" => "testPackage"
+//        ));
+//
+//        $testPackageJSON = json_decode($client->getResponse()->getContent());
+//
+//        var_dump($testPackageJSON);
+//
+//
+//        $client->request('DELETE', '/package/testPackage/delete');
+//
+//        # Testing response code for /package/{id}/disable
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertTrue(
+//            $client->getResponse()->headers->contains(
+//                'Content-Type',
+//                'application/json'
+//            )
+//        );
+//    }
 }

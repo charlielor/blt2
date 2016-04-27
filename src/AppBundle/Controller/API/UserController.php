@@ -46,7 +46,7 @@ class UserController extends Controller {
             );
         }
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 
     /**
@@ -87,6 +87,6 @@ class UserController extends Controller {
             );
         }
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 }

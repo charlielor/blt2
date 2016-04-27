@@ -61,6 +61,18 @@ class PackageController extends Controller
 
             $numOfPackagesFromPOST = $request->request->get("numOfPackages");
 
+            // None of the post variables can be empty
+            if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numOfPackagesFromPOST)) {
+                // Set up the response
+                $results = array(
+                    'result' => 'error',
+                    'message' => 'Error in processing submitted data',
+                    'object' => $request->request->all()
+                );
+
+                return new JsonResponse($results);
+            }
+
             // Create a new Package entity and set its properties
             $newPackage = new Package($trackingNumberOfNewPackage, $numOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 

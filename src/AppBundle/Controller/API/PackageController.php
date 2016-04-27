@@ -38,7 +38,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => '\'' . $trackingNumberOfNewPackage . '\' already exists',
-                'object' => $existingPackageGivenTrackingNumber
+                'object' => NULL
             );
 
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));

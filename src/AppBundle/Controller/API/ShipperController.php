@@ -238,7 +238,7 @@ class ShipperController extends Controller
 
     /**
      * @Route("/shipper/{id}/delete", name="deleteShipper")
-     * @Method({"PUT"})
+     * @Method({"DELETE"})
      *
      * TODO: Can not delete Shipper: will not cascade into Package table
      */

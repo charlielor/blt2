@@ -241,7 +241,7 @@ class ReceiverController extends Controller
 
     /**
      * @Route("/receiver/{id}/delete", name="deleteReceiver")
-     * @Method({"PUT"})
+     * @Method({"DELETE"})
      *
      * TODO: Can not delete Receiver: will not cascade into Package table
      */

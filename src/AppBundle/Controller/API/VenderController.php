@@ -238,7 +238,7 @@ class VenderController extends Controller
 
     /**
      * @Route("/vendor/{id}/delete", name="deleteVendor")
-     * @Method({"PUT"})
+     * @Method({"DELETE"})
      *
      * TODO: Can not delete Vendor: will not cascade into Package table
      */

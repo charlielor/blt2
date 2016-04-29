@@ -134,12 +134,13 @@
 
     <div class="container">
         <div class="row">
-            <div id="runAReportHeader" class="col-sm-3">
+            <div id="runAReportHeader" class="col-md-3">
                 <h3>Run a Report</h3>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-3">
+        <form>
+        <div class="form-group">
+            <div class="col-md-3">
                 <label for="request" class="control-label">Request Type</label>
                 <select id="request" class="form-control">
                     <option value="r-0-vendor">Packages ordered from Vendor</option>
@@ -156,7 +157,10 @@
                     <option value="o-0-none">Packages NOT delivered or picked up</option>
                 </select>
             </div>
-            <div class="col-sm-3">
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
                 <label for="select2-Shipper" class="control-label shipperSelect text-center">Shipper</label>
                 <label for="select2-Vendor" class="control-label vendorSelect text-center">Vendor</label>
                 <label for="select2-Receiver" class="control-label receiverSelect text-center">Receiver</label>
@@ -174,18 +178,28 @@
                     <select id="select2-User"></select>
                 </div>
             </div>
-            <div class="col-sm-2">
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-4 col-sm-3 col-md-2 col-md-offset-0">
                 <label class="control-label">Date Begin</label>
                 <button type="button" id="dateBeginButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
             </div>
-            <div class="col-sm-2">
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-3 col-sm-3 col-md-2 col-md-offset-0">
                 <label class="control-label">Date End</label>
                 <button type="button" id="dateEndButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
             </div>
-            <div class="col-sm-2">
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-offset-1 col-xs-2 col-sm-offset-3 col-sm-1 col-md-2 col-md-offset-0">
                 <button type="button" id="submitReportRequest" class="btn btn-primary center-block">Go!</button>
             </div>
         </div>
+        </form>
 
         <div id="graphQueryResults">
             <div class="row">

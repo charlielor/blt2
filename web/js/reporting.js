@@ -125,7 +125,6 @@ $(document).ready(function() {
                     }
                 }
             } else {
-                // TODO noty
                 alert("Fail to update page");
             }
 

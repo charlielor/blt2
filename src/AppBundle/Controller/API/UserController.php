@@ -60,7 +60,7 @@ class UserController extends Controller {
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for receivers that is like terms
+        // Set up query the database for users that is like term
         $query = $em->createQuery(
             'SELECT DISTINCT p.userWhoReceived FROM AppBundle:Package p
             WHERE p.userWhoReceived LIKE :term'

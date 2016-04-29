@@ -345,17 +345,17 @@ class PackageController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for packages that is like terms
+        // Set up query the database for packages that is like term
         $query = $em->createQuery(
             'SELECT p FROM AppBundle:Package p
-            WHERE p.trackingNumber LIKE :trackingNumber'
-        )->setParameter('trackingNumber', $term.'%');
+            WHERE p.trackingNumber LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $packages = $query->getResult();
 
         // If $package is not null, then set up $results to reflect successful query
-        if (!(empty($package))) {
+        if (!(empty($packages))) {
             // Set up response
             $results = array(
                 'result' => 'success',

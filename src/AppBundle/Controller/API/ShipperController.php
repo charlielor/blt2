@@ -288,11 +288,11 @@ class ShipperController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for receivers that is like terms
+        // Set up query the database for shippers that is like term
         $query = $em->createQuery(
-            'SELECT v FROM AppBundle:Shipper v
-            WHERE v.name LIKE :term
-            AND v.enabled = :enabled'
+            'SELECT s FROM AppBundle:Shipper s
+            WHERE s.name LIKE :term
+            AND s.enabled = :enabled'
         )->setParameters(array(
                 'term' => $term.'%',
                 'enabled' => 1)

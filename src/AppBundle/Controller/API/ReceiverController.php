@@ -293,9 +293,9 @@ class ReceiverController extends Controller
 
         // Set up query the database for receivers that is like terms
         $query = $em->createQuery(
-            'SELECT v FROM AppBundle:Receiver v
-            WHERE v.name LIKE :term
-            AND v.enabled = :enabled'
+            'SELECT r FROM AppBundle:Receiver r
+            WHERE r.name LIKE :term
+            AND r.enabled = :enabled'
         )->setParameters(array(
                 'term' => $term.'%',
                 'enabled' => 1)

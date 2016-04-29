@@ -141,12 +141,12 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/package/search', array(
-            "term" => "testPackage"
+            "term" => "test"
         ));
 
         $packageResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
 
-        var_dump($packageResponse['object']);
+        var_dump($packageResponse);
 
         $this->assertNotNull($packageResponse['object']);
 

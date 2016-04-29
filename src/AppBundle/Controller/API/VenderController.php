@@ -288,7 +288,7 @@ class VenderController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for receivers that is like terms
+        // Set up query the database for vendors that is like term
         $query = $em->createQuery(
             'SELECT v FROM AppBundle:Vendor v
             WHERE v.name LIKE :term

@@ -356,20 +356,20 @@ $(document).ready(function() {
 
         switch (entityRequested) {
             case "receiver":
-                tokenId = select2Receiver.select2().val();
-                tokenName = select2Receiver.select2().text();
+                tokenId = select2Receiver.val();
+                tokenName = select2Receiver.text();
                 break;
             case "shipper":
-                tokenId = select2Shipper.select2().val();
-                tokenName = select2Shipper.select2().text();
+                tokenId = select2Shipper.val();
+                tokenName = select2Shipper.text();
                 break;
             case "vendor":
-                tokenId = select2Vendor.select2().val();
-                tokenName = select2Vendor.select2().text();
+                tokenId = select2Vendor.val();
+                tokenName = select2Vendor.text();
                 break;
             case "user":
-                tokenId = select2User.select2().val();
-                tokenName = select2User.select2().text();
+                tokenId = select2User.val();
+                tokenName = select2User.text();
                 break;
             default:
                 break;
@@ -378,23 +378,29 @@ $(document).ready(function() {
         if ((tokenId === "" || tokenId === null) && entityRequested !== "none") {
             $("#emptyTokenModal").modal('show');
             // Must have selecting from a null select2
-            // switch (entityRequested) {
-            //     case "receiver":
-            //         select2Receiver.focus();
-            //         break;
-            //     case "shipper":
-            //         select2Shipper.focus();
-            //         break;
-            //     case "vendor":
-            //         select2Vendor.focus();
-            //         break;
-            //     case "user":
-            //         select2User.focus();
-            //         break;
-            //     default:
-            //         break;
-            // }
+            switch (entityRequested) {
+                case "receiver":
+                    select2Receiver.focus();
+                    break;
+                case "shipper":
+                    select2Shipper.focus();
+                    break;
+                case "vendor":
+                    select2Vendor.focus();
+                    break;
+                case "user":
+                    select2User.focus();
+                    break;
+                default:
+                    break;
+            }
             return;
+        } else {
+            // Clear all select2 inputs
+            select2Receiver.val(null).trigger("change");
+            select2Shipper.val(null).trigger("change");
+            select2Vendor.val(null).trigger("change");
+            select2User.val(null).trigger("change");
         }
 
 

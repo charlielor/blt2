@@ -17,8 +17,14 @@ class PackageControllerTest extends WebTestCase
             "deliveryRoom" => 112
         ));
 
+        // Assert that receiver was successfully created
         $receiverResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $this->assertArrayHasKey('result', $receiverResponse);
+        $this->assertEquals('success', $receiverResponse['result']);
 
+        $this->assertArrayHasKey('message', $receiverResponse);
+
+        $this->assertArrayHasKey('object', $receiverResponse);
         $this->assertNotNull($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -28,8 +34,13 @@ class PackageControllerTest extends WebTestCase
         ));
 
         $shipperResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $this->assertArrayHasKey('result', $shipperResponse);
+        $this->assertEquals('success', $shipperResponse['result']);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertArrayHasKey('message', $shipperResponse);
+
+        $this->assertArrayHasKey('object', $shipperResponse);
+        $this->assertNotNull($shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -38,10 +49,16 @@ class PackageControllerTest extends WebTestCase
         ));
 
         $vendorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $this->assertArrayHasKey('result', $vendorResponse);
+        $this->assertEquals('success', $vendorResponse['result']);
+
+        $this->assertArrayHasKey('message', $vendorResponse);
+
+        $this->assertArrayHasKey('object', $vendorResponse);
 
         $this->assertNotNull($vendorResponse['object']);
 
-        $vendor = $shipperResponse['object'];
+        $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
@@ -64,11 +81,13 @@ class PackageControllerTest extends WebTestCase
         $newPackage = json_decode(json_decode($client->getResponse()->getContent()), true);
 
         $this->assertArrayHasKey('result', $newPackage);
+        $this->assertEquals('success', $newPackage['result']);
+
         $this->assertArrayHasKey('message', $newPackage);
+
         $this->assertArrayHasKey('object', $newPackage);
         $this->assertNotNull($newPackage['object']);
 
-        $this->assertEquals('success', $newPackage['result']);
 
         # Testing against duplicates
         $client->request('POST', '/package/new', array(
@@ -96,6 +115,30 @@ class PackageControllerTest extends WebTestCase
         $this->assertNull($duplicatePackage['object']);
         $this->assertEquals('error', $duplicatePackage['result']);
 
+        # Testing with errors
+        $client->request('POST', '/package/new', array(
+            "trackingNumber" => "testPackage",
+            "receiverId" => $receiver['id'],
+            "vendorId" => $vendor['id']
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorParamsResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $errorParamsResponse);
+        $this->assertArrayHasKey('message', $errorParamsResponse);
+        $this->assertArrayHasKey('object', $errorParamsResponse);
+        $this->assertNull($errorParamsResponse['object']);
+        $this->assertEquals('error', $errorParamsResponse['result']);
+
     }
 
     public function testUpdatePackageRoute() {
@@ -117,6 +160,39 @@ class PackageControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        $updatedPackage = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $updatedPackage);
+        $this->assertArrayHasKey('message', $updatedPackage);
+        $this->assertArrayHasKey('object', $updatedPackage);
+        $this->assertNotNull($updatedPackage['object']);
+        $this->assertEquals('success', $updatedPackage['result']);
+
+        // Test for errors
+        $client->request('PUT', '/package/test/update', array(
+            "numOfPackages" => 1,
+            "removedPackingSlipIds" => array(
+                "removePackingSlipOne", "removePackingSlipTwo"
+            )
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertArrayHasKey('message', $errorResponse);
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+        $this->assertEquals('error', $errorResponse['result']);
     }
 
     public function testSearchPackageRoute() {
@@ -135,22 +211,50 @@ class PackageControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        $searchPackage = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $searchPackage);
+        $this->assertArrayHasKey('message', $searchPackage);
+        $this->assertArrayHasKey('object', $searchPackage);
+        $this->assertNotNull($searchPackage['object']);
+        $this->assertEquals('success', $searchPackage['result']);
+
+        // Test for errors
+        $client->request('GET', '/package/search', array(
+            "term" => "12345"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertArrayHasKey('message', $errorResponse);
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+        $this->assertEquals('error', $errorResponse['result']);
     }
 
     public function testDeletePackageRoute() {
         $client = static::createClient();
 
         $client->request('GET', '/package/search', array(
-            "term" => "test"
+            "term" => "testPackage"
         ));
 
         $packageResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
 
-        var_dump($packageResponse);
-
         $this->assertNotNull($packageResponse['object']);
 
-        $package = $packageResponse['object'];
+        $package = $packageResponse['object'][0];
 
         # Testing response code for /package/{id}/delete
         $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
@@ -164,9 +268,33 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $deletePackageResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $packageDeleted = json_decode(json_decode($client->getResponse()->getContent()), true);
 
-        var_dump($deletePackageResponse);
+        $this->assertArrayHasKey('result', $packageDeleted);
+        $this->assertArrayHasKey('message', $packageDeleted);
+        $this->assertArrayHasKey('object', $packageDeleted);
+        $this->assertNotNull($packageDeleted['object']);
+        $this->assertEquals('success', $packageDeleted['result']);
+
+        // Test for errors
+        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertArrayHasKey('message', $errorResponse);
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+        $this->assertEquals('error', $errorResponse['result']);
 
         // Search database for existing entities and delete them
         $client->request('GET', '/receiver/search', array(
@@ -177,7 +305,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertNotNull($receiverResponse['object']);
 
-        $receiver = $receiverResponse['object'];
+        $receiver = $receiverResponse['object'][0];
 
         $client->request('GET', '/shipper/search', array(
             "term" => "testPackageShipper"
@@ -187,7 +315,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertNotNull($receiverResponse['object']);
 
-        $shipper = $shipperResponse['object'];
+        $shipper = $shipperResponse['object'][0];
 
         $client->request('GET', '/vendor/search', array(
             "term" => "testPackageVendor"
@@ -197,7 +325,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertNotNull($vendorResponse['object']);
 
-        $vendor = $shipperResponse['object'];
+        $vendor = $shipperResponse['object'][0];
 
         $client->request('DELETE', '/receiver/' . $receiver['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());

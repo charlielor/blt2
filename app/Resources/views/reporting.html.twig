@@ -138,73 +138,11 @@
                 <h3>Run a Report</h3>
             </div>
         </div>
-        {#<form>#}
-        {#<div class="form-group">#}
-            {#<div class="col-md-3">#}
-                {#<label for="request" class="control-label">Request Type</label>#}
-                {#<select id="request" class="form-control">#}
-                    {#<option value="r-0-vendor">Packages ordered from Vendor</option>#}
-                    {#<option value="r-1-user">Packages checked in by User</option>#}
-                    {#<option value="r-2-shipper">Packages shipped by Shipper</option>#}
-                    {#<option value="-----" disabled>-----</option>#}
-                    {#<option value="d-0-receiver">Packages delivered to Receiver</option>#}
-                    {#<option value="-----" disabled>-----</option>#}
-                    {#<option value="r-3-none">Get all packages received</option>#}
-                    {#<option value="d-1-none">Get all packages delivered</option>#}
-                    {#<option value="-----" disabled>-----</option>#}
-                    {#<option value="p-0-none">Get all picked up packages</option>#}
-                    {#<option value="-----" disabled>-----</option>#}
-                    {#<option value="o-0-none">Packages NOT delivered or picked up</option>#}
-                {#</select>#}
-            {#</div>#}
-        {#</div>#}
-
-        {#<div class="form-group">#}
-            {#<div class="col-md-3">#}
-                {#<label for="select2-Shipper" class="control-label shipperSelect text-center">Shipper</label>#}
-                {#<label for="select2-Vendor" class="control-label vendorSelect text-center">Vendor</label>#}
-                {#<label for="select2-Receiver" class="control-label receiverSelect text-center">Receiver</label>#}
-                {#<label for="select2-User" class="control-label userSelect text-center">User</label>#}
-                {#<div class="shipperSelect">#}
-                    {#<select name="shipper" id="select2-Shipper"></select>#}
-                {#</div>#}
-                {#<div class="vendorSelect">#}
-                    {#<select name="vendor" id="select2-Vendor"></select>#}
-                {#</div>#}
-                {#<div class="receiverSelect">#}
-                    {#<select name="receiver" id="select2-Receiver"></select>#}
-                {#</div>#}
-                {#<div class="userSelect">#}
-                    {#<select id="select2-User"></select>#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-
-        {#<div class="form-group">#}
-            {#<div class="col-xs-5 col-sm-3 col-md-2 col-md-offset-0">#}
-                {#<label class="control-label">Date Begin</label>#}
-                {#<button type="button" id="dateBeginButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>#}
-            {#</div>#}
-        {#</div>#}
-
-        {#<div class="form-group">#}
-            {#<div class="col-xs-5 col-sm-3 col-md-2 col-md-offset-0">#}
-                {#<label class="control-label">Date End</label>#}
-                {#<button type="button" id="dateEndButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>#}
-            {#</div>#}
-        {#</div>#}
-
-        {#<div class="form-group">#}
-            {#<div class="col-xs-offset-8 col-xs-1 col-sm-offset-3 col-sm-1 col-md-2 col-md-offset-0">#}
-                {#<button type="button" id="submitReportRequest" class="btn btn-primary center-block">Go!</button>#}
-            {#</div>#}
-        {#</div>#}
-        {#</form>#}
 
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="request" class="control-label">Request Type</label>
+                    <label for="request" class="control-label">Request Type:</label>
                     <select id="request" class="form-control">
                         <option value="r-0-vendor">Packages ordered from Vendor</option>
                         <option value="r-1-user">Packages checked in by User</option>
@@ -225,33 +163,33 @@
 
             <div class="col-md-4">
                 <div class="shipperSelect form-group">
-                    <label for="select2-Shipper" class="control-label shipperSelect text-center">Shipper</label>
+                    <label for="select2-Shipper" class="control-label shipperSelect text-center">Shipper:</label>
                     <select name="shipper" id="select2-Shipper"></select>
                 </div>
                 <div class="vendorSelect form-group">
-                    <label for="select2-Vendor" class="control-label vendorSelect text-center">Vendor</label>
+                    <label for="select2-Vendor" class="control-label vendorSelect text-center">Vendor:</label>
                     <select name="vendor" id="select2-Vendor"></select>
                 </div>
                 <div class="receiverSelect form-group">
-                    <label for="select2-Receiver" class="control-label receiverSelect text-center">Receiver</label>
+                    <label for="select2-Receiver" class="control-label receiverSelect text-center">Receiver:</label>
                     <select name="receiver" id="select2-Receiver"></select>
                 </div>
                 <div class="userSelect form-group">
-                    <label for="select2-User" class="control-label userSelect text-center">User</label>
+                    <label for="select2-User" class="control-label userSelect text-center">User:</label>
                     <select id="select2-User"></select>
                 </div>
             </div>
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <label for="dateBeginButton" class="control-label">Date Begin</label>
+                    <label for="dateBeginButton" class="control-label">Date Begin:</label>
                     <button type="button" id="dateBeginButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
                 </div>
             </div>
 
             <div class="col-md-1">
                 <div class="form-group">
-                    <label for="dateEndButton" class="control-label">Date End</label>
+                    <label for="dateEndButton" class="control-label">Date End:</label>
                     <button type="button" id="dateEndButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
                 </div>
             </div>

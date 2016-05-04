@@ -140,7 +140,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="request" class="control-label">Request Type:</label>
                     <select id="request" class="form-control">
@@ -161,7 +161,7 @@
             </div>
 
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="shipperSelect form-group">
                     <label for="select2-Shipper" class="control-label shipperSelect text-center">Shipper:</label>
                     <select name="shipper" id="select2-Shipper"></select>
@@ -187,29 +187,19 @@
                 </div>
             </div>
 
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label for="dateEndButton" class="control-label">Date End:</label>
                     <button type="button" id="dateEndButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
                 </div>
             </div>
-        </div>
 
-
-        <div class="row">
-
-        </div>
-
-        <div class="row">
-            <div class="col-md-offset-10 col-md-2">
+            <div class="col-md-1">
                 <div class="form-group">
                     <button type="button" id="submitReportRequest" class="btn btn-primary">Go!</button>
                 </div>
             </div>
-
         </div>
-
-
 
         <div id="graphQueryResults">
             <div class="row">

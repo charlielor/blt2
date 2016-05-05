@@ -5648,17 +5648,11 @@ $(document).ready(function() {
 
     function showSelect2Input() {
         // Clear all select2 inputs
-        select2Receiver.select2("val", "");
-        select2Shipper.select2("val", "");
-        select2Vendor.select2("val", "");
-        select2User.select2("val", "");
-
-        // Disable all select2 inputs
-        select2Receiver.select2("enable", false);
-        select2Shipper.select2("enable", false);
-        select2Vendor.select2("enable", false);
-        select2User.select2("enable", false);
-
+        select2Receiver.val(null).trigger("change");
+        select2Shipper.val(null).trigger("change");
+        select2Vendor.val(null).trigger("change");
+        select2User.val(null).trigger("change");
+        
         // Get the entity requested
         var requestSplit = request.val().split("-");
         // Always the last element
@@ -5668,7 +5662,7 @@ $(document).ready(function() {
         switch (entityRequested) {
             case "receiver":
                 receiverSelect.show();
-                select2Receiver.select2("enable", true);
+                select2Receiver.prop("disabled", false);
 
                 shipperSelect.hide();
                 vendorSelect.hide();
@@ -5676,7 +5670,7 @@ $(document).ready(function() {
                 break;
             case "shipper":
                 shipperSelect.show();
-                select2Shipper.select2("enable", true);
+                select2Shipper.prop("disabled", false);
 
                 receiverSelect.hide();
                 vendorSelect.hide();
@@ -5684,7 +5678,7 @@ $(document).ready(function() {
                 break;
             case "vendor":
                 vendorSelect.show();
-                select2Vendor.select2("enable", true);
+                select2Vendor.prop("disabled", false);
 
                 receiverSelect.hide();
                 shipperSelect.hide();
@@ -5692,26 +5686,23 @@ $(document).ready(function() {
                 break;
             case "user":
                 userSelect.show();
-                select2User.select2("enable", true);
+                select2User.prop("disabled", false);
 
                 receiverSelect.hide();
                 shipperSelect.hide();
                 vendorSelect.hide();
                 break;
             default:
-                select2Receiver.select2("enable", false);
-                select2Shipper.select2("enable", false);
-                select2Vendor.select2("enable", false);
-                select2User.select2("enable", false);
+                select2Receiver.prop("disabled", true);
+                select2Shipper.prop("disabled", true);
+                select2Vendor.prop("disabled", true);
+                select2User.prop("disabled", true);
                 requestQuery["tokenId"] = null;
                 break;
         }
     }
 
     function getListOfUsers() {
-        // Get the entity requested
-        var requestSplit = request.val().split("-");
-
         $.get('user/all', function(response) {
             // Parse through JSON data and return array
             var results = JSON && JSON.parse(response) || $.parseJSON(response);
@@ -5726,7 +5717,6 @@ $(document).ready(function() {
                     }
                 }
             } else {
-                // TODO noty
                 alert("Fail to update page");
             }
 
@@ -5762,7 +5752,7 @@ $(document).ready(function() {
 
         requestDownload["type"] = "d-csv";
 
-        window.location.href = "report/getRequestedQuery?" + "request=" + requestDownload["request"] + "&tokenId=" + requestDownload["tokenId"] + "&dateBegin=" + requestDownload["dateBegin"] + "&dateEnd=" + requestDownload["dateEnd"] + "&type=" + requestDownload["type"];
+        window.location.href = "reporting/queryRequest?" + "request=" + requestDownload["request"] + "&tokenId=" + requestDownload["tokenId"] + "&dateBegin=" + requestDownload["dateBegin"] + "&dateEnd=" + requestDownload["dateEnd"] + "&type=" + requestDownload["type"];
     });
 
     $(request).on("change", request, function() {
@@ -5813,62 +5803,28 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For users.
      */
     select2Shipper.select2({
+        theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Shipper",
-        width: 355,
+        width: "auto",
         ajax: {
             url: 'shipper/search',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
+                // Parse through JSON data and return array
+                var response = JSON && JSON.parse(data) || $.parseJSON(data);
+
                 var results = [];
 
-                if (data['object'] !== null) {
-                    var shippers = data['object'];
-
-                    $.each(shippers, function(index) {
-                        results.push({
-                            id: shippers[index]['id'],
-                            text: shippers[index]['name']
-                        })
-                    });
-                }
-
-                return {
-                    results: results
-                };
-            }
-        }
-    }).on("select2-close", function() {
-        select2Shipper.blur();
-    });
-
-    /*
-     Allows for remote data AJAX searches within the database. For Vendor.
-     */
-    select2Vendor.select2({
-        minimumInputLength: 3,
-        placeholder: "Search for a Vendor",
-        width: 355,
-        ajax: {
-            url: 'vendor/search',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
-                };
-            },
-            results: function (data) {
-                var results = [];
-
-                if (data['object'] !== null) {
-                    var vendors = data['object'];
+                if (response['object'] !== null) {
+                    var vendors = response['object'];
 
                     $.each(vendors, function(index) {
                         results.push({
@@ -5883,36 +5839,39 @@ $(document).ready(function() {
                 };
             }
         }
-    }).on("select2-close", function() {
-        select2Vendor.blur();
     });
 
     /*
-     Allows for remote data AJAX searches within the database. For Receiver.
+     Allows for remote data AJAX searches within the database. For Vendor.
      */
-    select2Receiver.select2({
-        minimumInputLength: 1,
-        placeholder: "Search for a Receiver",
-        width: 355,
+    select2Vendor.select2({
+        theme: "bootstrap",
+        minimumInputLength: 3,
+        placeholder: "Search for a Vendor",
+        width: "auto",
         ajax: {
-            url: 'receiver/search',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            url: 'vendor/search',
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
+                // Parse through JSON data and return array
+                var response = JSON && JSON.parse(data) || $.parseJSON(data);
+
                 var results = [];
 
-                if (data['object'] !== null) {
-                    var receivers = data['object'];
+                if (response['object'] !== null) {
+                    var vendors = response['object'];
 
-                    $.each(receivers, function(index) {
+                    $.each(vendors, function(index) {
                         results.push({
-                            id: receivers[index]['id'],
-                            text: receivers[index]['name'] + ' | ' + receivers[index]['deliveryRoom']
+                            id: vendors[index]['id'],
+                            text: vendors[index]['name']
                         })
                     });
                 }
@@ -5922,18 +5881,57 @@ $(document).ready(function() {
                 };
             }
         }
-    }).on("select2-close", function() {
-        select2Receiver.blur();
+    });
+
+    /*
+     Allows for remote data AJAX searches within the database. For Receiver.
+     */
+    select2Receiver.select2({
+        theme: "bootstrap",
+        minimumInputLength: 1,
+        placeholder: "Search for a Receiver",
+        width: "auto",
+        ajax: {
+            url: 'receiver/search',
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
+                };
+
+                return query;
+            },
+            processResults: function (data) {
+                // Parse through JSON data and return array
+                var response = JSON && JSON.parse(data) || $.parseJSON(data);
+
+                var results = [];
+
+                if (response['object'] !== null) {
+                    var vendors = response['object'];
+
+                    $.each(vendors, function(index) {
+                        results.push({
+                            id: vendors[index]['id'],
+                            text: vendors[index]['name']
+                        })
+                    });
+                }
+
+                return {
+                    results: results
+                };
+            }
+        }
     });
 
     /*
      Allows for remote data AJAX searches within the database. For User.
      */
     select2User.select2({
+        theme: "bootstrap",
         placeholder: "Select a User",
-        width: 355
-    }).on("select2-close", function() {
-        select2User.blur();
+        width: "auto"
     });
 
 
@@ -5947,52 +5945,59 @@ $(document).ready(function() {
         var tokenId = null;
         var tokenName = null;
 
-        try {
-            switch (entityRequested) {
-                case "receiver":
-                    tokenId = select2Receiver.select2('data').id;
-                    tokenName = select2Receiver.select2('data').text;
-                    break;
-                case "shipper":
-                    tokenId = select2Shipper.select2('data').id;
-                    tokenName = select2Shipper.select2('data').text;
-                    break;
-                case "vendor":
-                    tokenId = select2Vendor.select2('data').id;
-                    tokenName = select2Vendor.select2('data').text;
-                    break;
-                case "user":
-                    tokenId = select2User.select2('data').id;
-                    tokenName = select2User.select2('data').text;
-                    break;
-                default:
-                    break;
-            }
-        } catch (e) {
+        switch (entityRequested) {
+            case "receiver":
+                tokenId = select2Receiver.val();
+                tokenName = select2Receiver.text();
+                break;
+            case "shipper":
+                tokenId = select2Shipper.val();
+                tokenName = select2Shipper.text();
+                break;
+            case "vendor":
+                tokenId = select2Vendor.val();
+                tokenName = select2Vendor.text();
+                break;
+            case "user":
+                tokenId = select2User.val();
+                tokenName = select2User.text();
+                break;
+            default:
+                break;
+        }
+
+        if ((tokenId === "" || tokenId === null) && entityRequested !== "none") {
+            $("#emptyTokenModal").modal('show');
             // Must have selecting from a null select2
             switch (entityRequested) {
                 case "receiver":
-                    select2Receiver.select2("focus");
+                    select2Receiver.focus();
                     break;
                 case "shipper":
-                    select2Shipper.select2("focus");
+                    select2Shipper.focus();
                     break;
                 case "vendor":
-                    select2Vendor.select2("focus");
+                    select2Vendor.focus();
                     break;
                 case "user":
-                    select2User.select2("focus");
+                    select2User.focus();
                     break;
                 default:
                     break;
             }
             return;
+        } else {
+            // Clear all select2 inputs
+            select2Receiver.val(null).trigger("change");
+            select2Shipper.val(null).trigger("change");
+            select2Vendor.val(null).trigger("change");
+            select2User.val(null).trigger("change");
         }
 
 
         // Make sure dates are in chronological order
         if (dateBegin.datepicker("getDate") > dateEnd.datepicker("getDate")) {
-            alert("Can't pick a date earlier than date begin");
+            $("#dateRangeErrorModal").modal('show');
             return;
         }
 
@@ -6011,7 +6016,7 @@ $(document).ready(function() {
         submitReportRequest.text("Fetching...");
         submitReportRequest.attr("disabled", "true");
 
-        $.get("report/getRequestedQuery", requestQuery, function(response) {
+        $.get("reporting/queryRequest", requestQuery, function(response) {
             spinnerGraph.hide();
 
             submitReportRequest.text("Go!");
@@ -6162,13 +6167,15 @@ $(document).ready(function() {
 
         }
 
+        console.log(requestTable);
+
         if (valid) {
 
             tableQueryResults.hide();
 
             clearTable();
 
-            $.get("report/getRequestedQuery", requestTable, function(data) {
+            $.get("reporting/queryRequest", requestTable, function(data) {
                 var results = JSON && JSON.parse(data) || $.parseJSON(data);
 
                 var packagesFromServer = null;
@@ -6179,7 +6186,6 @@ $(document).ready(function() {
                     packagesFromServer = results['object'];
 
                     $.each(packagesFromServer, function(index, element) {
-
 
                         // Create string-friendly dateReceived
                         var dateReceived = new Date(element["dateReceived"]["timestamp"] * 1000);

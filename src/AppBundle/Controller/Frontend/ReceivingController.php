@@ -1,0 +1,19 @@
+<?php
+
+
+namespace AppBundle\Controller\Frontend;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+
+class ReceivingController extends Controller {
+
+    /**
+     * @Route("/receiving", name="receiving")
+     */
+    public function renderTemplateAction() {
+        return $this->render('receiving.html.twig');
+    }
+}

@@ -1,0 +1,172 @@
+{% extends 'UWLogisticsBundle:desktop:base.html.twig' %}
+{% use 'UWLogisticsBundle:blocks:form.block.html.twig' %}
+{% use 'UWLogisticsBundle:blocks:pickupPackage.block.html.twig' %}
+
+{% block userActions %}
+    <li><a href="#" id="shipper" tabindex="-1">Select Shipper</a></li>
+    <li><a href="#" id="pickup" tabindex="-1">Pickup</a></li>
+    <li><a href="menu" tabindex="-1">Back to Menu</a></li>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets
+    'bundles/uwlogistics/css/desktop/receiving.css'
+    '../vendor/datatables/datatables/media/css/dataTables.bootstrap.min.css' filter='cssrewrite' %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {{ block('formStyleSheets') }}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    {{ block('form') }}
+    {{ block('pickupPackage') }}
+
+    <div id="emptyTrackingNumberModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="trackingNumberError">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="emptyTrackingNumberTitle">Error</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger center-block text-center">Tracking number can not be empty</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="packageAlreadyExistsModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="existingPackageError">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="packageAlreadyExistsErrorTitle">Existing Package</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger text-center">Package already exists</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button"  id="editPackage" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#packageModal">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="selectShipperModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="trackingNumberError">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="selectAShipperTItle">Select a Shipper</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="shippers">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% image 'bundles/uwlogistics/images/spinner.gif' %}
+                                <img src="{{ asset_url }}" id="spinner" class="center-block"/>
+                                {% endimage %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row panel">
+            <div class="col-md-6 text-right">
+                <h2>Shipper: </h2>
+            </div>
+            <div class="col-md-6 text-left">
+                <h2>
+                    <span id="shipperSpan"></span>
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 center-block">
+                <div class="input-group input-group-lg">
+                    <input type="text" id="trackingNumberInput" class="form-control text-center" />
+                    <div class="input-group-btn">
+                        <button type="button" id="clear" class="btn btn-danger">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="trackingNumberButtons" class="row">
+            <div class="col-md-12">
+                <button type="button" id="enterInDetails" class="btn btn-primary btn-large center-block" data-toggle="modal">Enter in Details</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-12 center-block">
+                <h3 class="text-center">Items received for today.</h3>
+            </div>
+        </div>
+        <div class="row">
+            <table id="datatable-Receiving" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Tracking Number</th>
+                    <th>Vendor</th>
+                    <th>Shipper</th>
+                    <th>Receiver</th>
+                    <th>Number of Packages</th>
+                    <th>User (who received)</th>
+                    <th>Packing Slip</th>
+                    <th>Date Received</th>
+                </tr>
+                </thead>
+                <tbody class="table-striped table-hover text-center">
+
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Tracking Number</th>
+                    <th>Vendor</th>
+                    <th>Shipper</th>
+                    <th>Receiver</th>
+                    <th>Number of Packages</th>
+                    <th>User (who received)</th>
+                    <th>Packing Slip</th>
+                    <th>Date Received</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    '../vendor/datatables/datatables/media/js/jquery.dataTables.min.js'
+    '../vendor/datatables/datatables/media/js/dataTables.bootstrap.min.js'
+    '../vendor/needim/noty/js/noty/jquery.noty.js'
+    '../vendor/needim/noty/js/noty/layouts/bottom.js'
+    '../vendor/needim/noty/js/noty/themes/bootstrap.js'
+    'bundles/uwlogistics/js/desktop/receiving/Package.js'
+    'bundles/uwlogistics/js/thirdparty/datatables/fnFindCellRowIndexes.js'
+    'bundles/uwlogistics/js/desktop/pickupSettings.js'
+    'bundles/uwlogistics/js/desktop/receiving/receiving.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {{ block('formJavascripts') }}
+    {{ block('pickupPackageJavascripts') }}
+{% endblock %}

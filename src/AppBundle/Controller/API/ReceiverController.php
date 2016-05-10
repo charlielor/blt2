@@ -117,7 +117,7 @@ class ReceiverController extends Controller
                 $receiver->setName($request->get('name'), $user);
 
                 // Updating a Receiver will automatically enable it
-                $receiver->enabled(TRUE);
+                $receiver->setEnabled(TRUE);
 
                 // Get entity manager
                 $em = $this->get('doctrine.orm.entity_manager');

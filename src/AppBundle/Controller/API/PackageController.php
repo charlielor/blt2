@@ -419,6 +419,38 @@ class PackageController extends Controller
     }
 
     /**
+     * @Route("/package/{id}", name="getPackage")
+     * @Method({"GET"})
+     */
+    public function getPackageAction(Request $request, $id) {
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        if (empty($package)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not find package given id: ' . $id,
+                'object' => NULL
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        } else {
+
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully deleted Package: ' . $package->getTrackingNumber(),
+                'object' => $package
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        }
+    }
+
+    /**
      * Resort $_FILES array so that each element has its own information
      *
      * @param $uploadedFilesArray - An array with information about files uploaded

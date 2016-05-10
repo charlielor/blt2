@@ -327,4 +327,38 @@ class ReceiverController extends Controller
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
+
+    /**
+     * @Route("/receiver/all", name="allReceivers")
+     * @Method({"GET"})
+     */
+    public function allReceiversAction() {
+        // Get the Receiver repository
+        $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
+
+        // Get the enabled Receivers
+        $receivers = $receiverRepository->findBy([
+            "enabled" => true
+        ]);
+
+        if (empty($receivers)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not get receivers',
+                'object' => NULL
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        } else {
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully retrieved all enabled Receivers',
+                'object' => $receivers
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        }
+    }
 }

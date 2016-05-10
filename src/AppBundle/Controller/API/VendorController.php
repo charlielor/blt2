@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Vendor;
 
-class VenderController extends Controller
+class VendorController extends Controller
 {
     /**
      * @Route("/vendor/new", name="newVendor")
@@ -321,6 +321,40 @@ class VenderController extends Controller
             );
 
             // Return response as JSON
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        }
+    }
+
+    /**
+     * @Route("/vendor/all", name="allVendors")
+     * @Method({"GET"})
+     */
+    public function allVendorsAction() {
+        // Get the Vendor repository
+        $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
+
+        // Get all enabled Vendors
+        $vendors = $vendorRepository->findBy([
+            "enabled" => true
+        ]);
+
+        if (empty($vendors)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not get receivers',
+                'object' => NULL
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        } else {
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully retrieved all enabled Vendors',
+                'object' => $vendors
+            );
+
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }

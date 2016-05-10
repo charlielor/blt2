@@ -12,7 +12,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $client->request('POST', '/receiver/new', array(
             "name" => "testReceiver",
-            "deliveryRoom" => 111
+            "deliveryRoom" => 112
         ));
 
         # Testing response code for /receiver/new
@@ -24,21 +24,32 @@ class ReceiverControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        // Assert that receiver was successfully created
+        $receiverResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $receiverResponse);
+        $this->assertEquals('success', $receiverResponse['result']);
+
+        $this->assertArrayHasKey('message', $receiverResponse);
+
+        $this->assertArrayHasKey('object', $receiverResponse);
+        $this->assertNotNull($receiverResponse['object']);
 
         $client->request('POST', '/receiver/new', array(
             "name" => "testReceiver",
-            "deliveryRoom" => 111
+            "deliveryRoom" => 112
         ));
 
-        # Testing response code for /receiver/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        // Assert that receiver was unsuccessfully created
+        $receiverResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $this->assertArrayHasKey('result', $receiverResponse);
+        $this->assertEquals('success', $receiverResponse['result']);
 
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
+        $this->assertArrayHasKey('message', $receiverResponse);
+
+        $this->assertArrayHasKey('object', $receiverResponse);
+        $this->assertNotNull($receiverResponse['object']);
     }
 
     public function testUpdateReceiverRoute() {

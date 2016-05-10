@@ -72,21 +72,27 @@ $(document).ready(function() {
         $('.shipperRow').remove();
 
         // Do an AJAX call to the server to get a list of enabled shippers and append them to the dialog
-        $.getJSON('getEnabledShippers', function(data) {
-            var retrievedShippers = data['object'];
-            var listOfShippers = [];
+        $.getJSON('shipper/all', function(data) {
+            if (data !== null) {
+                var results = JSON && JSON.parse(data) || $.parseJSON(data);
 
-            $.each(retrievedShippers, function(index) {
-                listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="' + retrievedShippers[index]['id'] + '" class="btn btn-default btn-lg btn-block text-center shipperSelected">' + retrievedShippers[index]['name'] + '</button></div></div>');
-            });
+                var retrievedShippers = results['object'];
+                var listOfShippers = [];
 
-            listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="addANewShipper" class="btn btn-default btn-lg btn-block text-center" data-toggle="modal" data-target="#addNewShipperModal" data-referer="selectAShipper" data-select2=false>Add New Shipper</button></div></div>');
+                $.each(retrievedShippers, function(index) {
+                    listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="' + retrievedShippers[index]['id'] + '" class="btn btn-default btn-lg btn-block text-center shipperSelected">' + retrievedShippers[index]['name'] + '</button></div></div>');
+                });
 
-            // Hide the spinner.gif
-            $('#spinner').hide();
+                listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="addANewShipper" class="btn btn-default btn-lg btn-block text-center" data-toggle="modal" data-target="#addNewShipperModal" data-referer="selectAShipper" data-select2=false>Add New Shipper</button></div></div>');
 
-            // Append the list of shipper
-            $("#shippers").append(listOfShippers);
+                // Hide the spinner.gif
+                $('#spinner').hide();
+
+                // Append the list of shipper
+                $("#shippers").append(listOfShippers);
+            } else {
+
+            }
         });
     });
 
@@ -151,7 +157,7 @@ $(document).ready(function() {
         if (trackingNumber.length == 0) {
             emptyTrackingNumberModal.modal('show');
         } else {
-            $.get('getPackageGivenTrackingNumber', {trackingNumber: trackingNumber})
+            $.get('/package/' + trackingNumber)
                 .done(function(data) {
                     var results = JSON && JSON.parse(data) || $.parseJSON(data);
 

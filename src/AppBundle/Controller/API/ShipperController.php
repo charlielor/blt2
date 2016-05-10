@@ -324,4 +324,38 @@ class ShipperController extends Controller
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         }
     }
+
+    /**
+     * @Route("/shipper/all", name="allShippers")
+     * @Method({"GET"})
+     */
+    public function allShippersAction() {
+        // Get the Shipper repository
+        $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
+
+        // Get the enabled Shippers
+        $shippers = $shipperRepository->findBy([
+            "enabled" => true
+        ]);
+
+        if (empty($shippers)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not get shippers',
+                'object' => NULL
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        } else {
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully retrieved all enabled Shippers',
+                'object' => $shippers
+            );
+
+            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        }
+    }
 }

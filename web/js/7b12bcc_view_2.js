@@ -161,7 +161,7 @@ $(document).ready(function() {
 
         dataTable.clear().draw();
 
-        $.get('getPackagesForDate', date, function(response) {
+        $.get('/getPackagesForDate', date, function(response) {
             // Parse through JSON data and return array
             var results = JSON && JSON.parse(response) || $.parseJSON(response);
 

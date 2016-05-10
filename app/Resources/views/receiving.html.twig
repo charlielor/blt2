@@ -1,6 +1,6 @@
-{% extends 'UWLogisticsBundle:desktop:base.html.twig' %}
-{% use 'UWLogisticsBundle:blocks:form.block.html.twig' %}
-{% use 'UWLogisticsBundle:blocks:pickupPackage.block.html.twig' %}
+{% extends 'base.html.twig' %}
+{% use 'blocks/newPackage.block.html.twig' %}
+{% use 'blocks/pickupPackage.block.html.twig' %}
 
 {% block userActions %}
     <li><a href="#" id="shipper" tabindex="-1">Select Shipper</a></li>
@@ -12,8 +12,8 @@
     {{ parent() }}
 
     {% stylesheets
-    'bundles/uwlogistics/css/desktop/receiving.css'
-    '../vendor/datatables/datatables/media/css/dataTables.bootstrap.min.css' filter='cssrewrite' %}
+    'css/reporting.less'
+    'css/DataTables/datatables.min.css' filter='cssrewrite' %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
 
@@ -70,7 +70,7 @@
                     <div id="shippers">
                         <div class="row">
                             <div class="col-md-12">
-                                {% image 'bundles/uwlogistics/images/spinner.gif' %}
+                                {% image 'images/spinner.gif' %}
                                 <img src="{{ asset_url }}" id="spinner" class="center-block"/>
                                 {% endimage %}
                             </div>
@@ -155,15 +155,12 @@
     {{ parent() }}
 
     {% javascripts
-    '../vendor/datatables/datatables/media/js/jquery.dataTables.min.js'
-    '../vendor/datatables/datatables/media/js/dataTables.bootstrap.min.js'
+    'js/DataTables/datatables.min.js'
     '../vendor/needim/noty/js/noty/jquery.noty.js'
     '../vendor/needim/noty/js/noty/layouts/bottom.js'
     '../vendor/needim/noty/js/noty/themes/bootstrap.js'
-    'bundles/uwlogistics/js/desktop/receiving/Package.js'
-    'bundles/uwlogistics/js/thirdparty/datatables/fnFindCellRowIndexes.js'
-    'bundles/uwlogistics/js/desktop/pickupSettings.js'
-    'bundles/uwlogistics/js/desktop/receiving/receiving.js' %}
+    'js/Package.js'
+    'js/receiving.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 

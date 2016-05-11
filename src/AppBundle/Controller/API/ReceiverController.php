@@ -67,11 +67,14 @@ class ReceiverController extends Controller
             $em->persist($newReceiver);
             $em->flush();
 
+            // Get new Receiver
+            $submittedReceiver = $receiverRepository->findBy(array('name' => $nameOfNewReceiver));
+
             // Set up the response
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $nameOfNewReceiver . '\'',
-                'object' => $newReceiver
+                'object' => $submittedReceiver
             );
 
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
@@ -101,10 +104,10 @@ class ReceiverController extends Controller
 
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
         } else {
-            $newReceiverName = $request->request->get("name");
+            $receiverName = $request->request->get("name");
 
             // Existing Receiver with the same name
-            $existingReceiverGivenName = $receiverRepository->findBy(array('name' => $newReceiverName));
+            $existingReceiverGivenName = $receiverRepository->findBy(array('name' => $receiverName));
 
             // If no other Receiver has the same name, then update it
             if (empty($existingReceiverGivenName)) {
@@ -113,11 +116,18 @@ class ReceiverController extends Controller
                 // Get user | anon. is temp for testing
                 $user = $this->get('security.token_storage')->getToken()->getUser();
 
-                // Set the current Receiver to its new name
-                $receiver->setName($request->get('name'), $user);
+                if (!empty($request->get('name'))) {
+                    // Set the current Receiver to its new name
+                    $receiver->setName($request->get('name'), $user);
+                }
+
+                if (!empty($request->get('deliveryRoom'))) {
+                    // Set the current Receiver's delivery room to its new name
+                    $receiver->setDeliveryRoom($request->get('deliveryRoom'), $user);
+                }
 
                 // Updating a Receiver will automatically enable it
-                $receiver->setEnabled(TRUE);
+                $receiver->setEnabled(TRUE, $user);
 
                 // Get entity manager
                 $em = $this->get('doctrine.orm.entity_manager');
@@ -126,11 +136,13 @@ class ReceiverController extends Controller
                 $em->persist($receiver);
                 $em->flush();
 
+                $updatedReceiver = $receiverRepository->findBy(array('name' => $receiver->getName()));
+
                 // Set up the response
                 $results = array(
                     'result' => 'success',
-                    'message' => 'Successfully updated ' . $receiverOldName . ' to ' . $receiver->getName(),
-                    'object' => $receiver
+                    'message' => 'Successfully updated ' . $receiverOldName,
+                    'object' => $updatedReceiver
                 );
 
                 return new JsonResponse($this->get('serializer')->serialize($results, 'json'));

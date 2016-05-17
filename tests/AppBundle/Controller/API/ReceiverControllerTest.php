@@ -701,8 +701,8 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        // Assert that route with invalid id gives errors
-        $client->request('DELETE', '/receiver/stuffedchickenwings/delete');
+        // Assert that entity was successfully deleted
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -713,15 +713,15 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
 
-        $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('error', $errorResponse['result']);
+        $this->assertArrayHasKey('result', $deletedResponse);
+        $this->assertEquals('success', $deletedResponse['result']);
 
-        $this->assertArrayHasKey('message', $errorResponse);
+        $this->assertArrayHasKey('message', $deletedResponse);
 
-        $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertArrayHasKey('object', $deletedResponse);
+        $this->assertNotNull($deletedResponse['object']);
     }
 
 }

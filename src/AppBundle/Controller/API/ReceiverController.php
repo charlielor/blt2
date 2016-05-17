@@ -364,7 +364,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("receiver/{id}", name="receiver")
+     * @Route("/receiver/{id}", name="receiver")
      * @Method({"GET"})
      */
     public function receiverAction($id) {

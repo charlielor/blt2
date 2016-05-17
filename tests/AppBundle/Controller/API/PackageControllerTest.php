@@ -26,6 +26,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $receiverResponse);
         $this->assertNotNull($receiverResponse['object']);
+        $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -41,6 +42,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $shipperResponse);
         $this->assertNotNull($shipperResponse['object']);
+        $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -55,17 +57,17 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-
         $this->assertNotNull($vendorResponse['object']);
+        $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
             "numOfPackages" => 4,
-            "shipperId" => $shipper['id'],
-            "receiverId" => $receiver['id'],
-            "vendorId" => $vendor['id']
+            "shipperId" => $shipper[0]['id'],
+            "receiverId" => $receiver[0]['id'],
+            "vendorId" => $vendor[0]['id']
         ));
 
         # Testing response code for /package/new
@@ -93,9 +95,9 @@ class PackageControllerTest extends WebTestCase
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
             "numOfPackages" => 4,
-            "shipperId" => $shipper['id'],
-            "receiverId" => $receiver['id'],
-            "vendorId" => $vendor['id']
+            "shipperId" => $shipper[0]['id'],
+            "receiverId" => $receiver[0]['id'],
+            "vendorId" => $vendor[0]['id']
         ));
 
         $this->assertTrue($client->getResponse()->isSuccessful());
@@ -118,8 +120,8 @@ class PackageControllerTest extends WebTestCase
         # Testing with errors
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "receiverId" => $receiver['id'],
-            "vendorId" => $vendor['id']
+            "receiverId" => $receiver[0]['id'],
+            "vendorId" => $vendor[0]['id']
         ));
 
         $this->assertTrue($client->getResponse()->isSuccessful());
@@ -168,6 +170,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $updatedPackage);
         $this->assertNotNull($updatedPackage['object']);
         $this->assertEquals('success', $updatedPackage['result']);
+        $this->assertEquals(1, $updatedPackage['object'][0]['numberOfPackages']);
 
         // Test for errors
         $client->request('PUT', '/package/test/update', array(
@@ -305,7 +308,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertNotNull($receiverResponse['object']);
 
-        $receiver = $receiverResponse['object'][0];
+        $receiver = $receiverResponse['object'];
 
         $client->request('GET', '/shipper/search', array(
             "term" => "testPackageShipper"
@@ -315,7 +318,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertNotNull($receiverResponse['object']);
 
-        $shipper = $shipperResponse['object'][0];
+        $shipper = $shipperResponse['object'];
 
         $client->request('GET', '/vendor/search', array(
             "term" => "testPackageVendor"
@@ -325,15 +328,15 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertNotNull($vendorResponse['object']);
 
-        $vendor = $shipperResponse['object'][0];
+        $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver['id'] . '/delete');
+        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper['id'] . '/delete');
+        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor['id'] . '/delete');
+        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 }

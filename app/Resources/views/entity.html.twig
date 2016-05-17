@@ -20,6 +20,8 @@
             <div class="row">
                 {% if type == "receiver" %}
                     <h2>{{ entity.name }} - {{ entity.deliveryRoom }}</h2>
+                {% elseif type == "package" %}
+                    <h2>{{ entity.trackingNumber }}</h2>
                 {% else %}
                     <h2>{{ entity.name }}</h2>
                 {% endif %}

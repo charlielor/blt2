@@ -429,25 +429,10 @@ class PackageController extends Controller
         // Get the package by id
         $package = $packageRepository->find($id);
 
-        if (empty($package)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not find package given id: ' . $id,
-                'object' => NULL
-            );
-
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-        } else {
-
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Package: ' . $package->getTrackingNumber(),
-                'object' => $package
-            );
-
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-        }
+        return $this->render('entity.html.twig', [
+            "type" => "package",
+            "entity" => $package
+        ]);
     }
 
     /**

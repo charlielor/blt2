@@ -38,7 +38,7 @@ class VendorController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             } else {
                 // Set up the response
                 $results = array(
@@ -47,7 +47,7 @@ class VendorController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         } else { // Create a new Vendor
 
@@ -71,10 +71,10 @@ class VendorController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $nameOfNewVendor . '\'',
-                'object' => $submittedVendor
+                'object' => json_decode($this->get('serializer')->serialize($submittedVendor, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
 
@@ -99,7 +99,7 @@ class VendorController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             $newVendorName = $request->request->get("name");
 
@@ -133,10 +133,10 @@ class VendorController extends Controller
                 $results = array(
                     'result' => 'success',
                     'message' => 'Successfully updated ' . $vendorOldName . ' to ' . $vendor->getName(),
-                    'object' => $submittedVendor
+                    'object' => json_decode($this->get('serializer')->serialize($submittedVendor, 'json'))
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
 
             } else {
                 // Set up the response
@@ -146,7 +146,7 @@ class VendorController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         }
     }
@@ -170,7 +170,7 @@ class VendorController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -189,10 +189,10 @@ class VendorController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully enabled ' . $vendor->getName(),
-                'object' => $vendor
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
     }
@@ -216,7 +216,7 @@ class VendorController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -235,10 +235,10 @@ class VendorController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully disabled ' . $vendor->getName(),
-                'object' => $vendor
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -263,7 +263,7 @@ class VendorController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -276,10 +276,10 @@ class VendorController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully deleted Vendor: ' . $vendor->getName(),
-                'object' => $vendor
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -313,11 +313,11 @@ class VendorController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($vendor) . ' Vendor(s) like \'' . $term . '\'',
-                'object' => $vendor
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
@@ -327,7 +327,7 @@ class VendorController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -348,10 +348,10 @@ class VendorController extends Controller
         $results = array(
             'result' => 'success',
             'message' => 'Successfully retrieved all enabled Vendors',
-            'object' => $vendors
+            'object' => json_decode($this->get('serializer')->serialize($vendors, 'json'))
         );
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 
     /**

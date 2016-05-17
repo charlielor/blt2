@@ -18,7 +18,7 @@ class PackageControllerTest extends WebTestCase
         ));
 
         // Assert that receiver was successfully created
-        $receiverResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('result', $receiverResponse);
         $this->assertEquals('success', $receiverResponse['result']);
 
@@ -34,7 +34,7 @@ class PackageControllerTest extends WebTestCase
             "name" => "testPackageShipper"
         ));
 
-        $shipperResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('result', $shipperResponse);
         $this->assertEquals('success', $shipperResponse['result']);
 
@@ -50,7 +50,7 @@ class PackageControllerTest extends WebTestCase
             "name" => "testPackageVendor"
         ));
 
-        $vendorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('result', $vendorResponse);
         $this->assertEquals('success', $vendorResponse['result']);
 
@@ -80,7 +80,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $newPackage = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $newPackage = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $newPackage);
         $this->assertEquals('success', $newPackage['result']);
@@ -89,7 +89,11 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $newPackage);
         $this->assertNotNull($newPackage['object']);
-
+        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
+        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
+        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
+        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
+        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
         # Testing against duplicates
         $client->request('POST', '/package/new', array(
@@ -109,7 +113,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $duplicatePackage = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $duplicatePackage = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $duplicatePackage);
         $this->assertArrayHasKey('message', $duplicatePackage);
@@ -133,7 +137,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $errorParamsResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorParamsResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorParamsResponse);
         $this->assertArrayHasKey('message', $errorParamsResponse);
@@ -163,14 +167,14 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $updatedPackage = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $updatedPackage = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $updatedPackage);
         $this->assertArrayHasKey('message', $updatedPackage);
         $this->assertArrayHasKey('object', $updatedPackage);
         $this->assertNotNull($updatedPackage['object']);
         $this->assertEquals('success', $updatedPackage['result']);
-        $this->assertEquals(1, $updatedPackage['object'][0]['numberOfPackages']);
+        $this->assertEquals(1, $updatedPackage['object']['numberOfPackages']);
 
         // Test for errors
         $client->request('PUT', '/package/test/update', array(
@@ -189,7 +193,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertArrayHasKey('message', $errorResponse);
@@ -215,7 +219,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $searchPackage = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $searchPackage = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $searchPackage);
         $this->assertArrayHasKey('message', $searchPackage);
@@ -237,7 +241,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertArrayHasKey('message', $errorResponse);
@@ -253,7 +257,7 @@ class PackageControllerTest extends WebTestCase
             "term" => "testPackage"
         ));
 
-        $packageResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $packageResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertNotNull($packageResponse['object']);
 
@@ -271,7 +275,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $packageDeleted = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
@@ -291,7 +295,7 @@ class PackageControllerTest extends WebTestCase
             )
         );
 
-        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertArrayHasKey('message', $errorResponse);
@@ -304,7 +308,7 @@ class PackageControllerTest extends WebTestCase
             "term" => "testPackageReceiver"
         ));
 
-        $receiverResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertNotNull($receiverResponse['object']);
 
@@ -314,7 +318,7 @@ class PackageControllerTest extends WebTestCase
             "term" => "testPackageShipper"
         ));
 
-        $shipperResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertNotNull($receiverResponse['object']);
 
@@ -324,7 +328,7 @@ class PackageControllerTest extends WebTestCase
             "term" => "testPackageVendor"
         ));
 
-        $vendorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertNotNull($vendorResponse['object']);
 

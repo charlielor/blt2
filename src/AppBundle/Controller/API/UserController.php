@@ -35,10 +35,10 @@ class UserController extends Controller {
         $results = array(
             'result' => 'success',
             'message' => 'Successfully queried database',
-            'object' => $entities
+            'object' => json_decode($this->get('serializer')->serialize($entities, 'json'))
         );
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 
     /**
@@ -67,7 +67,7 @@ class UserController extends Controller {
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
-                'object' => $users
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
             );
 
         } else {
@@ -79,6 +79,6 @@ class UserController extends Controller {
             );
         }
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 }

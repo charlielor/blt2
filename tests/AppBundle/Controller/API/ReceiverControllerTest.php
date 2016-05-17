@@ -25,7 +25,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -42,7 +42,7 @@ class ReceiverControllerTest extends WebTestCase
             "deliveryRoom" => 112
         ));
 
-        $duplicateResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $duplicateResponse = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('result', $duplicateResponse);
         $this->assertEquals('error', $duplicateResponse['result']);
 
@@ -63,7 +63,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $disabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $disabledResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $disabledResponse);
         $this->assertEquals('success', $disabledResponse['result']);
@@ -88,7 +88,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $dupDisabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $dupDisabledResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $dupDisabledResponse);
         $this->assertEquals('error', $dupDisabledResponse['result']);
@@ -111,7 +111,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $enabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $enabledResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $enabledResponse);
         $this->assertEquals('success', $enabledResponse['result']);
@@ -134,7 +134,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);
@@ -163,7 +163,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -189,7 +189,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -217,7 +217,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $sameNameResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $sameNameResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $sameNameResponse);
         $this->assertEquals('error', $sameNameResponse['result']);
@@ -242,7 +242,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertEquals('error', $errorResponse['result']);
@@ -264,7 +264,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);
@@ -294,7 +294,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -318,7 +318,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $enabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $enabledResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $enabledResponse);
         $this->assertEquals('success', $enabledResponse['result']);
@@ -341,7 +341,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $noIdErrorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $noIdErrorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $noIdErrorResponse);
         $this->assertEquals('error', $noIdErrorResponse['result']);
@@ -365,7 +365,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertCount(1, $successResponse['object']);
 
-        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);
@@ -394,7 +394,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -418,7 +418,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $enabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $enabledResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $enabledResponse);
         $this->assertEquals('success', $enabledResponse['result']);
@@ -441,7 +441,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $noIdErrorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $noIdErrorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $noIdErrorResponse);
         $this->assertEquals('error', $noIdErrorResponse['result']);
@@ -465,7 +465,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertCount(1, $successResponse['object']);
 
-        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);
@@ -494,7 +494,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -519,7 +519,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -544,7 +544,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertEquals('error', $errorResponse['result']);
@@ -566,7 +566,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);
@@ -595,7 +595,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -618,7 +618,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);
@@ -640,7 +640,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertEquals('error', $errorResponse['result']);
@@ -685,7 +685,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
@@ -713,7 +713,7 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);

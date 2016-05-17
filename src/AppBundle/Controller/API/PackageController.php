@@ -41,7 +41,7 @@ class PackageController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else { // Create a new Package
 
             // Get user | anon. is temp for testing
@@ -70,7 +70,7 @@ class PackageController extends Controller
                     'object' => $request->request->all()
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
 
             // Create a new Package entity and set its properties
@@ -133,7 +133,7 @@ class PackageController extends Controller
                             'object' => NULL
                         );
 
-                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                        return new JsonResponse($results);
                     }
                 }
 
@@ -149,10 +149,10 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $trackingNumberOfNewPackage . '\'',
-                'object' => $newPackage
+                'object' => json_decode($this->get('serializer')->serialize($newPackage, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
 
 
         }
@@ -180,7 +180,7 @@ class PackageController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Cannot update tracking number --> ID
 
@@ -249,7 +249,7 @@ class PackageController extends Controller
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
             }
 
-            
+
             // If there are any pictures taken, move them to the uploadedFiles array
             if (!(empty($uploadedPictures))) {
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
@@ -277,7 +277,7 @@ class PackageController extends Controller
                             'object' => NULL
                         );
 
-                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                        return new JsonResponse($results);
                     }
                 }
 
@@ -326,11 +326,11 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully updated ' . $id,
-                'object' => $package
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
             );
 
             // Return the results
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -360,11 +360,11 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($packages) . ' Package(s) like \'' . $term . '\'',
-                'object' => $packages
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
@@ -374,7 +374,7 @@ class PackageController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -398,7 +398,7 @@ class PackageController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -411,10 +411,10 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully deleted Package: ' . $package->getTrackingNumber(),
-                'object' => $package
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -464,11 +464,11 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($queryResults) . ' Packages',
-                'object' => $queryResults
+                'object' => json_decode($this->get('serializer')->serialize($queryResults, 'json'))
             );
         }
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 
     /**

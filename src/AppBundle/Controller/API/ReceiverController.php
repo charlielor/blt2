@@ -41,7 +41,7 @@ class ReceiverController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             } else {
                 // Set up the response
                 $results = array(
@@ -50,7 +50,7 @@ class ReceiverController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         } else { // Create a new Receiver
 
@@ -74,10 +74,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $nameOfNewReceiver . '\'',
-                'object' => $submittedReceiver
+                'object' => json_decode($this->get('serializer')->serialize($submittedReceiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
 
@@ -102,7 +102,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             $receiverName = $request->request->get("name");
 
@@ -142,10 +142,10 @@ class ReceiverController extends Controller
                 $results = array(
                     'result' => 'success',
                     'message' => 'Successfully updated ' . $receiverOldName,
-                    'object' => $updatedReceiver
+                    'object' => json_decode($this->get('serializer')->serialize($updatedReceiver, 'json'))
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
 
             } else {
                 // Set up the response
@@ -155,7 +155,7 @@ class ReceiverController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         }
     }
@@ -179,7 +179,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -198,10 +198,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully enabled ' . $receiver->getName(),
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
     }
@@ -225,7 +225,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -244,10 +244,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully disabled ' . $receiver->getName(),
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -272,7 +272,7 @@ class ReceiverController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -285,10 +285,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully deleted Receiver: ' . $receiver->getName(),
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -322,11 +322,11 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
@@ -336,7 +336,7 @@ class ReceiverController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -357,10 +357,10 @@ class ReceiverController extends Controller
         $results = array(
             'result' => 'success',
             'message' => 'Successfully retrieved all enabled Receivers',
-            'object' => $receivers
+            'object' => json_decode($this->get('serializer')->serialize($receivers, 'json'))
         );
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 
     /**

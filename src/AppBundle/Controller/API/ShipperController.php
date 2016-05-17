@@ -38,7 +38,7 @@ class ShipperController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             } else {
                 // Set up the response
                 $results = array(
@@ -47,7 +47,7 @@ class ShipperController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         } else { // Create a new Shipper
 
@@ -71,10 +71,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $nameOfNewShipper . '\'',
-                'object' => $submittedShipper
+                'object' => json_decode($this->get('serializer')->serialize($submittedShipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
 
@@ -99,7 +99,7 @@ class ShipperController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             $newShipperName = $request->request->get("name");
 
@@ -133,10 +133,10 @@ class ShipperController extends Controller
                 $results = array(
                     'result' => 'success',
                     'message' => 'Successfully updated ' . $shipperOldName . ' to ' . $shipper->getName(),
-                    'object' => $submittedShipper
+                    'object' => json_decode($this->get('serializer')->serialize($submittedShipper, 'json'))
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
 
             } else {
                 // Set up the response
@@ -146,7 +146,7 @@ class ShipperController extends Controller
                     'object' => NULL
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         }
     }
@@ -170,7 +170,7 @@ class ShipperController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -189,10 +189,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully enabled ' . $shipper->getName(),
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
     }
@@ -216,7 +216,7 @@ class ShipperController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -235,10 +235,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully disabled ' . $shipper->getName(),
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -263,7 +263,7 @@ class ShipperController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -276,10 +276,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully deleted Shipper: ' . $shipper->getName(),
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -313,11 +313,11 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
@@ -327,7 +327,7 @@ class ShipperController extends Controller
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -348,10 +348,10 @@ class ShipperController extends Controller
         $results = array(
             'result' => 'success',
             'message' => 'Successfully retrieved all enabled Shippers',
-            'object' => $shippers
+            'object' => json_decode($this->get('serializer')->serialize($shippers, 'json'))
         );
 
-        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+        return new JsonResponse($results);
     }
 
     /**

@@ -34,6 +34,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was unsuccessfully created, duplicate
         $client->request('POST', '/receiver/new', array(
@@ -51,7 +52,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertNull($duplicateResponse['object']);
 
         // Assert that given entity is disabled, display error
-        $client->request('PUT', '/receiver/' . $successResponse["object"]["id"] . '/disable');
+        $client->request('PUT', '/receiver/' . $successResponse["object"][0]["id"] . '/disable');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -97,16 +98,32 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $dupDisabledResponse);
         $this->assertNull($dupDisabledResponse['object']);
 
-        // Search for entity
-        $client->request('GET', '/receiver/search', array(
-            "term" => $successResponse['object']['name']
-        ));
+        // Re-enable receiver
+        // Assert that given entity is disabled, display error
+        $client->request('PUT', '/receiver/' . $successResponse["object"][0]["id"] . '/enable');
 
-        $entity = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $enabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $enabledResponse);
+        $this->assertEquals('success', $enabledResponse['result']);
+
+        $this->assertArrayHasKey('message', $enabledResponse);
+
+        $this->assertArrayHasKey('object', $enabledResponse);
+        $this->assertNotNull($enabledResponse['object']);
 
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $entity['object']['id'] . '/delete');
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -155,9 +172,10 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully updated
-        $client->request('PUT', '/receiver/' . $successResponse['object']['id'] . '/update', array(
+        $client->request('PUT', '/receiver/' . $successResponse['object'][0]['id'] . '/update', array(
             "name" => "testUpdated",
             "deliveryRoom" => 1212
         ));
@@ -181,11 +199,35 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotNull($successResponse['object']);
 
-        $this->assertEquals('testUpdated', $successResponse['object']['name']);
-        $this->assertEquals('1212', $successResponse['object']['deliveryRoom']);
+        $this->assertEquals('testUpdated', $successResponse['object'][0]['name']);
+        $this->assertEquals('1212', $successResponse['object'][0]['deliveryRoom']);
+
+        // Assert that a entity that gets updated to another entity with the same name is an error
+        $client->request('PUT', '/receiver/' . $successResponse['object'][0]['id'] . '/update', array(
+            "name" => "testUpdated",
+            "deliveryRoom" => 1212
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $sameNameResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $sameNameResponse);
+        $this->assertEquals('error', $sameNameResponse['result']);
+
+        $this->assertArrayHasKey('message', $sameNameResponse);
+
+        $this->assertArrayHasKey('object', $sameNameResponse);
+        $this->assertNull($sameNameResponse['object']);
 
         // Assert that a entity that does not exist is not updated
-        // Assert that the entity was successfully updated
         $client->request('PUT', '/receiver/stuffedchickenwings/update', array(
             "name" => "testUpdated",
             "deliveryRoom" => 1212
@@ -200,18 +242,18 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
 
-        $this->assertArrayHasKey('result', $successResponse);
-        $this->assertEquals('error', $successResponse['result']);
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertEquals('error', $errorResponse['result']);
 
-        $this->assertArrayHasKey('message', $successResponse);
+        $this->assertArrayHasKey('message', $errorResponse);
 
-        $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNull($successResponse['object']);
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object']['id'] . '/delete');
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -233,12 +275,16 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertNotNull($deletedResponse['object']);
     }
 
+
     public function testEnableReceiverRoute() {
         $client = static::createClient();
 
-        $client->request('PUT', '/receiver/0/enable');
+        // Assert that entity was successfully created
+        $client->request('POST', '/receiver/new', array(
+            "name" => "test",
+            "deliveryRoom" => 112
+        ));
 
-        # Testing response code for /receiver/1/enable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -247,14 +293,98 @@ class ReceiverControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that entity is successfully enabled
+        $client->request('PUT', '/receiver/'. $successResponse['object'][0]['id']. '/enable');
+
+        // Testing response code for /receiver/{id}/enable
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $enabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $enabledResponse);
+        $this->assertEquals('success', $enabledResponse['result']);
+
+        $this->assertArrayHasKey('message', $enabledResponse);
+
+        $this->assertArrayHasKey('object', $enabledResponse);
+        $this->assertNotNull($enabledResponse['object']);
+
+        // Assert that enabling a entity with no id gives errors
+        $client->request('PUT', '/receiver/stuffedchickenwings/enable');
+
+        // Testing response code for /receiver/{id}/enable
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $noIdErrorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $noIdErrorResponse);
+        $this->assertEquals('error', $noIdErrorResponse['result']);
+
+        $this->assertArrayHasKey('message', $noIdErrorResponse);
+
+        $this->assertArrayHasKey('object', $noIdErrorResponse);
+        $this->assertNull($noIdErrorResponse['object']);
+
+        // Assert that receiver was successfully deleted
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $this->assertCount(1, $successResponse['object']);
+
+        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $deletedResponse);
+        $this->assertEquals('success', $deletedResponse['result']);
+
+        $this->assertArrayHasKey('message', $deletedResponse);
+
+        $this->assertArrayHasKey('object', $deletedResponse);
+        $this->assertNotNull($deletedResponse['object']);
     }
 
     public function testDisableReceiverRoute() {
         $client = static::createClient();
 
-        $client->request('PUT', '/receiver/1/disable');
+        // Assert that entity was successfully created
+        $client->request('POST', '/receiver/new', array(
+            "name" => "test",
+            "deliveryRoom" => 112
+        ));
 
-        # Testing response code for /receiver/1/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -263,6 +393,87 @@ class ReceiverControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that entity is successfully disabled
+        $client->request('PUT', '/receiver/'. $successResponse['object'][0]['id']. '/disable');
+
+        // Testing response code for /receiver/{id}/disable
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $enabledResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $enabledResponse);
+        $this->assertEquals('success', $enabledResponse['result']);
+
+        $this->assertArrayHasKey('message', $enabledResponse);
+
+        $this->assertArrayHasKey('object', $enabledResponse);
+        $this->assertNotNull($enabledResponse['object']);
+
+        // Assert that disabling a entity with no id gives errors
+        $client->request('PUT', '/receiver/stuffedchickenwings/disable');
+
+        // Testing response code for /receiver/{id}/enable
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $noIdErrorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $noIdErrorResponse);
+        $this->assertEquals('error', $noIdErrorResponse['result']);
+
+        $this->assertArrayHasKey('message', $noIdErrorResponse);
+
+        $this->assertArrayHasKey('object', $noIdErrorResponse);
+        $this->assertNull($noIdErrorResponse['object']);
+
+        // Assert that receiver was successfully deleted
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $this->assertCount(1, $successResponse['object']);
+
+        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $deletedResponse);
+        $this->assertEquals('success', $deletedResponse['result']);
+
+        $this->assertArrayHasKey('message', $deletedResponse);
+
+        $this->assertArrayHasKey('object', $deletedResponse);
+        $this->assertNotNull($deletedResponse['object']);
     }
 
     public function testSearchReceiverRoute() {
@@ -292,6 +503,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
         $client->request('GET', '/receiver/search', array(
@@ -332,18 +544,18 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
 
-        $receiverErrorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
 
-        $this->assertArrayHasKey('result', $receiverErrorResponse);
-        $this->assertEquals('error', $receiverErrorResponse['result']);
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertEquals('error', $errorResponse['result']);
 
-        $this->assertArrayHasKey('message', $receiverErrorResponse);
+        $this->assertArrayHasKey('message', $errorResponse);
 
-        $this->assertArrayHasKey('object', $receiverErrorResponse);
-        $this->assertNull($successResponse['object']);
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object']['id'] . '/delete');
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -368,9 +580,83 @@ class ReceiverControllerTest extends WebTestCase
     public function testDeleteReceiverRoute() {
         $client = static::createClient();
 
-        $client->request('PUT', '/receiver/1/delete');
+        // Assert that entity was successfully created
+        $client->request('POST', '/receiver/new', array(
+            "name" => "test",
+            "deliveryRoom" => 112
+        ));
 
-        # Testing response code for /receiver/1/disable
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that entity was successfully deleted
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $deletedResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $deletedResponse);
+        $this->assertEquals('success', $deletedResponse['result']);
+
+        $this->assertArrayHasKey('message', $deletedResponse);
+
+        $this->assertArrayHasKey('object', $deletedResponse);
+        $this->assertNotNull($deletedResponse['object']);
+        
+        // Assert that route with invalid id gives errors
+        $client->request('DELETE', '/receiver/stuffedchickenwings/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertEquals('error', $errorResponse['result']);
+
+        $this->assertArrayHasKey('message', $errorResponse);
+
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+    }
+
+    public function testAllReceiversRoute() {
+        $client = static::createClient();
+
+        // Assert searching for entity returns something
+        $client->request('GET', '/receiver/all');
+
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -380,4 +666,62 @@ class ReceiverControllerTest extends WebTestCase
             )
         );
     }
+
+    public function testReceiverRoute() {
+        $client = static::createClient();
+
+        // Assert that entity was successfully created
+        $client->request('POST', '/receiver/new', array(
+            "name" => "test",
+            "deliveryRoom" => 112
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that going to the entity's page is successful
+        $client->request('GET', '/receiver/' . $successResponse['object'][0]['id']);
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        // Assert that route with invalid id gives errors
+        $client->request('DELETE', '/receiver/stuffedchickenwings/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode(json_decode($client->getResponse()->getContent()), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertEquals('error', $errorResponse['result']);
+
+        $this->assertArrayHasKey('message', $errorResponse);
+
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+    }
+
 }

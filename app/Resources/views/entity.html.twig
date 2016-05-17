@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block userActions %}
+    <li><a href="/" tabindex="-1">Back to Menu</a></li>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {#{% stylesheets#}
+    {#'css/entity.less' filter='cssrewrite' %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+{% endblock %}
+
+{% block body %}
+    {% if entity %}
+        <div class="container">
+            <div class="row">
+                {% if type == "receiver" %}
+                    <h2>{{ entity.name }} - {{ entity.deliveryRoom }}</h2>
+                {% else %}
+                    <h2>{{ entity.name }}</h2>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {#{% javascripts#}
+    {#'js/entity.js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+{% endblock %}

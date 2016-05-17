@@ -151,7 +151,7 @@ class ReceiverController extends Controller
                 // Set up the response
                 $results = array(
                     'result' => 'error',
-                    'message' => 'Another Receiver already has update name: ' . $newReceiverName,
+                    'message' => 'Another Receiver already has update name: ' . $receiverName,
                     'object' => NULL
                 );
 
@@ -353,24 +353,29 @@ class ReceiverController extends Controller
             "enabled" => true
         ]);
 
-        if (empty($receivers)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not get receivers',
-                'object' => NULL
-            );
+        // Set up the response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Successfully retrieved all enabled Receivers',
+            'object' => $receivers
+        );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-        } else {
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully retrieved all enabled Receivers',
-                'object' => $receivers
-            );
+        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+    }
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-        }
+    /**
+     * @Route("receiver/{id}", name="receiver")
+     * @Method({"GET"})
+     */
+    public function receiverAction($id) {
+        // Get the Receiver repository
+        $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
+
+        $receiver = $receiverRepository->find($id);
+
+        return $this->render('entity.html.twig', [
+            "type" => "receiver",
+            "entity" => $receiver
+        ]);
     }
 }

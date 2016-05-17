@@ -64,11 +64,14 @@ class VendorController extends Controller
             $em->persist($newVendor);
             $em->flush();
 
+            // Get the new vendor and return it
+            $submittedVendor = $vendorRepository->findBy(["name" => $nameOfNewVendor]);
+
             // Set up the response
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $nameOfNewVendor . '\'',
-                'object' => $newVendor
+                'object' => $submittedVendor
             );
 
             return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
@@ -114,7 +117,7 @@ class VendorController extends Controller
                 $vendor->setName($request->get('name'), $user);
 
                 // Updating a Vendor will automatically enable it
-                $vendor->enabled(TRUE);
+                $vendor->setEnabled(TRUE, $user);
 
                 // Get entity manager
                 $em = $this->get('doctrine.orm.entity_manager');
@@ -123,11 +126,14 @@ class VendorController extends Controller
                 $em->persist($vendor);
                 $em->flush();
 
+                // Get the new vendor and return it
+                $submittedVendor = $vendorRepository->findBy(["name" => $newVendorName]);
+
                 // Set up the response
                 $results = array(
                     'result' => 'success',
                     'message' => 'Successfully updated ' . $vendorOldName . ' to ' . $vendor->getName(),
-                    'object' => $vendor
+                    'object' => $submittedVendor
                 );
 
                 return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
@@ -338,24 +344,30 @@ class VendorController extends Controller
             "enabled" => true
         ]);
 
-        if (empty($vendors)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not get receivers',
-                'object' => NULL
-            );
+        // Set up the response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Successfully retrieved all enabled Vendors',
+            'object' => $vendors
+        );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-        } else {
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully retrieved all enabled Vendors',
-                'object' => $vendors
-            );
+        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+    }
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
-        }
+    /**
+     * @Route("/vendor/{id}", name="vendor")
+     * @Method({"GET"})
+     */
+    public function vendorAction($id) {
+        // Get the Vendor repository
+        $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
+
+        // Get the enabled Vendors
+        $vendor = $vendorRepository->find($id);
+
+        return $this->render('entity.html.twig', [
+            "type" => "vendor",
+            "entity" => $vendor
+        ]);
     }
 }

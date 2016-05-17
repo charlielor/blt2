@@ -22,7 +22,8 @@ $(document).ready(function() {
         ajax: {
             url: 'packages',
             data: {
-                date: "now"
+                dateBegin: "now",
+                dateEnd: "now"
             },
             'dataSrc': 'object'
         },
@@ -117,8 +118,10 @@ $(document).ready(function() {
         defaultDate: new Date(),
         maxDate: new Date(),
         onSelect: function(selectedDate) {
+            var dateSelected = new Date(selectedDate).toDateString();
             var date = {
-                date: new Date(selectedDate).toDateString()
+                dateBegin: dateSelected,
+                dateEnd: dateSelected
             };
 
             // When the user selects a date, send a request to the server to get data for that date

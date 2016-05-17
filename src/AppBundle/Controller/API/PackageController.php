@@ -424,12 +424,12 @@ class PackageController extends Controller
      */
     public function getPackagesAction(Request $request) {
         // A new time variable that points to the beginning of the day
-        $dateTimeBegin = new \DateTime($request->query->get('date'));
+        $dateTimeBegin = new \DateTime($request->query->get('dateBegin'));
         $dateTimeBegin->setTime(00, 00, 00);
         $dateTimeBeginString = $dateTimeBegin->format("Y-m-d H:i:s");
 
         // A new time variable that points to the end of the day
-        $dateTimeEnd = new \DateTime($request->query->get('date'));
+        $dateTimeEnd = new \DateTime($request->query->get('dateEnd'));
         $dateTimeEnd->setTime(23, 59, 59);
         $dateTimeEndString = $dateTimeEnd->format("Y-m-d H:i:s");
 
@@ -452,11 +452,20 @@ class PackageController extends Controller
 
         $query = $qb->getQuery();
 
-        $results = array(
-            'result' => 'error',
-            'message' => 'Could not query the database',
-            'object' => NULL
-        );
+        if ($dateTimeBegin === $dateTimeEnd) {
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Packages for ' . $dateTimeBegin->format("Y-m-d"),
+                'object' => NULL
+            );
+        } else {
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Packages between ' . $dateTimeBegin->format("Y-m-d") . ' and ' . $dateTimeEnd->format("Y-m-d"),
+                'object' => NULL
+            );
+        }
+
 
         $queryResults = $query->getResult();
 

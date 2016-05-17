@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends Controller {
 
     /**
-     * @Route("/user/all", name="getAllUsers")
+     * @Route("/users", name="users")
      * @Method({"GET"})
      */
     public function getAllUsersAction() {

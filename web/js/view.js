@@ -20,7 +20,7 @@ $(document).ready(function() {
         ],
         responsive: true,
         ajax: {
-            url: 'getPackagesForDate',
+            url: 'packages',
             data: {
                 date: "now"
             },
@@ -124,7 +124,7 @@ $(document).ready(function() {
             // When the user selects a date, send a request to the server to get data for that date
             dataTable.clear().draw();
 
-            $.get('getPackagesForDate', date, function(response) {
+            $.get('packages', date, function(response) {
                 // Parse through JSON data and return array
                 var results = JSON && JSON.parse(response) || $.parseJSON(response);
 

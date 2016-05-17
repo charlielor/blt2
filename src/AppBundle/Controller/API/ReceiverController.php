@@ -341,7 +341,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/all", name="allReceivers")
+     * @Route("/receivers", name="receivers")
      * @Method({"GET"})
      */
     public function allReceiversAction() {

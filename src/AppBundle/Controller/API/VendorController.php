@@ -332,7 +332,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/all", name="allVendors")
+     * @Route("/vendors", name="vendors")
      * @Method({"GET"})
      */
     public function allVendorsAction() {

@@ -339,4 +339,10 @@ class PackageControllerTest extends WebTestCase
         $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
+
+    public function testGetPackagesRoute() {
+        
+
+    }
+
 }

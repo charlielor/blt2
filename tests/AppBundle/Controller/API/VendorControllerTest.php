@@ -641,7 +641,7 @@ class VendorControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert searching for entity returns something
-        $client->request('GET', '/vendor/all');
+        $client->request('GET', '/vendors');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 

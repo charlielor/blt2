@@ -10,7 +10,7 @@ class UserControllerTest extends WebTestCase
     public function testGetAllUsersRoute() {
         $client = static::createClient();
 
-        $client->request('GET', '/user/all');
+        $client->request('GET', '/users');
 
         # Testing response code for /user/all
         $this->assertTrue($client->getResponse()->isSuccessful());

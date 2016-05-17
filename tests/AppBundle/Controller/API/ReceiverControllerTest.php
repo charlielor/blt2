@@ -655,7 +655,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert searching for entity returns something
-        $client->request('GET', '/receiver/all');
+        $client->request('GET', '/receivers');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 

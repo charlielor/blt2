@@ -332,7 +332,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/all", name="allShippers")
+     * @Route("/shippers", name="shippers")
      * @Method({"GET"})
      */
     public function allShippersAction() {

@@ -9,9 +9,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Monolog\Logger;
 use AppBundle\Entity\Package;
 use AppBundle\Entity\PackingSlip;
+use Doctrine\ORM\Query\Expr;
 
 class PackageController extends Controller
 {
@@ -419,10 +419,63 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/{id}", name="getPackage")
+     * @Route("/packages", name="packages")
      * @Method({"GET"})
      */
-    public function getPackageAction(Request $request, $id) {
+    public function getPackagesAction(Request $request) {
+        // A new time variable that points to the beginning of the day
+        $dateTimeBegin = new \DateTime($request->query->get('date'));
+        $dateTimeBegin->setTime(00, 00, 00);
+        $dateTimeBeginString = $dateTimeBegin->format("Y-m-d H:i:s");
+
+        // A new time variable that points to the end of the day
+        $dateTimeEnd = new \DateTime($request->query->get('date'));
+        $dateTimeEnd->setTime(23, 59, 59);
+        $dateTimeEndString = $dateTimeEnd->format("Y-m-d H:i:s");
+
+        // Get the repository
+        $em = $this->getDoctrine()->getManager();
+
+        $qb = $em->createQueryBuilder();
+
+        $qb->add('select', new Expr\Select(array('p')))
+            ->add('from', new Expr\From('AppBundle:Package', 'p'))
+            ->add('where', $qb->expr()->between(
+                'p.dateReceived',
+                ':dateTimeBegin',
+                ":dateTimeEnd"
+            )
+            )->setParameters(array(
+                "dateTimeBegin" => $dateTimeBeginString,
+                "dateTimeEnd" => $dateTimeEndString
+            ));
+
+        $query = $qb->getQuery();
+
+        $results = array(
+            'result' => 'error',
+            'message' => 'Could not query the database',
+            'object' => NULL
+        );
+
+        $queryResults = $query->getResult();
+
+        if (!(empty($queryResults))) {
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($queryResults) . ' Packages',
+                'object' => $queryResults
+            );
+        }
+
+        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+    }
+
+    /**
+     * @Route("/package/{id}", name="package")
+     * @Method({"GET"})
+     */
+    public function packageAction(Request $request, $id) {
         // Get the Package repository
         $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
 

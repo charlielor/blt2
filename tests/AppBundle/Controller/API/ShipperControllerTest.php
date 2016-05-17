@@ -641,7 +641,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert searching for entity returns something
-        $client->request('GET', '/shipper/all');
+        $client->request('GET', '/shippers');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 

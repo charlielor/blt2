@@ -39,5 +39,10 @@ class UserControllerTest extends WebTestCase
                 'application/json'
             )
         );
+
+        // Assert error
+        $client->request('GET', '/user/search', array(
+            "term" => "stuffedchickenwings"
+        ));
     }
 }

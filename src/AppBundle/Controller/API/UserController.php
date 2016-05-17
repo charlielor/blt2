@@ -32,19 +32,11 @@ class UserController extends Controller {
             array_push($entities, $user);
         }
 
-        if (!empty($entities)) {
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully queried database',
-                'object' => $entities
-            );
-        } else {
-            $results = array(
-                'result' => 'error',
-                'message' => 'Error in querying database',
-                'object' => NULL
-            );
-        }
+        $results = array(
+            'result' => 'success',
+            'message' => 'Successfully queried database',
+            'object' => $entities
+        );
 
         return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
     }

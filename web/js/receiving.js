@@ -4,24 +4,34 @@ $(document).ready(function() {
     window.packageObject = new Package();
 
     // DataTable for today's packages for the receiving page
-    var dataTableReceiving = $('#datatable-Receiving').DataTable({
-        'ajax': {
-            'url': 'getPackagesForDate',
-            'data': {
-                'date': 'now'
+    $('#datatable-Receiving').DataTable({
+        dom: "<'row'<'col-sm-6 hidden-xs'l><'col-sm-6'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5 hidden-xs'i><'col-sm-7 hidden-xs'p>>" +
+        "<'row'<'col-sm-12 text-center'B>>",
+        buttons: [
+            'csv', 'pdf'
+        ],
+        autoWidth: false,
+        responsive: true,
+        ajax: {
+            url: 'packages',
+            data: {
+                dateBegin: 'now',
+                dateEnd: 'now'
             },
-            'dataSrc': 'object'
+            dataSrc: 'object'
         },
-        'columns': [
-            {'data': 'trackingNumber'},
-            {'data': 'vendor.name'},
-            {'data': 'shipper.name'},
-            {'data': 'receiver.name'},
-            {'data': 'numberOfPackages'},
-            {'data': 'userWhoReceived'},
+        columns: [
+            {data: 'trackingNumber'},
+            {data: 'vendor.name'},
+            {data: 'shipper.name'},
+            {data: 'receiver.name'},
+            {data: 'numberOfPackages'},
+            {data: 'userWhoReceived'},
             {
-                'data': 'packingSlips[]',
-                'render': function(data) {
+                data: 'packingSlips[]',
+                render: function(data) {
                     // Create links for all packing slips
                     var packingSlipLinks = 'None';
                     if (data.length != 0) {
@@ -35,8 +45,8 @@ $(document).ready(function() {
                 }
             },
             {
-                'data': 'dateReceived.timestamp',
-                'render': function(data) {
+                data: 'dateReceived.timestamp',
+                render: function(data) {
                     // Get the date and times it by 1000
                     var dateFromPackage = new Date(data * 1000);
 
@@ -72,11 +82,10 @@ $(document).ready(function() {
         $('.shipperRow').remove();
 
         // Do an AJAX call to the server to get a list of enabled shippers and append them to the dialog
-        $.getJSON('shipper/all', function(data) {
+        $.getJSON('shippers', function(data) {
             if (data !== null) {
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
 
-                var retrievedShippers = results['object'];
+                var retrievedShippers = data['object'];
                 var listOfShippers = [];
 
                 $.each(retrievedShippers, function(index) {

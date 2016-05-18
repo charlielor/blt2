@@ -452,7 +452,7 @@ class PackageController extends Controller
 
         $query = $qb->getQuery();
 
-        if ($dateTimeBegin === $dateTimeEnd) {
+        if ($request->query->get('dateBegin') === $request->query->get('dateEnd')) {
             $results = array(
                 'result' => 'error',
                 'message' => 'No Packages for ' . $dateTimeBegin->format("Y-m-d"),

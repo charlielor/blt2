@@ -18,6 +18,7 @@ $(document).ready(function() {
         buttons: [
             'csv', 'pdf'
         ],
+        autoWidth: false,
         responsive: true,
         ajax: {
             url: 'packages',
@@ -25,7 +26,7 @@ $(document).ready(function() {
                 dateBegin: "now",
                 dateEnd: "now"
             },
-            'dataSrc': 'object'
+            dataSrc: 'object'
         },
         columns: [
             {data: 'trackingNumber'},
@@ -207,15 +208,15 @@ $(document).ready(function() {
     /*
      Refreshes the datatable every 30 seconds if the date on the datatable is the current date
      */
-    // setInterval(function() {
-    //     var dateOnDatePickerButton = new Date(selectDateButton.text());
-    //
-    //     if (((currentDate.getFullYear() === dateOnDatePickerButton.getFullYear()) &&
-    //         (currentDate.getMonth() === dateOnDatePickerButton.getMonth()) &&
-    //         (currentDate.getDate() === dateOnDatePickerButton.getDate()))) {
-    //         dataTable.ajax.reload();
-    //     }
-    //
-    // }, 30000);
+    setInterval(function() {
+        var dateOnDatePickerButton = new Date(selectDateButton.text());
+
+        if (((currentDate.getFullYear() === dateOnDatePickerButton.getFullYear()) &&
+            (currentDate.getMonth() === dateOnDatePickerButton.getMonth()) &&
+            (currentDate.getDate() === dateOnDatePickerButton.getDate()))) {
+            dataTable.ajax.reload();
+        }
+
+    }, 30000);
 
 });

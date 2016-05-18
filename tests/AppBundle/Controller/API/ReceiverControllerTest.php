@@ -529,9 +529,112 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotNull($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
+        $this->assertEquals("test", $successResponse['object'][0]['name']);
 
         // Assert that given entity wasn't found
         $client->request('GET', '/receiver/search', array(
+            "term" => "stuffedchickenwings"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertEquals('error', $errorResponse['result']);
+
+        $this->assertArrayHasKey('message', $errorResponse);
+
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+
+        // Assert that receiver was successfully deleted
+        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $deletedResponse);
+        $this->assertEquals('success', $deletedResponse['result']);
+
+        $this->assertArrayHasKey('message', $deletedResponse);
+
+        $this->assertArrayHasKey('object', $deletedResponse);
+        $this->assertNotNull($deletedResponse['object']);
+    }
+
+    public function testLikeReceiverRoute() {
+        $client = static::createClient();
+
+        // Assert that entity was successfully created
+        $client->request('POST', '/receiver/new', array(
+            "name" => "test",
+            "deliveryRoom" => 112
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that the entity was successfully found
+        $client->request('GET', '/receiver/like', array(
+            "term" => "te"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+        $this->assertEquals("test", $successResponse['object'][0]['name']);
+
+        // Assert that given entity wasn't found
+        $client->request('GET', '/receiver/like', array(
             "term" => "stuffedchickenwings"
         ));
 

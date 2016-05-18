@@ -564,6 +564,106 @@ class VendorControllerTest extends WebTestCase
         $this->assertNotNull($deletedResponse['object']);
     }
 
+    public function testLikeVendorRoute() {
+        $client = static::createClient();
+
+        // Assert that entity was successfully created
+        $client->request('POST', '/vendor/new', array(
+            "name" => "test"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that the entity was successfully found
+        $client->request('GET', '/vendor/like', array(
+            "term" => "te"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that given entity wasn't found
+        $client->request('GET', '/vendor/like', array(
+            "term" => "stuffedchickenwings"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertEquals('error', $errorResponse['result']);
+
+        $this->assertArrayHasKey('message', $errorResponse);
+
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+
+        // Assert that vendor was successfully deleted
+        $client->request('DELETE', '/vendor/' . $successResponse['object'][0]['id'] . '/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $deletedResponse);
+        $this->assertEquals('success', $deletedResponse['result']);
+
+        $this->assertArrayHasKey('message', $deletedResponse);
+
+        $this->assertArrayHasKey('object', $deletedResponse);
+        $this->assertNotNull($deletedResponse['object']);
+    }
+
     public function testDeleteVendorRoute() {
         $client = static::createClient();
 

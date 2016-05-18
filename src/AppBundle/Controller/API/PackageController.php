@@ -348,6 +348,50 @@ class PackageController extends Controller
         // Set up query the database for packages that is like term
         $query = $em->createQuery(
             'SELECT p FROM AppBundle:Package p
+            WHERE p.trackingNumber = :term'
+        )->setParameter('term', $term);
+
+        // Run query and save it
+        $packages = $query->getResult();
+
+        // If $package is not null, then set up $results to reflect successful query
+        if (!(empty($packages))) {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($packages) . ' Package',
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Did not find packages with tracking number: ' . $term,
+                'object' => NULL
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/package/like", name="likePackage")
+     * @Method({"Get"})
+     */
+    public function likePackageAction(Request $request) {
+        // Get the term
+        $term = $request->query->get('term');
+
+        // Get the entity manager
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        // Set up query the database for packages that is like term
+        $query = $em->createQuery(
+            'SELECT p FROM AppBundle:Package p
             WHERE p.trackingNumber LIKE :term'
         )->setParameter('term', $term.'%');
 

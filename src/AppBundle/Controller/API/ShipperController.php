@@ -297,6 +297,54 @@ class ShipperController extends Controller
         // Set up query the database for shippers that is like term
         $query = $em->createQuery(
             'SELECT s FROM AppBundle:Shipper s
+            WHERE s.name = :term
+            AND s.enabled = :enabled'
+        )->setParameters(array(
+                'term' => $term,
+                'enabled' => 1)
+        );
+
+        // Run query and save it
+        $shipper = $query->getResult();
+
+        // If $receiver is not null, then set up $results to reflect successful query
+        if (!(empty($shipper))) {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($shipper) . ' Shipper',
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Was not able to query database',
+                'object' => NULL
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/shipper/like", name="likeShipper")
+     * @Method({"GET"})
+     */
+    public function likeShipperAction(Request $request) {
+        // Get the term
+        $term = $request->query->get('term');
+
+        // Get the entity manager
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        // Set up query the database for shippers that is like term
+        $query = $em->createQuery(
+            'SELECT s FROM AppBundle:Shipper s
             WHERE s.name LIKE :term
             AND s.enabled = :enabled'
         )->setParameters(array(

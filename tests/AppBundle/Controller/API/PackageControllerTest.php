@@ -202,6 +202,55 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('error', $errorResponse['result']);
     }
 
+    public function testLikePackageRoute() {
+        $client = static::createClient();
+
+        $client->request('GET', '/package/like', array(
+            "term" => "test"
+        ));
+
+        # Testing response code for /package/search
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $searchPackage = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $searchPackage);
+        $this->assertArrayHasKey('message', $searchPackage);
+        $this->assertArrayHasKey('object', $searchPackage);
+        $this->assertNotNull($searchPackage['object']);
+        $this->assertEquals('success', $searchPackage['result']);
+        $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
+
+        // Test for errors
+        $client->request('GET', '/package/search', array(
+            "term" => "12345"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertArrayHasKey('message', $errorResponse);
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+        $this->assertEquals('error', $errorResponse['result']);
+    }
+
     public function testSearchPackageRoute() {
         $client = static::createClient();
 
@@ -226,6 +275,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $searchPackage);
         $this->assertNotNull($searchPackage['object']);
         $this->assertEquals('success', $searchPackage['result']);
+        $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
 
         // Test for errors
         $client->request('GET', '/package/search', array(

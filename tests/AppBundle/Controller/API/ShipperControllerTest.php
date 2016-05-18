@@ -516,9 +516,111 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotNull($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
+        $this->assertEquals("test", $successResponse['object'][0]['name']);
 
         // Assert that given entity wasn't found
         $client->request('GET', '/shipper/search', array(
+            "term" => "stuffedchickenwings"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $errorResponse);
+        $this->assertEquals('error', $errorResponse['result']);
+
+        $this->assertArrayHasKey('message', $errorResponse);
+
+        $this->assertArrayHasKey('object', $errorResponse);
+        $this->assertNull($errorResponse['object']);
+
+        // Assert that shipper was successfully deleted
+        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $deletedResponse);
+        $this->assertEquals('success', $deletedResponse['result']);
+
+        $this->assertArrayHasKey('message', $deletedResponse);
+
+        $this->assertArrayHasKey('object', $deletedResponse);
+        $this->assertNotNull($deletedResponse['object']);
+    }
+
+    public function testLikeShipperRoute() {
+        $client = static::createClient();
+
+        // Assert that entity was successfully created
+        $client->request('POST', '/shipper/new', array(
+            "name" => "test"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+
+        // Assert that the entity was successfully found
+        $client->request('GET', '/shipper/like', array(
+            "term" => "te"
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $successResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $successResponse);
+        $this->assertEquals('success', $successResponse['result']);
+
+        $this->assertArrayHasKey('message', $successResponse);
+
+        $this->assertArrayHasKey('object', $successResponse);
+        $this->assertNotNull($successResponse['object']);
+        $this->assertCount(1, $successResponse['object']);
+        $this->assertEquals("test", $successResponse['object'][0]['name']);
+
+        // Assert that given entity wasn't found
+        $client->request('GET', '/shipper/like', array(
             "term" => "stuffedchickenwings"
         ));
 

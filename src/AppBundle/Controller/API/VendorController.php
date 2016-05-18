@@ -297,6 +297,54 @@ class VendorController extends Controller
         // Set up query the database for vendors that is like term
         $query = $em->createQuery(
             'SELECT v FROM AppBundle:Vendor v
+            WHERE v.name = :term
+            AND v.enabled = :enabled'
+        )->setParameters(array(
+                'term' => $term,
+                'enabled' => 1)
+        );
+
+        // Run query and save it
+        $vendor = $query->getResult();
+
+        // If $receiver is not null, then set up $results to reflect successful query
+        if (!(empty($vendor))) {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($vendor) . ' Vendor',
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Was not able to query database',
+                'object' => NULL
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/vendor/like", name="likeVendor")
+     * @Method({"GET"})
+     */
+    public function likeVendorAction(Request $request) {
+        // Get the term
+        $term = $request->query->get('term');
+
+        // Get the entity manager
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        // Set up query the database for vendors that is like term
+        $query = $em->createQuery(
+            'SELECT v FROM AppBundle:Vendor v
             WHERE v.name LIKE :term
             AND v.enabled = :enabled'
         )->setParameters(array(

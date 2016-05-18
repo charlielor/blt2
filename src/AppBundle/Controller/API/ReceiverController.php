@@ -306,6 +306,54 @@ class ReceiverController extends Controller
         // Set up query the database for receivers that is like terms
         $query = $em->createQuery(
             'SELECT r FROM AppBundle:Receiver r
+            WHERE r.name = :term
+            AND r.enabled = :enabled'
+        )->setParameters(array(
+                'term' => $term,
+                'enabled' => 1)
+        );
+
+        // Run query and save it
+        $receiver = $query->getResult();
+
+        // If $receiver is not null, then set up $results to reflect successful query
+        if (!(empty($receiver))) {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Was not able to query database',
+                'object' => NULL
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/receiver/like", name="likeReceiver")
+     * @Method({"GET"})
+     */
+    public function likeReceiverAction(Request $request) {
+        // Get the term
+        $term = $request->query->get('term');
+
+        // Get the entity manager
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        // Set up query the database for receivers that is like terms
+        $query = $em->createQuery(
+            'SELECT r FROM AppBundle:Receiver r
             WHERE r.name LIKE :term
             AND r.enabled = :enabled'
         )->setParameters(array(

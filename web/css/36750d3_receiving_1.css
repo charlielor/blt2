@@ -1,7 +1,10 @@
 /* Extra small devices (phones, less than 768px) */
 /* No media query since this is the default in Bootstrap */
-canvas {
-  display: none;
+#trackingNumberButtons {
+  margin-top: 15px;
+}
+#addANewShipper {
+  margin-top: 15px;
 }
 /* Small devices (tablets, 768px and up) */
 /* Medium devices (desktops, 992px and up) */

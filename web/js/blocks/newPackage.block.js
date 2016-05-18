@@ -15,8 +15,7 @@ $(document).ready(function() {
     var n = null;
 
     /*
-     A hidden input that shows up with the shipper dialog pops up. Allows for remote
-     data AJAX searches within the database.
+     Allows for remote data AJAX searches within the database. For Shipper.
      */
     select2Shipper.select2({
         theme: "bootstrap",
@@ -34,18 +33,15 @@ $(document).ready(function() {
                 return query;
             },
             processResults: function (data) {
-                // Parse through JSON data and return array
-                var response = JSON && JSON.parse(data) || $.parseJSON(data);
-
                 var results = [];
 
-                if (response['object'] !== null) {
-                    var vendors = response['object'];
+                if (data['object'] !== null) {
+                    var shipper = data['object'];
 
-                    $.each(vendors, function(index) {
+                    $.each(shipper, function(index) {
                         results.push({
-                            id: vendors[index]['id'],
-                            text: vendors[index]['name']
+                            id: shipper[index]['id'],
+                            text: shipper[index]['name']
                         })
                     });
                 }
@@ -58,8 +54,7 @@ $(document).ready(function() {
     });
 
     /*
-     A hidden input that shows up with the vendor dialog pops up. Allows for remote
-     data AJAX searches within the database.
+     Allows for remote data AJAX searches within the database. For Vendor.
      */
     select2Vendor.select2({
         theme: "bootstrap",
@@ -77,13 +72,10 @@ $(document).ready(function() {
                 return query;
             },
             processResults: function (data) {
-                // Parse through JSON data and return array
-                var response = JSON && JSON.parse(data) || $.parseJSON(data);
-
                 var results = [];
 
-                if (response['object'] !== null) {
-                    var vendors = response['object'];
+                if (data['object'] !== null) {
+                    var vendors = data['object'];
 
                     $.each(vendors, function(index) {
                         results.push({
@@ -101,8 +93,7 @@ $(document).ready(function() {
     });
 
     /*
-     A hidden input that shows up with the receiver dialog pops up. Allows for remote
-     data AJAX searches within the database.
+     Allows for remote data AJAX searches within the database. For Receiver.
      */
     select2Receiver.select2({
         theme: "bootstrap",
@@ -120,18 +111,15 @@ $(document).ready(function() {
                 return query;
             },
             processResults: function (data) {
-                // Parse through JSON data and return array
-                var response = JSON && JSON.parse(data) || $.parseJSON(data);
-
                 var results = [];
 
-                if (response['object'] !== null) {
-                    var vendors = response['object'];
+                if (data['object'] !== null) {
+                    var receiver = data['object'];
 
-                    $.each(vendors, function(index) {
+                    $.each(receiver, function(index) {
                         results.push({
-                            id: vendors[index]['id'],
-                            text: vendors[index]['name']
+                            id: receiver[index]['id'],
+                            text: receiver[index]['name']
                         })
                     });
                 }

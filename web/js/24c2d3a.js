@@ -5596,32 +5596,33 @@ $(document).ready(function() {
     var n = null;
 
     /*
-     A hidden input that shows up with the shipper dialog pops up. Allows for remote
-     data AJAX searches within the database.
+     Allows for remote data AJAX searches within the database. For Shipper.
      */
     select2Shipper.select2({
-        dropdownCssClass: "bootstrapTheme",
+        theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Shipper",
+        width: "auto",
         ajax: {
-            url: 'getShippersLikeTerm',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            url: 'shipper/like',
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
                 var results = [];
 
                 if (data['object'] !== null) {
-                    var shippers = data['object'];
+                    var shipper = data['object'];
 
-                    $.each(shippers, function(index) {
+                    $.each(shipper, function(index) {
                         results.push({
-                            id: shippers[index]['id'],
-                            text: shippers[index]['name']
+                            id: shipper[index]['id'],
+                            text: shipper[index]['name']
                         })
                     });
                 }
@@ -5630,31 +5631,28 @@ $(document).ready(function() {
                     results: results
                 };
             }
-        },
-        initSelection: function(e, c) {
         }
-    }).on("select2-close", function() {
-        select2Shipper.blur();
     });
 
     /*
-     A hidden input that shows up with the vendor dialog pops up. Allows for remote
-     data AJAX searches within the database.
+     Allows for remote data AJAX searches within the database. For Vendor.
      */
     select2Vendor.select2({
-        dropdownCssClass: "bootstrapTheme",
+        theme: "bootstrap",
         minimumInputLength: 3,
         placeholder: "Search for a Vendor",
+        width: "auto",
         ajax: {
-            url: 'getVendorsLikeTerm',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            url: 'vendor/like',
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
                 var results = [];
 
                 if (data['object'] !== null) {
@@ -5672,40 +5670,37 @@ $(document).ready(function() {
                     results: results
                 };
             }
-        },
-        initSelection: function(e, c) {
         }
-    }).on("select2-close", function() {
-        select2Vendor.blur();
     });
 
     /*
-     A hidden input that shows up with the receiver dialog pops up. Allows for remote
-     data AJAX searches within the database.
+     Allows for remote data AJAX searches within the database. For Receiver.
      */
     select2Receiver.select2({
-        dropdownCssClass: "bootstrapTheme",
+        theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Receiver",
+        width: "auto",
         ajax: {
-            url: 'getReceiversLikeTerm',
-            quietMillis: 100,
-            dataType: 'json',
-            data: function (term) {
-                return {
-                    term: term
+            url: 'receiver/like',
+            delay: 250,
+            data: function(params) {
+                var query = {
+                    term: params.term
                 };
+
+                return query;
             },
-            results: function (data) {
+            processResults: function (data) {
                 var results = [];
 
                 if (data['object'] !== null) {
-                    var receivers = data['object'];
+                    var receiver = data['object'];
 
-                    $.each(receivers, function(index) {
+                    $.each(receiver, function(index) {
                         results.push({
-                            id: receivers[index]['id'],
-                            text: receivers[index]['name'] + ' | ' + receivers[index]['deliveryRoom']
+                            id: receiver[index]['id'],
+                            text: receiver[index]['name']
                         })
                     });
                 }
@@ -5714,11 +5709,7 @@ $(document).ready(function() {
                     results: results
                 };
             }
-        },
-        initSelection: function(e, c) {
         }
-    }).on("select2-close", function() {
-        select2Receiver.blur();
     });
 
     packageModal.on("show.bs.modal", function() {

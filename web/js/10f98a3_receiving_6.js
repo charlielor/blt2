@@ -4,24 +4,34 @@ $(document).ready(function() {
     window.packageObject = new Package();
 
     // DataTable for today's packages for the receiving page
-    var dataTableReceiving = $('#datatable-Receiving').DataTable({
-        'ajax': {
-            'url': 'getPackagesForDate',
-            'data': {
-                'date': 'now'
+    $('#datatable-Receiving').DataTable({
+        dom: "<'row'<'col-sm-6 hidden-xs'l><'col-sm-6'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5 hidden-xs'i><'col-sm-7 hidden-xs'p>>" +
+        "<'row'<'col-sm-12 text-center'B>>",
+        buttons: [
+            'csv', 'pdf'
+        ],
+        autoWidth: false,
+        responsive: true,
+        ajax: {
+            url: 'packages',
+            data: {
+                dateBegin: 'now',
+                dateEnd: 'now'
             },
-            'dataSrc': 'object'
+            dataSrc: 'object'
         },
-        'columns': [
-            {'data': 'trackingNumber'},
-            {'data': 'vendor.name'},
-            {'data': 'shipper.name'},
-            {'data': 'receiver.name'},
-            {'data': 'numberOfPackages'},
-            {'data': 'userWhoReceived'},
+        columns: [
+            {data: 'trackingNumber'},
+            {data: 'vendor.name'},
+            {data: 'shipper.name'},
+            {data: 'receiver.name'},
+            {data: 'numberOfPackages'},
+            {data: 'userWhoReceived'},
             {
-                'data': 'packingSlips[]',
-                'render': function(data) {
+                data: 'packingSlips[]',
+                render: function(data) {
                     // Create links for all packing slips
                     var packingSlipLinks = 'None';
                     if (data.length != 0) {
@@ -35,8 +45,8 @@ $(document).ready(function() {
                 }
             },
             {
-                'data': 'dateReceived.timestamp',
-                'render': function(data) {
+                data: 'dateReceived.timestamp',
+                render: function(data) {
                     // Get the date and times it by 1000
                     var dateFromPackage = new Date(data * 1000);
 
@@ -72,21 +82,26 @@ $(document).ready(function() {
         $('.shipperRow').remove();
 
         // Do an AJAX call to the server to get a list of enabled shippers and append them to the dialog
-        $.getJSON('getEnabledShippers', function(data) {
-            var retrievedShippers = data['object'];
-            var listOfShippers = [];
+        $.getJSON('shippers', function(data) {
+            if (data !== null) {
 
-            $.each(retrievedShippers, function(index) {
-                listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="' + retrievedShippers[index]['id'] + '" class="btn btn-default btn-lg btn-block text-center shipperSelected">' + retrievedShippers[index]['name'] + '</button></div></div>');
-            });
+                var retrievedShippers = data['object'];
+                var listOfShippers = [];
 
-            listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="addANewShipper" class="btn btn-default btn-lg btn-block text-center" data-toggle="modal" data-target="#addNewShipperModal" data-referer="selectAShipper" data-select2=false>Add New Shipper</button></div></div>');
+                $.each(retrievedShippers, function(index) {
+                    listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="' + retrievedShippers[index]['id'] + '" class="btn btn-default btn-lg btn-block text-center shipperSelected">' + retrievedShippers[index]['name'] + '</button></div></div>');
+                });
 
-            // Hide the spinner.gif
-            $('#spinner').hide();
+                listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="addANewShipper" class="btn btn-default btn-lg btn-block text-center" data-toggle="modal" data-target="#addNewShipperModal" data-referer="selectAShipper" data-select2=false>Add New Shipper</button></div></div>');
 
-            // Append the list of shipper
-            $("#shippers").append(listOfShippers);
+                // Hide the spinner.gif
+                $('#spinner').hide();
+
+                // Append the list of shipper
+                $("#shippers").append(listOfShippers);
+            } else {
+
+            }
         });
     });
 
@@ -151,13 +166,13 @@ $(document).ready(function() {
         if (trackingNumber.length == 0) {
             emptyTrackingNumberModal.modal('show');
         } else {
-            $.get('getPackageGivenTrackingNumber', {trackingNumber: trackingNumber})
+            $.get('package/search', {'term': trackingNumber})
                 .done(function(data) {
-                    var results = JSON && JSON.parse(data) || $.parseJSON(data);
 
-                    if (results['result'] == 'success') {
-                        if (results['object'] != null) {
-                            window.packageObject = results['object'];
+                    console.log(data);
+                    if (data['result'] == 'error') {
+                        if (data['object'] != null) {
+                            window.packageObject = data['object'];
 
                             window.packageObject['isNew'] = false;
 

@@ -205,7 +205,7 @@ $(document).ready(function() {
     });
 
     /*
-     Allows for remote data AJAX searches within the database. For users.
+     Allows for remote data AJAX searches within the database. For Shipper.
      */
     select2Shipper.select2({
         theme: "bootstrap",
@@ -226,12 +226,12 @@ $(document).ready(function() {
                 var results = [];
 
                 if (data['object'] !== null) {
-                    var vendors = data['object'];
+                    var shipper = data['object'];
 
-                    $.each(vendors, function(index) {
+                    $.each(shipper, function(index) {
                         results.push({
-                            id: vendors[index]['id'],
-                            text: vendors[index]['name']
+                            id: shipper[index]['id'],
+                            text: shipper[index]['name']
                         })
                     });
                 }
@@ -304,12 +304,12 @@ $(document).ready(function() {
                 var results = [];
 
                 if (data['object'] !== null) {
-                    var vendors = data['object'];
+                    var receiver = data['object'];
 
-                    $.each(vendors, function(index) {
+                    $.each(receiver, function(index) {
                         results.push({
-                            id: vendors[index]['id'],
-                            text: vendors[index]['name']
+                            id: receiver[index]['id'],
+                            text: receiver[index]['name']
                         })
                     });
                 }

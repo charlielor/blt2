@@ -168,11 +168,11 @@ $(document).ready(function() {
         } else {
             $.get('package/search', {'term': trackingNumber})
                 .done(function(data) {
-                    var results = JSON && JSON.parse(data) || $.parseJSON(data);
 
-                    if (results['result'] == 'success') {
-                        if (results['object'] != null) {
-                            window.packageObject = results['object'];
+                    console.log(data);
+                    if (data['result'] == 'error') {
+                        if (data['object'] != null) {
+                            window.packageObject = data['object'];
 
                             window.packageObject['isNew'] = false;
 

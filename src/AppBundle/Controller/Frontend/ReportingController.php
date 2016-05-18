@@ -18,9 +18,9 @@ class ReportingController extends Controller
     }
 
     /**
-     * @Route("/reporting/queryRequest", name="queryRequest")
+     * @Route("/reporting/query", name="query")
      */
-    public function queryRequestAction(Request $request) {
+    public function queryAction(Request $request) {
         $requestQuery = $request->get("request");
 
         $typeOfRequest = $request->get("type");
@@ -747,7 +747,7 @@ class ReportingController extends Controller
                         'message' => 'Successfully queried database',
                         'requestedQuery' => $requestQuery,
                         'tokenId' => $tokenId,
-                        'object' => $reorganizedPackages,
+                        'object' => json_decode($this->get('serializer')->serialize($reorganizedPackages, 'json')),
                         'type' => $typeOfRequest,
                     );
                 } else if ($dateDiff > $secondCutOffForDateDiff) { // Date difference is greater than 3 months
@@ -775,7 +775,7 @@ class ReportingController extends Controller
                         'message' => 'Successfully queried database',
                         'requestedQuery' => $requestQuery,
                         'tokenId' => $tokenId,
-                        'object' => $reorganizedPackages,
+                        'object' => json_decode($this->get('serializer')->serialize($reorganizedPackages, 'json')),
                         'type' => $typeOfRequest,
                     );
                 } else { // Default
@@ -784,7 +784,7 @@ class ReportingController extends Controller
                         'message' => 'Successfully queried database',
                         'requestedQuery' => $requestQuery,
                         'tokenId' => $tokenId,
-                        'object' => $packages,
+                        'object' => json_decode($this->get('serializer')->serialize($packages, 'json')),
                         'type' => $typeOfRequest,
                     );
                 }
@@ -794,13 +794,13 @@ class ReportingController extends Controller
                     'message' => 'Successfully queried database',
                     'requestedQuery' => $requestQuery,
                     'tokenId' => $tokenId,
-                    'object' => $packages,
+                    'object' => json_decode($this->get('serializer')->serialize($packages, 'json')),
                     'type' => $typeOfRequest,
                 );
             }
 
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else if (count($packages) == 0) {
             $results = array(
                 'result' => 'success',
@@ -811,7 +811,7 @@ class ReportingController extends Controller
                 'type' => $typeOfRequest,
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             $results = array(
                 'result' => 'error',
@@ -819,7 +819,7 @@ class ReportingController extends Controller
                 'object' => NULL
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 }

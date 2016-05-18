@@ -24,7 +24,7 @@ $(document).ready(function() {
         placeholder: "Search for a Shipper",
         width: "auto",
         ajax: {
-            url: 'shipper/search',
+            url: 'shipper/like',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -67,7 +67,7 @@ $(document).ready(function() {
         placeholder: "Search for a Vendor",
         width: "auto",
         ajax: {
-            url: 'shipper/search',
+            url: 'vendor/like',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -110,7 +110,7 @@ $(document).ready(function() {
         placeholder: "Search for a Receiver",
         width: "auto",
         ajax: {
-            url: 'shipper/search',
+            url: 'receiver/like',
             delay: 250,
             data: function(params) {
                 var query = {

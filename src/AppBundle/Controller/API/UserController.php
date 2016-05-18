@@ -17,25 +17,16 @@ class UserController extends Controller {
     public function getAllUsersAction() {
         $em = $this->get('doctrine.orm.entity_manager');
         $query = $em->createQuery(
-            'SELECT DISTINCT p.userWhoReceived FROM AppBundle:Package p
+            'SELECT DISTINCT p.userWhoReceived as username FROM AppBundle:Package p
                     ORDER BY p.userWhoReceived ASC'
         );
 
         $results = $query->getResult();
 
-        $entities = array();
-
-        foreach ($results as $result) {
-            $user = [
-                'name'=> $result['userWhoReceived']
-            ];
-            array_push($entities, $user);
-        }
-
         $results = array(
             'result' => 'success',
             'message' => 'Successfully queried database',
-            'object' => json_decode($this->get('serializer')->serialize($entities, 'json'))
+            'object' => json_decode($this->get('serializer')->serialize($results, 'json'))
         );
 
         return new JsonResponse($results);

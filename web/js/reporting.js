@@ -111,15 +111,12 @@ $(document).ready(function() {
     }
 
     function getListOfUsers() {
-        $.get('user/all', function(response) {
-            // Parse through JSON data and return array
-            var results = JSON && JSON.parse(response) || $.parseJSON(response);
-
-            if (results['result'] == 'success') {
-                if (results['object'].length != 0) {
+        $.get('users', function(response) {
+            if (response['result'] == 'success') {
+                if (response['object'].length != 0) {
                     token1.empty();
-                    for (var i = 0; i < results['object'].length; i++) {
-                        var option = '<option value=' + results['object'][i]['name'] + '>' + results['object'][i]['name'] + '</option>';
+                    for (var i = 0; i < response['object'].length; i++) {
+                        var option = '<option value=' + response['object'][i]['username'] + '>' + response['object'][i]['username'] + '</option>';
 
                         select2User.append(option);
                     }
@@ -216,7 +213,7 @@ $(document).ready(function() {
         placeholder: "Search for a Shipper",
         width: "auto",
         ajax: {
-            url: 'shipper/search',
+            url: 'shipper/like',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -226,13 +223,10 @@ $(document).ready(function() {
                 return query;
             },
             processResults: function (data) {
-                // Parse through JSON data and return array
-                var response = JSON && JSON.parse(data) || $.parseJSON(data);
-
                 var results = [];
 
-                if (response['object'] !== null) {
-                    var vendors = response['object'];
+                if (data['object'] !== null) {
+                    var vendors = data['object'];
 
                     $.each(vendors, function(index) {
                         results.push({
@@ -258,7 +252,7 @@ $(document).ready(function() {
         placeholder: "Search for a Vendor",
         width: "auto",
         ajax: {
-            url: 'vendor/search',
+            url: 'vendor/like',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -268,13 +262,10 @@ $(document).ready(function() {
                 return query;
             },
             processResults: function (data) {
-                // Parse through JSON data and return array
-                var response = JSON && JSON.parse(data) || $.parseJSON(data);
-
                 var results = [];
 
-                if (response['object'] !== null) {
-                    var vendors = response['object'];
+                if (data['object'] !== null) {
+                    var vendors = data['object'];
 
                     $.each(vendors, function(index) {
                         results.push({
@@ -300,7 +291,7 @@ $(document).ready(function() {
         placeholder: "Search for a Receiver",
         width: "auto",
         ajax: {
-            url: 'receiver/search',
+            url: 'receiver/like',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -310,13 +301,10 @@ $(document).ready(function() {
                 return query;
             },
             processResults: function (data) {
-                // Parse through JSON data and return array
-                var response = JSON && JSON.parse(data) || $.parseJSON(data);
-
                 var results = [];
 
-                if (response['object'] !== null) {
-                    var vendors = response['object'];
+                if (data['object'] !== null) {
+                    var vendors = data['object'];
 
                     $.each(vendors, function(index) {
                         results.push({
@@ -424,23 +412,20 @@ $(document).ready(function() {
         submitReportRequest.text("Fetching...");
         submitReportRequest.attr("disabled", "true");
 
-        $.get("reporting/queryRequest", requestQuery, function(response) {
+        $.get("reporting/query", requestQuery, function(response) {
             spinnerGraph.hide();
 
             submitReportRequest.text("Go!");
             submitReportRequest.removeAttr("disabled");
 
-            // Parse through JSON data and return array
-            var results = JSON && JSON.parse(response) || $.parseJSON(response);
-
-            if (results["result"] == "success") {
-                if ((results['object'] != null)) {
-                    var requestedQuery = results['requestedQuery'].split("-");
+            if (response["result"] == "success") {
+                if ((response['object'] != null)) {
+                    var requestedQuery = response['requestedQuery'].split("-");
 
                     graphQueryResults.show();
 
-                    if (results['object'].length > 0) {
-                        var dates = results['object'];
+                    if (response['object'].length > 0) {
+                        var dates = response['object'];
                         var reportResultsDates = [];
                         var reportResultsCount = [];
 
@@ -575,23 +560,20 @@ $(document).ready(function() {
 
         }
 
-        console.log(requestTable);
-
         if (valid) {
 
             tableQueryResults.hide();
 
             clearTable();
 
-            $.get("reporting/queryRequest", requestTable, function(data) {
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
+            $.get("reporting/query", requestTable, function(response) {
 
                 var packagesFromServer = null;
 
-                if (results['result'] == 'success') {
+                if (response['result'] == 'success') {
                     clearTable();
 
-                    packagesFromServer = results['object'];
+                    packagesFromServer = response['object'];
 
                     $.each(packagesFromServer, function(index, element) {
 

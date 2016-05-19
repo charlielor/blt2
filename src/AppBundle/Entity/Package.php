@@ -256,8 +256,13 @@ class Package {
         $this->delivered = $delivered;
 
         $now = new \DateTime("NOW");
-        $this->dateModified = $now;
+        if ($delivered) {
+            $this->dateDelivered = $now;
+            $this->userWhoDelivered = $user;
+        }
 
+
+        $this->dateModified = $now;
         $this->userLastModified = $user;
 
         return $this;
@@ -508,8 +513,13 @@ class Package {
         $this->pickedUp = $pickedUp;
 
         $now = new \DateTime("NOW");
-        $this->dateModified = $now;
 
+        if ($pickedUp) {
+            $this->datePickedUp = $now;
+            $this->userWhoAuthorizedPickUp = $user;
+        }
+
+        $this->dateModified = $now;
         $this->userLastModified = $user;
 
         return $this;

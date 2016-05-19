@@ -156,8 +156,6 @@ class PackageController extends Controller
 
 
         }
-
-
     }
 
     /**
@@ -182,7 +180,7 @@ class PackageController extends Controller
 
             return new JsonResponse($results);
         } else {
-            // Cannot update tracking number --> ID
+            // Cannot update tracking number --> ID, userWhoReceived and dateReceived
 
             // Get all that has been submitted through PUT
             $updatePackage = $request->request->all();
@@ -196,34 +194,38 @@ class PackageController extends Controller
             // Get the current date
             $currentDate = new \DateTime("NOW");
 
-            $deletedPackingSlipIDs = $updatePackage['removedPackingSlipIds'];
+            // For each updatable field
+            if (!empty($updatePackage['removedPackingSlipIds'])) {
+                $deletedPackingSlipIDs = $updatePackage['removedPackingSlipIds'];
 
-            $packingSlipRepository = $this->getDoctrine()->getRepository("AppBundle:PackingSlip");
+                $packingSlipRepository = $this->getDoctrine()->getRepository("AppBundle:PackingSlip");
 
-            // Remove packing slips from package
-            foreach ($deletedPackingSlipIDs as $id) {
-                $deletedPackingSlip = $packingSlipRepository->find($id);
+                // Remove packing slips from package
+                foreach ($deletedPackingSlipIDs as $id) {
+                    $deletedPackingSlip = $packingSlipRepository->find($id);
 
-                if (!empty($deletedPackingSlip)) {
-                    // Get the location of where the file should be uploaded to
-                    $originalPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+                    if (!empty($deletedPackingSlip)) {
+                        // Get the location of where the file should be uploaded to
+                        $originalPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
 
-                    $generatedDeletedPackingSlipName = ($this->generateDeletedFileName($deletedPackingSlip->getPath(), $deletedPackingSlip->getCompleteFileName(), 0));
+                        $generatedDeletedPackingSlipName = ($this->generateDeletedFileName($deletedPackingSlip->getPath(), $deletedPackingSlip->getCompleteFileName(), 0));
 
-                    $deletedPackingSlip->renamePackingSlipToDeleted($generatedDeletedPackingSlipName);
+                        $deletedPackingSlip->renamePackingSlipToDeleted($generatedDeletedPackingSlipName);
 
-                    $deletedPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+                        $deletedPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
 
-                    // Make sure the entity manager sees the entity as a new entity
-                    $em->persist($deletedPackingSlip);
+                        // Make sure the entity manager sees the entity as a new entity
+                        $em->persist($deletedPackingSlip);
 
-                    // Commit deleted packing slips to the server
-                    $em->flush();
+                        // Commit deleted packing slips to the server
+                        $em->flush();
 
-                    rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
+                        rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
 
-                    $package->removePackingSlips($deletedPackingSlip);
+                        $package->removePackingSlips($deletedPackingSlip);
+                    }
                 }
+
             }
 
             // If there are pictures that were uploaded, put them in an array
@@ -234,21 +236,20 @@ class PackageController extends Controller
             if (!empty($_FILES["attachedPackingSlips"])) {
                 // Get an array of what the uploaded file object is
                 $uploadedFiles = $_FILES["attachedPackingSlips"];
-            }
 
-            if (!(empty($uploadedFiles))) {
                 // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
                 $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
 
                 // Remove any duplicates
                 $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+            } else {
+                $uploadedFiles = [];
             }
 
             // If there are any pictures taken, move them to the uploadedFiles array
             if (!(empty($uploadedPictures))) {
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
             }
-
 
             // If there are any pictures taken, move them to the uploadedFiles array
             if (!(empty($uploadedPictures))) {
@@ -264,7 +265,7 @@ class PackageController extends Controller
                     $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $id, $i, $currentDate->format('Ymd'));
 
                     if ($moveUploadedFileLocation != NULL) {
-                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['deleted'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
+                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['deleted'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
 
                         $em->persist($packingSlip);
 
@@ -317,6 +318,14 @@ class PackageController extends Controller
                 $package->setNumberOfPackages($updatePackage["numOfPackages"], $user);
             }
 
+            // If the package has been delivered or picked up, update it [can't be both]
+            if (!empty($updatePackage['delivered'])) {
+                $package->setDelivered($updatePackage['delivered'], $user);
+            } else if (!empty($updatePackage['pickedUp'])) {
+                $package->setPickedUp($updatePackage['pickedUp'], $user);
+                $package->setUserWhoPickedUp($updatePackage['userWhoPickedUp'], $user);
+            }
+            
             // Make sure the entity manager sees the entity as a new entity
             $em->persist($package);
 
@@ -325,7 +334,7 @@ class PackageController extends Controller
 
             $results = array(
                 'result' => 'success',
-                'message' => 'Successfully updated ' . $id,
+                'message' => 'Successfully updated ' . $id . '!',
                 'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
             );
 

@@ -16,6 +16,41 @@ $(document).ready(function() {
 
     var submitPackagePickupInformation = $("#submitPackagePickupInformation");
 
+    var dataTablePickUp = $('#datatable-PickupResults').DataTable({
+        'searching': false,
+        'ordering': false,
+        'paging': false,
+        'info': false,
+        'dataSrc': '',
+        'columns': [
+            {
+                'data': null,
+                'render': function() {
+                    return '<button type="button" class="btn btn-default btn-sm deleteRowInPickUpTable">Delete</button>';
+                }
+            },
+            {'data': 'trackingNumber'},
+            {'data': 'vendor.name'},
+            {'data': 'shipper.name'},
+            {'data': 'receiver.name'},
+            {
+                'data': 'dateReceived.timestamp',
+                'render': function(data) {
+                    var dateFromPackage = new Date(data * 1000);
+
+                    var month = (dateFromPackage.getMonth() + 1);
+                    month = month < 10 ? '0' + month : month;
+
+                    var date = dateFromPackage.getDate();
+                    date = date < 10 ? '0' + date : date;
+
+                    return (month + '-' + date + '-' + dateFromPackage.getFullYear());
+                }
+            },
+            {'data': 'numberOfPackages'}
+        ]
+    });
+
     // When the user clicks on the pick up button, open the dialog box with the barcode input textbox
     $("#pickup").click(function() {
         pickupPackageModal.modal('show');
@@ -41,12 +76,10 @@ $(document).ready(function() {
             // Get the packages base on scanned barcode
             $.ajax({
                     type: "GET",
-                    url: "pickup/getPackagesForPickup",
-                    data: { 'trackingNumber': ptn }
+                    url: "package/search",
+                    data: { 'term': ptn }
                 })
-                .done(function(data) {
-                    // Parse through JSON data and return array
-                    var results = JSON && JSON.parse(data) || $.parseJSON(data);
+                .done(function(results) {
                     // If the results come back with an error, display display error
                     if (results['result'] == 'error') {
                         addError("input", results['message']);
@@ -106,19 +139,16 @@ $(document).ready(function() {
                 var dataBeingSent = {
                     userWhoPickedUp: uwpu,
                     userWhoAuthorized: uwa,
-                    trackingNumber: trackingNumberInPickUp
+                    pickedUp: 1
                 };
 
                 // Send the AJAX request
                 $.ajax({
-                        type: "POST",
-                        url: "pickup/updatePackageAsPickedUp",
+                        type: "PUT",
+                        url: "package/" + trackingNumberInPickUp + "/update",
                         data: dataBeingSent
                     })
-                    .done(function(data) {
-                        // Parse through JSON data and return array
-                        var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+                    .done(function(results) {
                         var n = null;
 
                         // If the results come back successful, create a noty to let the user know that it has been successfully updated on the server

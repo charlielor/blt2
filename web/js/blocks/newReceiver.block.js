@@ -82,7 +82,7 @@ $(document).ready(function() {
                         layout: "bottom",
                         theme: "bootstrapTheme",
                         type: "success",
-                        text: "New Receiver successfully created!",
+                        text: results['message'],
                         maxVisible: 2,
                         timeout: 2000,
                         killer: true,

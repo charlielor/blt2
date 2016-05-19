@@ -18,6 +18,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Shipper.
      */
     select2Shipper.select2({
+        dropdownParent: $("#packageModal"),
         theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Shipper",
@@ -57,6 +58,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Vendor.
      */
     select2Vendor.select2({
+        dropdownParent: $("#packageModal"),
         theme: "bootstrap",
         minimumInputLength: 3,
         placeholder: "Search for a Vendor",
@@ -96,6 +98,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Receiver.
      */
     select2Receiver.select2({
+        dropdownParent: $("#packageModal"),
         theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Receiver",

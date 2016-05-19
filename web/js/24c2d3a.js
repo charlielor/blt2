@@ -5599,6 +5599,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Shipper.
      */
     select2Shipper.select2({
+        dropdownParent: $("#packageModal"),
         theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Shipper",
@@ -5638,6 +5639,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Vendor.
      */
     select2Vendor.select2({
+        dropdownParent: $("#packageModal"),
         theme: "bootstrap",
         minimumInputLength: 3,
         placeholder: "Search for a Vendor",
@@ -5677,6 +5679,7 @@ $(document).ready(function() {
      Allows for remote data AJAX searches within the database. For Receiver.
      */
     select2Receiver.select2({
+        dropdownParent: $("#packageModal"),
         theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Receiver",
@@ -5784,9 +5787,9 @@ $(document).ready(function() {
 
     packageModal.on("shown.bs.modal", function() {
         if (window.packageObject['isNew'] == true) {
-            select2Vendor.select2("focus");
+            select2Vendor.focus();
         } else if (window.packageObject.isNew == false) {
-            select2Shipper.select2("focus");
+            select2Shipper.focus();
         }
     });
 
@@ -5821,13 +5824,13 @@ $(document).ready(function() {
             window.packageObject.numberOfPackages = existingPackageObject['numberOfPackages'];
             window.packageObject.deletedPackingSlips = deletedPackingSlips;
 
-            if (shipperSelector.select2('data') == null) {
+            if (shipperSelector.val() == null) {
                 // If selectShipper is empty
                 addError("shipper", "");
             } else {
                 shipper = {
-                    "id": shipperSelector.select2('data').id,
-                    "name": shipperSelector.select2('data').text
+                    "id": shipperSelector.val(),
+                    "name": shipperSelector.text()
                 };
             }
         } else {
@@ -5839,21 +5842,21 @@ $(document).ready(function() {
 
         window.packageObject.shipper = shipper;
 
-        if ((vendorSelector.select2('data') == null)) {
+        if ((vendorSelector.val() === null)) {
             addError("vendor", "");
 
-        } else if (receiverSelector.select2('data') == null) {
+        } else if (receiverSelector.val() === null) {
             addError("receiver", "");
         } else {
             vendor = {
-                "id": vendorSelector.select2('data').id,
-                "name": vendorSelector.select2('data').text
+                "id": vendorSelector.val(),
+                "name": vendorSelector.text()
             };
 
             receiver = {
-                "id": receiverSelector.select2('data').id,
-                "name": receiverSelector.select2('data').text.split("|")[0].trim(),
-                "deliveryRoom": receiverSelector.select2('data').text.split("|")[1].trim()
+                "id": receiverSelector.val(),
+                "name": receiverSelector.text().split("|")[0].trim(),
+                "deliveryRoom": receiverSelector.text().split("|")[1].trim()
             };
 
             window.packageObject.vendor = vendor;
@@ -5912,10 +5915,7 @@ $(document).ready(function() {
                         contentType: false,
                         processData: false
                     })
-                    .done(function (data) {
-                        // Parse through JSON data and return array
-                        var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+                    .done(function (results) {
                         // If the result is an error, display the error and close the form as the form has already been submitted
                         if (results['result'] == 'error') {
                             n = noty({
@@ -6058,9 +6058,9 @@ $(document).ready(function() {
         removeFormErrors();
 
         // Reset select2 hidden inputs
-        select2Shipper.select2('val', '');
-        select2Vendor.select2('val', '');
-        select2Receiver.select2('val', '');
+        select2Shipper.val(null).trigger("change");
+        select2Vendor.val(null).trigger("change");
+        select2Receiver.val(null).trigger("change");
 
         // Set the number of packageObjects to 1
         numberOfPackages.val(1);

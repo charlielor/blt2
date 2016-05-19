@@ -57,9 +57,17 @@ $(document).ready(function() {
                     name: newShipper
                 }
             ).fail(function() {
-
-                }
-            ).done(function(results) {
+                n = noty({
+                    layout: "bottom",
+                    theme: "bootstrapTheme",
+                    type: "error",
+                    text: "Connection error; please try again",
+                    maxVisible: 2,
+                    timeout: 2000,
+                    killer: true,
+                    buttons: false
+                });
+            }).done(function(results) {
                 // If there's an error, display the error
                 if (results['result'] == 'error') {
                     addError(results['message']);
@@ -67,7 +75,7 @@ $(document).ready(function() {
                     // Display a noty notification towards the bottom telling the user that the new vendor information was submitted successfully
                     n = noty({
                         layout: "bottom",
-                        theme: "bootstrap",
+                        theme: "bootstrapTheme",
                         type: "success",
                         text: "New Shipper successfully created!",
                         maxVisible: 2,
@@ -87,8 +95,7 @@ $(document).ready(function() {
                     addNewShipperModal.modal('hide');
 
                 } else {
-                    // If error, append error
-
+                    alert("Error with creating new Shipper");
                 }
             });
         }

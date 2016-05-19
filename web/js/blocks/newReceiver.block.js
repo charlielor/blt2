@@ -80,7 +80,7 @@ $(document).ready(function() {
                     // Display a noty notification towards the bottom telling the user that the new receiver information was submitted successfully
                     n = noty({
                         layout: "bottom",
-                        theme: "relax",
+                        theme: "bootstrapTheme",
                         type: "success",
                         text: "New Receiver successfully created!",
                         maxVisible: 2,
@@ -98,6 +98,8 @@ $(document).ready(function() {
 
                     // Close the modal
                     addNewReceiverModal.modal('hide');
+                } else {
+                    alert("Error with creating new Receiver");
                 }
             });
         }

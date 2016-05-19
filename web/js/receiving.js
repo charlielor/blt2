@@ -168,8 +168,6 @@ $(document).ready(function() {
         } else {
             $.get('package/search', {'term': trackingNumber})
                 .done(function(data) {
-
-                    console.log(data);
                     if (data['result'] == 'error') {
                         if (data['object'] != null) {
                             window.packageObject = data['object'];

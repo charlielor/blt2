@@ -18,6 +18,11 @@ $(document).ready(function() {
     });
 
     addNewVendorModal.on("shown.bs.modal", function() {
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            addNewVendorModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
+
         clearErrors();
         newVendorName.focus();
     });
@@ -40,7 +45,7 @@ $(document).ready(function() {
             newVendorName.focus();
         } else {
             // Submit new vendor
-            $.post("addNewVendor",
+            $.post("vendor/new",
                 {
                     name: vendorName
                 }
@@ -49,10 +54,7 @@ $(document).ready(function() {
                     addError('There was an connection error; please try again');
                     newVendorName.focus();
                 }
-            ).done(function(data) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+            ).done(function(results) {
                 // If error, append error
                 if (results['result'] == 'error') {
                     addError(results['message']);
@@ -74,7 +76,7 @@ $(document).ready(function() {
                     if (select2) {
                         var putInSelect2 = {
                             'id': results['object']['id'],
-                            'text': results['object']['name'] + " | " + results['object']['deliveryRoom']
+                            'text': results['object']['name']
                         };
 
                         $("#select2-Vendor").select2('data', putInSelect2);

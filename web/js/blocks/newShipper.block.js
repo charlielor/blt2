@@ -18,6 +18,11 @@ $(document).ready(function() {
     });
 
     addNewShipperModal.on("shown.bs.modal", function() {
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            addNewShipperModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
+
         clearErrors();
         newShipperName.focus();
     });
@@ -47,17 +52,14 @@ $(document).ready(function() {
             newShipperName.focus();
         } else {
             // Submit new shipper information
-            $.post("addNewShipper",
+            $.post("shipper/new",
                 {
                     name: newShipper
                 }
             ).fail(function() {
 
                 }
-            ).done(function(data) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+            ).done(function(results) {
                 // If there's an error, display the error
                 if (results['result'] == 'error') {
                     addError(results['message']);
@@ -76,12 +78,8 @@ $(document).ready(function() {
 
                     // Add the newly created vendor to the select2 input box
                     if (select2) {
-                        var putInSelect2 = {
-                            'id': results['object']['id'],
-                            'text': results['object']['name']
-                        };
-
-                        $("#select2-Shipper").select2('data', putInSelect2);
+                        $("#select2-Shipper").val(results['object'][0]['id']).trigger("change");
+                        $("#select2-Shipper").text(results['object'][0]['name']).trigger("change");
                     }
 
                     // Close the modal

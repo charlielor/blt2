@@ -21,6 +21,11 @@ $(document).ready(function() {
     });
 
     addNewReceiverModal.on("shown.bs.modal", function() {
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            addNewReceiverModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
+
         clearErrors();
         newReceiverName.focus();
     });
@@ -51,19 +56,16 @@ $(document).ready(function() {
             newReceiverName.focus();
         } else {
             // Submit the newReceiver information
-            $.post("addNewReceiver",
+            $.post("receiver/new",
                 {
                     name: receiverName,
-                    roomNumber: receiverRoomNumber
+                    deliveryRoom: receiverRoomNumber
                 }
             ).fail(function() {
                     // If connection error, display error
                     addError("none", 'There was a connection error; please try again');
                 }
-            ).done(function(data) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+            ).done(function(results) {
                 // If error, display error
                 if (results['result'] == 'error') {
                     if (results['message'].indexOf('Room number') == 0) {
@@ -89,12 +91,8 @@ $(document).ready(function() {
 
                     // Add the newly created vendor to the select2 input box
                     if (select2) {
-                        var putInSelect2 = {
-                            'id': results['object']['id'],
-                            'text': results['object']['name']
-                        };
-
-                        $("#select2-Receiver").select2('data', putInSelect2);
+                        $("#select2-Receiver").val(results['object'][0]['id']).trigger("change");
+                        $("#select2-Receiver").text(results['object'][0]['name'] + " | " + results['object'][0]['deliveryRoom']).trigger("change");
                     }
 
                     // Close the modal

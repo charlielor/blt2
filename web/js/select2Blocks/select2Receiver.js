@@ -6,7 +6,7 @@ $(document).ready(function() {
         theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Receiver",
-        width: "auto",
+        width: "off",
         ajax: {
             url: 'receiver/like',
             delay: 250,
@@ -26,7 +26,7 @@ $(document).ready(function() {
                     $.each(receiver, function(index) {
                         results.push({
                             id: receiver[index]['id'],
-                            text: receiver[index]['name']
+                            text: receiver[index]['name'] + " | " + receiver[index]['deliveryRoom']
                         })
                     });
                 }

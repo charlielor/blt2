@@ -6,7 +6,7 @@ $(document).ready(function() {
         theme: "bootstrap",
         minimumInputLength: 3,
         placeholder: "Search for a Vendor",
-        width: "auto",
+        width: "off",
         ajax: {
             url: 'vendor/like',
             delay: 250,

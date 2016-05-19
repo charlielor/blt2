@@ -6,7 +6,7 @@ $(document).ready(function() {
         theme: "bootstrap",
         minimumInputLength: 1,
         placeholder: "Search for a Shipper",
-        width: "auto",
+        width: "off",
         ajax: {
             url: 'shipper/like',
             delay: 250,

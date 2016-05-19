@@ -78,8 +78,9 @@ $(document).ready(function() {
 
                     // Add the newly created vendor to the select2 input box
                     if (select2) {
-                        $("#select2-Shipper").val(results['object'][0]['id']).trigger("change");
-                        $("#select2-Shipper").text(results['object'][0]['name']).trigger("change");
+                        var option = new Option(results['object'][0]['name'], results['object'][0]['id']);
+
+                        $("#select2-Shipper").html(option).trigger("change");
                     }
 
                     // Close the modal

@@ -91,8 +91,9 @@ $(document).ready(function() {
 
                     // Add the newly created vendor to the select2 input box
                     if (select2) {
-                        $("#select2-Receiver").val(results['object'][0]['id']).trigger("change");
-                        $("#select2-Receiver").text(results['object'][0]['name'] + " | " + results['object'][0]['deliveryRoom']).trigger("change");
+                        var option = new Option(results['object'][0]['name'] + " | " + results['object'][0]['deliveryRoom'], results['object'][0]['id']);
+
+                        $("#select2-Receiver").html(option).trigger("change");
                     }
 
                     // Close the modal

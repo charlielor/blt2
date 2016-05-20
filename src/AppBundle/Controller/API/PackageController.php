@@ -317,14 +317,6 @@ class PackageController extends Controller
             if (!empty($updatePackage["numOfPackages"])) {
                 $package->setNumberOfPackages($updatePackage["numOfPackages"], $user);
             }
-
-            // If the package has been delivered or picked up, update it [can't be both]
-            if (!empty($updatePackage['delivered'])) {
-                $package->setDelivered($updatePackage['delivered'], $user);
-            } else if (!empty($updatePackage['pickedUp'])) {
-                $package->setPickedUp($updatePackage['pickedUp'], $user);
-                $package->setUserWhoPickedUp($updatePackage['userWhoPickedUp'], $user);
-            }
             
             // Make sure the entity manager sees the entity as a new entity
             $em->persist($package);
@@ -341,6 +333,139 @@ class PackageController extends Controller
             // Return the results
             return new JsonResponse($results);
         }
+    }
+
+    /**
+     * @Route("/package/{id}/deliver", name="deliverPackage")
+     * @Method({"PUT"})
+     */
+    public function deliverPackageAction($id) {
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        // If package doesn't exist, return
+        if (empty($package)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not find package given id: ' . $id,
+                'object' => NULL
+            );
+
+            return new JsonResponse($results);
+        } else if ($package->getDelivered()) { // If package is already delivered
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been delivered',
+                'object' => NULL
+            );
+
+            return new JsonResponse($results);
+        } if ($package->getPickedUp()) { // If package is already picked up
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been picked up' ,
+                'object' => NULL
+            );
+
+            return new JsonResponse($results);
+        } else {
+            // Get user | anon. is temp for testing
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+
+            // Get the entity manager
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            $package->setDelivered(1, $user);
+
+            // Make sure the entity manager sees the entity as a new entity
+            $em->persist($package);
+
+            // Commit changes to the server
+            $em->flush();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Package delivered successfully!',
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
+            );
+
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/package/{id}/pickup", name="pickupPackage")
+     * @Method({"PUT"})
+     */
+    public function pickupPackageAction(Request $request, $id) {
+
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        // If package doesn't exist, return
+        if (empty($package)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not find package given id: ' . $id,
+                'object' => NULL
+            );
+
+            return new JsonResponse($results);
+        } else if ($package->getDelivered()) { // If package is already delivered
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been delivered',
+                'object' => NULL
+            );
+
+            return new JsonResponse($results);
+        } if ($package->getPickedUp()) { // If package is already picked up
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been picked up' ,
+                'object' => NULL
+            );
+
+            return new JsonResponse($results);
+        } else {
+            // Get user | anon. is temp for testing
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+
+            // Get the entity manager
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            $package->setPickedUp(1, $user);
+            $package->setUserWhoPickedUp($request->request->get('userWhoPickedUp'), $user);
+
+            // Make sure the entity manager sees the entity as a new entity
+            $em->persist($package);
+
+            // Commit changes to the server
+            $em->flush();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Package picked up successfully!',
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
+            );
+
+            return new JsonResponse($results);
+        }
+
     }
 
     /**
@@ -378,7 +503,7 @@ class PackageController extends Controller
             // Set up response
             $results = array(
                 'result' => 'error',
-                'message' => 'Did not find packages with tracking number: ' . $term,
+                'message' => 'Did not find package with tracking number: ' . $term,
                 'object' => NULL
             );
 

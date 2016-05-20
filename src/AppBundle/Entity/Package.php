@@ -256,6 +256,7 @@ class Package {
         $this->delivered = $delivered;
 
         $now = new \DateTime("NOW");
+
         if ($delivered) {
             $this->dateDelivered = $now;
             $this->userWhoDelivered = $user;

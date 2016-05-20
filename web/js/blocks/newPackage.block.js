@@ -101,7 +101,7 @@ $(document).ready(function() {
         $("#trackingNumberInput").focus();
     });
 
-    $("#submitNewPackage").on("click", function() {
+    $("#submitPackage").on("click", function() {
         // Get the elements
         var shipperSpan = $("#shipperSpan");
         var shipperSelector = $("#select2-Shipper");

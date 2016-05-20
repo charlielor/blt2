@@ -53,7 +53,9 @@ $(document).ready(function() {
 
     // When the user clicks on the pick up button, open the dialog box with the barcode input textbox
     $("#pickup").click(function() {
-        pickupPackageModal.modal('show');
+        pickupPackageModal.modal({
+            backdrop: "static"
+        });
     });
 
     pickupPackageModal.on("shown.bs.modal", function() {

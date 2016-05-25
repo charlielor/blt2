@@ -172,15 +172,14 @@ $(document).ready(function() {
                 .done(function(data) {
                     if (data['result'] == 'success') {
                         if (data['object'] != null) {
-                            window.packageObject = data['object'][0];
+                            window.existingPackageObject = data['object'][0];
                             window.newPackage = false;
 
-                            $("#existingPackage").text(packageObject['trackingNumber'] + " already exists");
+                            $("#existingPackage").text(window.existingPackageObject['trackingNumber'] + " already exists");
 
                             packageAlreadyExistsModal.modal("show");
                         }
                     } else { // If searching for package with tracking number doesn't return anything
-                        window.packageObject = new Package(trackingNumber);
                         window.newPackage = true;
 
                         $("#packageModal").modal({

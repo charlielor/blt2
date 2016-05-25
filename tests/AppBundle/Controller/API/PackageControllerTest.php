@@ -299,7 +299,7 @@ class PackageControllerTest extends WebTestCase
         // Test for update
         $client->request('PUT', '/package/testPackage/update', array(
             "numOfPackages" => 1,
-            "removedPackingSlipIds" => array(
+            "deletePackingSlipIds" => array(
                 "removePackingSlipOne", "removePackingSlipTwo"
             )
         ));

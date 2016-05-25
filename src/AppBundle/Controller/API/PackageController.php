@@ -99,12 +99,6 @@ class PackageController extends Controller
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
             }
 
-
-            // If there are any pictures taken, move them to the uploadedFiles array
-            if (!(empty($uploadedPictures))) {
-                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
-            }
-
             // Get the current date
             $currentDate = new \DateTime("NOW");
 
@@ -120,7 +114,7 @@ class PackageController extends Controller
                     $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $trackingNumberOfNewPackage, $i, $currentDate->format('Ymd'));
 
                     if ($moveUploadedFileLocation != NULL) {
-                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
+                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
 
                         $em->persist($packingSlip);
 
@@ -174,7 +168,7 @@ class PackageController extends Controller
             // Set up the response
             $results = array(
                 'result' => 'error',
-                'message' => 'Can not find package given id: ' . $id,
+                'message' => 'Can not find package given tracking number: ' . $id,
                 'object' => NULL
             );
 
@@ -193,14 +187,14 @@ class PackageController extends Controller
             $currentDate = new \DateTime("NOW");
 
             // For each updatable field
-            if (!empty($updatePackage['removedPackingSlipIds'])) {
-                $deletedPackingSlipIDs = $updatePackage['removedPackingSlipIds'];
+            if (!empty($updatePackage['deletePackingSlipIds'])) {
+                $deletedPackingSlipIDs = $updatePackage['deletePackingSlipIds'];
 
                 $packingSlipRepository = $this->getDoctrine()->getRepository("AppBundle:PackingSlip");
 
                 // Remove packing slips from package
-                foreach ($deletedPackingSlipIDs as $id) {
-                    $deletedPackingSlip = $packingSlipRepository->find($id);
+                foreach ($deletedPackingSlipIDs as $packingSlipID) {
+                    $deletedPackingSlip = $packingSlipRepository->find($packingSlipID);
 
                     if (!empty($deletedPackingSlip)) {
                         // Get the location of where the file should be uploaded to
@@ -220,7 +214,7 @@ class PackageController extends Controller
 
                         rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
 
-                        $package->removePackingSlips($deletedPackingSlip);
+                        $package->removePackingSlips($deletedPackingSlip, $user);
                     }
                 }
 
@@ -249,11 +243,6 @@ class PackageController extends Controller
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
             }
 
-            // If there are any pictures taken, move them to the uploadedFiles array
-            if (!(empty($uploadedPictures))) {
-                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
-            }
-
             // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
             if (!(empty($uploadedFiles))) {
 
@@ -263,7 +252,7 @@ class PackageController extends Controller
                     $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $id, $i, $currentDate->format('Ymd'));
 
                     if ($moveUploadedFileLocation != NULL) {
-                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['deleted'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
+                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
 
                         $em->persist($packingSlip);
 
@@ -766,7 +755,7 @@ class PackageController extends Controller
     }
 
     /**
-     * Check uploaded file for errors and file type validation then move it to the upload folder
+     * Check uploaded file for errors and file type validation then move it to the uploads folder
      *
      * @param $uploadedFile
      * @param $trackingNumber
@@ -779,7 +768,7 @@ class PackageController extends Controller
         // Get the location of where the file should be uploaded to
         $dirRoot = $this->get('kernel')->getRootDir() . '/../';
 
-        $path = "upload/" . $date . "/" . $trackingNumber . "/";
+        $path = "uploads/" . $date . "/" . $trackingNumber . "/";
 
         $uploadedFileResults = array(
             "filename" => "",
@@ -796,7 +785,7 @@ class PackageController extends Controller
                 // If that folder doesn't exist, create it
                 if (!file_exists($moveDir)) {
                     if (!(mkdir($moveDir, 0755, true))) {
-                        $folderWithoutRootDirectory = strstr($moveDir, '/upload');
+                        $folderWithoutRootDirectory = strstr($moveDir, '/uploads');
                         $this->logger->error('Unable to create ...' . $folderWithoutRootDirectory . ' on the server');
                         return FALSE;
                     }
@@ -826,19 +815,19 @@ class PackageController extends Controller
                  */
                 if (is_uploaded_file($uploadedFile["tmp_name"])) {
                     if (!(move_uploaded_file($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
                         $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
                 } else if (($uploadedFile["type"] == "image/png") || ($uploadedFile["type"] == "image/jpeg")) {
                     if (!(rename($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
                         $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
 
                     if (!chmod($moveToDir, 0644)) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
                         $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
@@ -858,7 +847,7 @@ class PackageController extends Controller
 
                 // Existence of file
                 if (!file_exists($moveToDir)) {
-                    $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
+                    $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
                     $this->logger->error('The file that got uploaded does not exist at location ...' . $folderWithoutRootDirectory);
                     return FALSE;
                 }

@@ -28,25 +28,25 @@ $(document).ready(function() {
             $(".newPackage").hide();
 
             // Set the tracking number
-            $("#packageTrackingNumber").text(window.packageObject.trackingNumber);
+            $("#packageTrackingNumber").text(window.existingPackageObject.trackingNumber);
 
             // Fill in the select2 inputs
-            var shipperOption = new Option(window.packageObject.shipper.name, window.packageObject.shipper.id);
+            var shipperOption = new Option(window.existingPackageObject.shipper.name, window.existingPackageObject.shipper.id);
             select2Shipper.html(shipperOption).trigger("change");
 
-            var vendorOption = new Option(window.packageObject.vendor.name, window.packageObject.vendor.id);
+            var vendorOption = new Option(window.existingPackageObject.vendor.name, window.existingPackageObject.vendor.id);
             select2Vendor.html(vendorOption).trigger("change");
 
-            var receiverOption = new Option(window.packageObject.receiver.name  + ' | ' + window.packageObject.receiver.deliveryRoom, window.packageObject.receiver.id);
+            var receiverOption = new Option(window.existingPackageObject.receiver.name  + ' | ' + window.existingPackageObject.receiver.deliveryRoom, window.existingPackageObject.receiver.id);
             select2Receiver.html(receiverOption).trigger("change");
 
             // Set the number of packageObjects
-            numberOfPackages.val(window.packageObject.numberOfPackages);
+            numberOfPackages.val(window.existingPackageObject.numberOfPackages);
 
             // If the packageObject has packing slips, set up preview links
-            if (window.packageObject.packingSlips.length > 0) {
+            if (window.existingPackageObject.packingSlips.length > 0) {
 
-                window.packageObject.packingSlips.forEach(function (element, index, array) {
+                window.existingPackageObject.packingSlips.forEach(function (element, index, array) {
 
                     listOfExistingPackingSlips.append(
                         '<div id="' + element['id']+ '" class="form-control-static input-group col-md-3">' +
@@ -71,22 +71,15 @@ $(document).ready(function() {
 
             var shipperSpan = $("#shipperSpan");
 
-            // Create a new packageObject
-            window.packageObject = new Package(trackingNumber);
-
             $("#packageShipper").text(shipperSpan.text());
 
             // Set the tracking number in form
-            $("#packageTrackingNumber").text(window.packageObject.trackingNumber);
+            $("#packageTrackingNumber").text(trackingNumber);
         }
     });
 
     packageModal.on("shown.bs.modal", function() {
-        if (window.packageObject['isNew'] == true) {
-            select2Vendor.focus();
-        } else if (window.packageObject.isNew == false) {
-            select2Shipper.focus();
-        }
+
     });
 
     packageModal.on("hidden.bs.modal", function() {
@@ -110,7 +103,9 @@ $(document).ready(function() {
                 return;
             } else {
                 formData.append("shipperId", shipperSelector.val());
-                formData.append("removedPackingSlipIds", deletedPackingSlips);
+                deletedPackingSlips.forEach(function(val, index) {
+                    formData.append("deletePackingSlipIds[]", val);
+                });
             }
         } else {
             formData.append("trackingNumber", $("#packageTrackingNumber").text());
@@ -140,31 +135,28 @@ $(document).ready(function() {
 
         // Get all pictures
         var picturesTaken = document.getElementsByClassName("thumbnail");
+
         if (picturesTaken.length > 0) {
-            var packingSlipPictures = [];
             for (var i = 0; i < picturesTaken.length; i++) {
-                packingSlipPictures.push(picturesTaken[i].src);
+                formData.append("packingSlipPictures[]", picturesTaken[i].src);
             }
-            formData.append("packingSlipPictures[]", packingSlipPictures);
         }
 
         // Check for packing slips and if there are none, ask if it's okay to submit packageObject with no packing slips
         var okayOnPackingSlips = true;
 
-        if (window.packageObject.packingSlips.length == 0) {
-            var emptyPackingSlips = false;
-            var packingSlips = $("#attachedPackingSlips");
-            var numberOfAttachedPackingSlips = packingSlips[0]['files'].length;
+        var emptyPackingSlips = false;
+        var packingSlips = $("#attachedPackingSlips");
+        var numberOfAttachedPackingSlips = packingSlips[0]['files'].length;
 
-            if (numberOfAttachedPackingSlips < 1) {
-                emptyPackingSlips = true;
-            }
+        if (numberOfAttachedPackingSlips < 1 && picturesTaken.length < 1) {
+            emptyPackingSlips = true;
+        }
 
-            if (emptyPackingSlips) {
-                var confirmNoPackingSlip = confirm("There are no packing slips attached. Is that okay?");
-                if (!confirmNoPackingSlip) {
-                    okayOnPackingSlips = false;
-                }
+        if (emptyPackingSlips) {
+            var confirmNoPackingSlip = confirm("There are no packing slips attached. Is that okay?");
+            if (!confirmNoPackingSlip) {
+                okayOnPackingSlips = false;
             }
         }
 
@@ -208,9 +200,6 @@ $(document).ready(function() {
                                     killer: true,
                                     buttons: false
                                 });
-
-                                // Close the form
-                                packageModal.modal("hide");
                             }
                         }
                     })
@@ -229,7 +218,7 @@ $(document).ready(function() {
                     });
             } else { // Update package VIA PUT
                 $.ajax({
-                    url: 'package/' + window.packageObject.trackingNumber + '/update',
+                    url: 'package/' + window.existingPackageObject.trackingNumber + '/update',
                     type: 'PUT',
                     data: formData,
                     contentType: false,
@@ -275,9 +264,6 @@ $(document).ready(function() {
                                 if (row.length != 0) {
                                     $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
                                 }
-
-                                // Close the form
-                                packageModal.modal("hide");
                             }
                         }
                     })
@@ -298,7 +284,8 @@ $(document).ready(function() {
 
         }
 
-        window.newPackage = true;
+        // Close the form
+        packageModal.modal("hide");
     });
 
     // When the user clicks on the "-" next to the number of packageObjects text input box, decrease the number in the text box by one
@@ -328,7 +315,7 @@ $(document).ready(function() {
     /*
      * Delete existing packing slip
      */
-    $(document).on("click", ".deleteExistingPackingSlip", function(e) {
+    $(document).on("click", ".deleteExistingPackingSlip", function() {
         var idOfPackingSlip = $(this).data('id');
 
         $("#" + idOfPackingSlip).remove();
@@ -362,7 +349,11 @@ $(document).ready(function() {
         $("#image").src = '';
         $("#thumbnailsDiv").empty();
 
-        packageObject = null;
+        // Change newPackage flag to true
+        window.newPackage = true;
+
+        // Clear any deleted packing slips from updates
+        deletedPackingSlips = [];
     }
 
     // If the up/down arrow keys are pressed, add or subtract the number of packageObjects

@@ -102,115 +102,83 @@ $(document).ready(function() {
         var vendorSelector = $("#select2-Vendor");
         var receiverSelector = $("#select2-Receiver");
 
-        var shipper, vendor, receiver;
+        var formData = new FormData(document.getElementById('uploadFiles'));
 
-        // Remove all errors
-        //removeFormErrors();
-
-        // Check to see if select2 shipper/vendor/receiver is filled
-        if (window.packageObject.isNew == false) {
-            var existingPackageObject = window.packageObject;
-
-            // Create a new receivedPackage object and fill in information
-            window.packageObject = new Package(existingPackageObject['trackingNumber']);
-            window.packageObject.isNew = false;
-            window.packageObject.shipper = existingPackageObject['shipper'];
-            window.packageObject.receiver = existingPackageObject['receiver'];
-            window.packageObject.vendor = existingPackageObject['vendor'];
-            window.packageObject.numberOfPackages = existingPackageObject['numberOfPackages'];
-            window.packageObject.deletedPackingSlips = deletedPackingSlips;
-
-            if (shipperSelector.val() == null) {
-                // If selectShipper is empty
-                addError("shipper", "");
+        if (!window.newPackage) {
+            if (shipperSelector.val() === null) {
+                shipperSelector.select2('open');
+                return;
             } else {
-                shipper = {
-                    "id": shipperSelector.val(),
-                    "name": shipperSelector.text()
-                };
+                formData.append("shipperId", shipperSelector.val());
+                formData.append("removedPackingSlipIds", deletedPackingSlips);
             }
         } else {
-            shipper = {
-                "id": parseInt(shipperSpan.attr('value')),
-                "name": shipperSpan.text()
-            };
+            formData.append("trackingNumber", $("#packageTrackingNumber").text());
+            formData.append("shipperId", shipperSpan.attr('value'));
         }
 
-        window.packageObject.shipper = shipper;
-
-        if ((vendorSelector.val() === null)) {
-            addError("vendor", "");
-
-        } else if (receiverSelector.val() === null) {
-            addError("receiver", "");
+        if (vendorSelector.val() === null) {
+            vendorSelector.select2('open');
+            return;
         } else {
-            vendor = {
-                "id": vendorSelector.val(),
-                "name": vendorSelector.text()
-            };
-
-            receiver = {
-                "id": receiverSelector.val(),
-                "name": receiverSelector.text().split("|")[0].trim(),
-                "deliveryRoom": receiverSelector.text().split("|")[1].trim()
-            };
-
-            window.packageObject.vendor = vendor;
-            window.packageObject.receiver = receiver;
-
+            formData.append("vendorId", vendorSelector.val());
         }
 
-        // Set the number of packageObjects
-        window.packageObject.numberOfPackages = parseInt($("#numberOfPackages").val());
+        if (receiverSelector.val() === null) {
+            receiverSelector.select2('open');
+            return;
+        } else {
+            formData.append("receiverId", receiverSelector.val());
+        }
 
-        // If the form is valid
-        if (window.packageObject.valdiatePackage()) {
-            // Push all pictures to the packageObject object
-            var picturesTaken = document.getElementsByClassName("thumbnail");
+        if (parseInt($("#numberOfPackages").val()) < 0) {
+            $("#addAPackage").focus();
+            return;
+        } else {
+            formData.append("numOfPackages", parseInt($("#numberOfPackages").val()));
+        }
 
+        // Get all pictures
+        var picturesTaken = document.getElementsByClassName("thumbnail");
+        if (picturesTaken.length > 0) {
+            var packingSlipPictures = [];
             for (var i = 0; i < picturesTaken.length; i++) {
-                window.packageObject.packingSlips.push(picturesTaken[i].src);
+                packingSlipPictures.push(picturesTaken[i].src);
+            }
+            formData.append("packingSlipPictures[]", packingSlipPictures);
+        }
+
+        // Check for packing slips and if there are none, ask if it's okay to submit packageObject with no packing slips
+        var okayOnPackingSlips = true;
+
+        if (window.packageObject.packingSlips.length == 0) {
+            var emptyPackingSlips = false;
+            var packingSlips = $("#attachedPackingSlips");
+            var numberOfAttachedPackingSlips = packingSlips[0]['files'].length;
+
+            if (numberOfAttachedPackingSlips < 1) {
+                emptyPackingSlips = true;
             }
 
-            // Get the selected uploaded files into it's own form
-            var formData = new FormData(document.getElementById('uploadFiles'));
-
-            // Change the packageObject object into JSOn
-            var packageObjectJSON = JSON.stringify(window.packageObject);
-
-            // Append the packageObject JSON to the form
-            formData.append('packageObject', packageObjectJSON);
-
-            // Check for packing slips and if there are none, ask if it's okay to submit packageObject with no packing slips
-            var okayOnPackingSlips = true;
-
-            if (window.packageObject.packingSlips.length == 0) {
-                var emptyPackingSlips = false;
-                var packingSlips = $("#attachedPackingSlips");
-                var numberOfAttachedPackingSlips = packingSlips[0]['files'].length;
-
-                if (numberOfAttachedPackingSlips < 1) {
-                    emptyPackingSlips = true;
-                }
-
-                if (emptyPackingSlips) {
-                    var confirmNoPackingSlip = confirm("There are no packing slips attached. Is that okay?");
-                    if (!confirmNoPackingSlip) {
-                        okayOnPackingSlips = false;
-                    }
+            if (emptyPackingSlips) {
+                var confirmNoPackingSlip = confirm("There are no packing slips attached. Is that okay?");
+                if (!confirmNoPackingSlip) {
+                    okayOnPackingSlips = false;
                 }
             }
+        }
 
-            // If okay no packing slips
-            if (okayOnPackingSlips) {
+        // If okay no packing slips
+        if (okayOnPackingSlips) {
+            if (window.newPackage) {
                 // Upload form VIA AJAX POST
                 $.ajax({
-                        url: 'submitPackageInformation',
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false
-                    })
+                    url: 'package/new',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                })
                     .done(function (results) {
                         // If the result is an error, display the error and close the form as the form has already been submitted
                         if (results['result'] == 'error') {
@@ -224,74 +192,26 @@ $(document).ready(function() {
                                 killer: true,
                                 buttons: false
                             });
-
-
                         } else {
                             if ((results['result'] == 'success') && (results['object'] !== null)) {
-                                if (results['message'] == 'Successfully submitted package') {
-                                    // Add a row to the current table with the last uploaded packageObject information
-                                    $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
+                                // Add a row to the current table with the last uploaded packageObject information
+                                $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
 
-                                    // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
-                                    n = noty({
-                                        layout: "bottom",
-                                        theme: "bootstrapTheme",
-                                        type: "success",
-                                        text: "Package information sent successfully!",
-                                        maxVisible: 2,
-                                        timeout: 2000,
-                                        killer: true,
-                                        buttons: false
-                                    });
-
-                                    // Close the form
-                                    packageModal.modal("hide");
-
-                                } else if (results['message'] == "Successfully updated package") {
-                                    // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
-                                    n = noty({
-                                        layout: "bottom",
-                                        theme: "bootstrapTheme",
-                                        type: "success",
-                                        text: results['message'],
-                                        maxVisible: 2,
-                                        timeout: 2000,
-                                        killer: true,
-                                        buttons: false
-                                    });
-
-                                    // Depending on the returned object, either update the dataTable or ignore
-                                    var trackingNumberUpdated = results["object"]["trackingNumber"];
-
-                                    // Get the row index the row is on if any
-                                    // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
-                                    // legacy plugins created for 1.9 and lower
-                                    var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
-
-                                    if (row.length != 0) {
-                                        $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
-                                    }
-
-                                    // Close the form
-                                    packageModal.modal("hide");
-                                } else {
-                                    // TODO
-
-                                    console.log("Was successful at doing something...");
-                                }
-                            } else {
+                                // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
                                 n = noty({
                                     layout: "bottom",
                                     theme: "bootstrapTheme",
-                                    type: "error",
-                                    text: "Error in loading packageObject data into table",
+                                    type: "success",
+                                    text: "Package information sent successfully!",
                                     maxVisible: 2,
                                     timeout: 2000,
                                     killer: true,
                                     buttons: false
                                 });
-                            }
 
+                                // Close the form
+                                packageModal.modal("hide");
+                            }
                         }
                     })
                     .fail(function () {
@@ -300,7 +220,74 @@ $(document).ready(function() {
                             layout: "bottom",
                             theme: "bootstrapTheme",
                             type: "error",
-                            text: "Package information NOT sent successfully!",
+                            text: "Connection error; please try again",
+                            maxVisible: 2,
+                            timeout: 2000,
+                            killer: true,
+                            buttons: false
+                        });
+                    });
+            } else { // Update package VIA PUT
+                $.ajax({
+                    url: 'package/' + window.packageObject.trackingNumber + '/update',
+                    type: 'PUT',
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                })
+                    .done(function (results) {
+                        // If the result is an error, display the error and close the form as the form has already been submitted
+                        if (results['result'] == 'error') {
+                            n = noty({
+                                layout: "bottom",
+                                theme: "bootstrapTheme",
+                                type: "error",
+                                text: results['message'],
+                                maxVisible: 2,
+                                timeout: 2000,
+                                killer: true,
+                                buttons: false
+                            });
+                        } else {
+                            if ((results['result'] == 'success') && (results['object'] !== null)) {
+                                // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
+                                n = noty({
+                                    layout: "bottom",
+                                    theme: "bootstrapTheme",
+                                    type: "success",
+                                    text: results['message'],
+                                    maxVisible: 2,
+                                    timeout: 2000,
+                                    killer: true,
+                                    buttons: false
+                                });
+
+                                // Depending on the returned object, either update the dataTable or ignore
+                                var trackingNumberUpdated = results["object"]["trackingNumber"];
+
+                                console.log(results["object"]);
+
+                                // Get the row index the row is on if any
+                                // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
+                                // legacy plugins created for 1.9 and lower
+                                var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
+
+                                if (row.length != 0) {
+                                    $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
+                                }
+
+                                // Close the form
+                                packageModal.modal("hide");
+                            }
+                        }
+                    })
+                    .fail(function () {
+                        // Display a noty telling the user that there was an issue submitting the packageObject information
+                        n = noty({
+                            layout: "bottom",
+                            theme: "bootstrapTheme",
+                            type: "error",
+                            text: "Connection error; please try again",
                             maxVisible: 2,
                             timeout: 2000,
                             killer: true,
@@ -308,9 +295,10 @@ $(document).ready(function() {
                         });
                     });
             }
+
         }
 
-        window.newPackage = false;
+        window.newPackage = true;
     });
 
     // When the user clicks on the "-" next to the number of packageObjects text input box, decrease the number in the text box by one

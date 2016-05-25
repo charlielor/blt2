@@ -180,8 +180,6 @@ class PackageController extends Controller
 
             return new JsonResponse($results);
         } else {
-            // Cannot update tracking number --> ID, userWhoReceived and dateReceived
-
             // Get all that has been submitted through PUT
             $updatePackage = $request->request->all();
 

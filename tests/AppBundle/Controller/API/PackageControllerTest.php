@@ -522,7 +522,7 @@ class PackageControllerTest extends WebTestCase
 
         // Test for errors
         $client->request('GET', '/package/search', array(
-            "term" => "12345"
+            "term" => "stuffedchickenwings"
         ));
 
         $this->assertTrue($client->getResponse()->isSuccessful());

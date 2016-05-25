@@ -21,11 +21,11 @@ var Package = Package || function(trackingNumber) {
         this.numberOfPackages = 1;
 
         this.packingSlips = [];
-    };
 
-Package.prototype.valdiatePackage = function() {
-    return ((this.trackingNumber != null) && (this.shipper.id != "")
-    && (this.shipper.name != "") && (this.vendor.id != "") && (this.vendor.name != "")
-    && (this.receiver.id != "") && (this.receiver.name != "")
-    && (this.receiver.deliveryRoom != "") && (this.numberOfPackages > 0));
-};
+        this.validatePackage = function() {
+            return ((this.trackingNumber != null) && (this.shipper.id != "")
+            && (this.shipper.name != "") && (this.vendor.id != "") && (this.vendor.name != "")
+            && (this.receiver.id != "") && (this.receiver.name != "")
+            && (this.receiver.deliveryRoom != "") && (this.numberOfPackages > 0));
+        }
+    };

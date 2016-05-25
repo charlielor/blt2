@@ -23,11 +23,15 @@ class LoadPackage extends AbstractFixture implements OrderedFixtureInterface, Co
     }
 
     public function load(ObjectManager $manager) {
-        $testPackage = new Package("fixturePackage", 1, $this->getReference("fixtureShipper"), $this->getReference("fixtureReceiver"), $this->getReference("fixtureVendor"), "anon.");
+        $fixturePackage = new Package("fixturePackage", 7, $this->getReference("fixtureShipper"), $this->getReference("fixtureReceiver"), $this->getReference("fixtureVendor"), "anon.");
+        $fixturePackage2 = new Package("fixturePackage2", 3, $this->getReference("fixtureShipper2"), $this->getReference("fixtureReceiver2"), $this->getReference("fixtureVendor2"), "anon2.");
 
-        $this->addReference("fixturePackage", $testPackage);
 
-        $manager->persist($testPackage);
+        $this->addReference("fixturePackage", $fixturePackage);
+        $this->addReference("fixturePackage2", $fixturePackage2);
+
+        $manager->persist($fixturePackage);
+        $manager->persist($fixturePackage2);
 
         $manager->flush();
     }

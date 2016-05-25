@@ -1,7 +1,9 @@
 $(document).ready(function() {
     var trackingNumberInput = $('#trackingNumberInput');
 
-    window.packageObject = new Package();
+    window.packageObject = null;
+
+    window.newPackage = true;
 
     // DataTable for today's packages for the receiving page
     $('#datatable-Receiving').DataTable({
@@ -168,26 +170,22 @@ $(document).ready(function() {
         } else {
             $.get('package/search', {'term': trackingNumber})
                 .done(function(data) {
-                    if (data['result'] == 'error') {
+                    if (data['result'] == 'success') {
                         if (data['object'] != null) {
-                            window.packageObject = data['object'];
-
-                            window.packageObject['isNew'] = false;
+                            window.packageObject = data['object'][0];
+                            window.newPackage = false;
 
                             $("#existingPackage").text(packageObject['trackingNumber'] + " already exists");
+
                             packageAlreadyExistsModal.modal("show");
-
-
-                        } else {
-                            window.packageObject = new Package(trackingNumber);
-
-                            $("#packageModal").modal({
-                                backdrop: "static"
-                            });
                         }
+                    } else { // If searching for package with tracking number doesn't return anything
+                        window.packageObject = new Package(trackingNumber);
+                        window.newPackage = true;
 
-                    } else { // TODO - Error in querying for package
-
+                        $("#packageModal").modal({
+                            backdrop: "static"
+                        });
                     }
 
                 });

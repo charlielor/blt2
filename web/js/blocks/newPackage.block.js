@@ -18,9 +18,9 @@ $(document).ready(function() {
     $.fn.select2.defaults.set("dropdownParent", $("#packageModal"));
 
     packageModal.on("show.bs.modal", function() {
-        // When the dialogForm opens, check to see there's an existing packageObject.
+        // When the dialogForm opens, check to see if it is an existing packageObject.
         // If so then show the shipper select2 div, create a new packageObject and fill the information
-        if (window.packageObject.isNew == false) {
+        if (window.newPackage == false) {
             // Display the shipper select2
             $(".existingPackage").show();
 
@@ -31,20 +31,14 @@ $(document).ready(function() {
             $("#packageTrackingNumber").text(window.packageObject.trackingNumber);
 
             // Fill in the select2 inputs
-            $("#select2-Shipper").select2('data', {
-                id: window.packageObject.shipper.id,
-                text: window.packageObject.shipper.name
-            });
+            var shipperOption = new Option(window.packageObject.shipper.name, window.packageObject.shipper.id);
+            select2Shipper.html(shipperOption).trigger("change");
 
-            $("#select2-Vendor").select2('data', {
-                id: window.packageObject.vendor.id,
-                text: window.packageObject.vendor.name
-            });
+            var vendorOption = new Option(window.packageObject.vendor.name, window.packageObject.vendor.id);
+            select2Vendor.html(vendorOption).trigger("change");
 
-            $("#select2-Receiver").select2('data', {
-                id: window.packageObject.receiver.id,
-                text: window.packageObject.receiver.name  + ' | ' + window.packageObject.receiver.deliveryRoom
-            });
+            var receiverOption = new Option(window.packageObject.receiver.name  + ' | ' + window.packageObject.receiver.deliveryRoom, window.packageObject.receiver.id);
+            select2Receiver.html(receiverOption).trigger("change");
 
             // Set the number of packageObjects
             numberOfPackages.val(window.packageObject.numberOfPackages);
@@ -315,6 +309,8 @@ $(document).ready(function() {
                     });
             }
         }
+
+        window.newPackage = false;
     });
 
     // When the user clicks on the "-" next to the number of packageObjects text input box, decrease the number in the text box by one

@@ -84,10 +84,10 @@ $(document).ready(function() {
         $('.shipperRow').remove();
 
         // Do an AJAX call to the server to get a list of enabled shippers and append them to the dialog
-        $.getJSON('shippers', function(data) {
-            if (data !== null) {
+        $.getJSON('shippers', function(results) {
+            if (results['object'].length !== 0) {
 
-                var retrievedShippers = data['object'];
+                var retrievedShippers = results['object'];
                 var listOfShippers = [];
 
                 $.each(retrievedShippers, function(index) {
@@ -165,13 +165,13 @@ $(document).ready(function() {
         var trackingNumber = trackingNumberInput.val().replace(/\s/g, "");
 
         // Check to see if it's empty
-        if (trackingNumber.length == 0) {
+        if (trackingNumber.length === 0) {
             emptyTrackingNumberModal.modal('show');
         } else {
             $.get('package/search', {'term': trackingNumber})
                 .done(function(data) {
                     if (data['result'] == 'success') {
-                        if (data['object'] != null) {
+                        if (data['object'].length !== 0) {
                             window.existingPackageObject = data['object'][0];
                             window.newPackage = false;
 

@@ -80,7 +80,7 @@ $(document).ready(function() {
         var ptn = pickupTrackingNumber.val();
 
         // If the barcode is not empty, submit the barcode to the server and get the package
-        if ((ptn.replace(/\s/g,"")).length == 0) {
+        if ((ptn.replace(/\s/g,"")).length === 0) {
             // If the barcode is empty, then display error, clear and focus input box
             addError("input", "Tracking number can not be empty");
             pickupTrackingNumber.focus();
@@ -136,7 +136,7 @@ $(document).ready(function() {
 
             // If the user who is picking up the package's textbox is not empty or null, then update the server
             // that the package has been picked up.
-            if ((uwpu.replace(/\s/g, "")).length == 0) {
+            if ((uwpu.replace(/\s/g, "")).length === 0) {
                 addError("table", "Please enter in the first and last name of the person who is picking up package");
                 userWhoPickedUp.focus();
             } else {

@@ -20,7 +20,7 @@ $(document).ready(function() {
     packageModal.on("show.bs.modal", function() {
         // When the dialogForm opens, check to see if it is an existing packageObject.
         // If so then show the shipper select2 div, create a new packageObject and fill the information
-        if (window.newPackage == false) {
+        if (window.newPackage === false) {
             // Display the shipper select2
             $(".existingPackage").show();
 
@@ -389,7 +389,7 @@ $(document).ready(function() {
         if (confirmDelete) {
             this.remove();
             var allThumbnails = document.getElementsByClassName("thumbnail").length;
-            if (allThumbnails == 0) {
+            if (allThumbnails === 0) {
                 $("#thumbnails").css("display", "none");
             }
         }

@@ -38,10 +38,10 @@ $(document).ready(function() {
     // Global variable to allow different settings of DataTables for mobile and desktop
     // DataTable for the main table on delivering
     var dataTableDelivering = $('#datatable-Delivering').DataTable({
+        paging: false,
+        searching: false,
         autoWidth: false,
         responsive: true,
-        dataSrc: '',
-        order: [[4, 'desc']],
         columns: [
             {data: 'trackingNumber'},
             {data: 'vendor.name'},
@@ -99,7 +99,6 @@ $(document).ready(function() {
     var dataTableMoreThanOnePackage = $('#datatable-MoreThanOnePackage').DataTable({
         autoWidth: false,
         responsive: true,
-        dataSrc: '',
         columns: [
             {
                 data: null,
@@ -197,14 +196,12 @@ $(document).ready(function() {
 
             $.ajax({
                 type: "GET",
-                url: "delivering/getReceiver",
+                url: "receiver/packages",
                 data: {
-                    barcode: barcode
+                    name: barcode
                 }
             })
-                . done(function(data) {
-                    // Parse through JSON data and return array
-                    var results = JSON && JSON.parse(data) || $.parseJSON(data);
+                . done(function(results) {
                     // If the results come back with an error, display a noty with the error
                     if (results['result'] == 'error') {
                         // Display a noty letting the user know what the error is
@@ -279,17 +276,14 @@ $(document).ready(function() {
 
         if (trackingNumber)
             $.ajax({
-                type: "POST",
-                url: "delivering/submitTrackingNumber",
+                type: "PUT",
+                url: "package/" + trackingNumber + "/deliver",
                 data: {
                     barcode: trackingNumber,
                     receiver: receiver
                 }
             })
-                .done(function(data) {
-                    // Parse through JSON data and return array
-                    var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+                .done(function(results) {
                     var n = null;
 
                     // If the results is an error, display a noty letting the user know that there was an error

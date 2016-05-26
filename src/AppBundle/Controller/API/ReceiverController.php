@@ -412,29 +412,43 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/{id}/packages", name="receiverPackages")
+     * @Route("/receiver/packages", name="receiverPackages")
      * @Method({"GET"})
      */
-    public function allPackagesAction(Request $request, $id) {
-        // Get the Package repository
-        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+    public function receiverPackagesAction(Request $request) {
+        if (empty($request->query->get('name'))) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Error in retrieving packages',
+                'object' => []
+            );
 
-        // Get all packages received by receiver
-        $packages = $packageRepository->findBy([
-            'receiver' => $id,
-            'delivered' => 0,
-            'pickedUp' => 0
-        ]);
+            return new JsonResponse($results);
+        } else {
+            $name = $request->query->get('name');
 
-        // Set up the response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Successfully retrieved ' . count($packages) . ' Package(s)' ,
-            'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
-        );
+            $em = $this->get('doctrine.orm.entity_manager');
 
-        return new JsonResponse($results);
+            $query = $em->createQuery(
+                'SELECT p FROM AppBundle:Package p, AppBundle:Receiver r
+                                     WHERE r.name = :name
+                                     AND r.id = p.receiver
+                                     AND p.delivered = false
+                                     AND p.pickedUp = false'
+            )->setParameter("name", $name);
 
+            $packages = $query->getResult();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully retrieved ' . count($packages) . ' Package(s)' ,
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+            );
+
+            return new JsonResponse($results);
+        }
     }
 
     /**

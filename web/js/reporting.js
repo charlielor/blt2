@@ -293,64 +293,61 @@ $(document).ready(function() {
             submitReportRequest.removeAttr("disabled");
 
             if (response["result"] == "success") {
-                if ((response['object'] != null)) {
-                    var requestedQuery = response['requestedQuery'].split("-");
+                var requestedQuery = response['requestedQuery'].split("-");
 
-                    graphQueryResults.show();
+                graphQueryResults.show();
 
-                    if (response['object'].length > 0) {
-                        var dates = response['object'];
-                        var reportResultsDates = [];
-                        var reportResultsCount = [];
+                if (response['object'].length > 0) {
+                    var dates = response['object'];
+                    var reportResultsDates = [];
+                    var reportResultsCount = [];
 
-                        //if (dates.length > 15) {
-                        //    reportResultsGraph.css('width', '1000');
-                        //    reportResultsGraph.css('height', '500px');
-                        //} else if (dates.length > 15) {
-                        //    reportResultsGraph.css('width', '1000px');
-                        //    reportResultsGraph.css('height', '500px');
-                        //} else if (dates.length > 10) {
-                        //    reportResultsGraph.css('width', '800px');
-                        //    reportResultsGraph.css('height', '400px');
-                        //} else if (dates.length > 5) {
-                        //    reportResultsGraph.css('width', '600px');
-                        //    reportResultsGraph.css('height', '300px');
-                        //} else {
-                        //    reportResultsGraph.css('width', '600px');
-                        //    reportResultsGraph.css('height', '300px');
-                        //}
+                    //if (dates.length > 15) {
+                    //    reportResultsGraph.css('width', '1000');
+                    //    reportResultsGraph.css('height', '500px');
+                    //} else if (dates.length > 15) {
+                    //    reportResultsGraph.css('width', '1000px');
+                    //    reportResultsGraph.css('height', '500px');
+                    //} else if (dates.length > 10) {
+                    //    reportResultsGraph.css('width', '800px');
+                    //    reportResultsGraph.css('height', '400px');
+                    //} else if (dates.length > 5) {
+                    //    reportResultsGraph.css('width', '600px');
+                    //    reportResultsGraph.css('height', '300px');
+                    //} else {
+                    //    reportResultsGraph.css('width', '600px');
+                    //    reportResultsGraph.css('height', '300px');
+                    //}
 
-                        for (var i = 0; i < dates.length; i++) {
-                            if (dates[i] != null) {
-                                reportResultsDates.push(dates[i]['d']);
-                                reportResultsCount.push(dates[i]['numOfPackages']);
-                            }
+                    for (var i = 0; i < dates.length; i++) {
+                        if (dates[i] != null) {
+                            reportResultsDates.push(dates[i]['d']);
+                            reportResultsCount.push(dates[i]['numOfPackages']);
                         }
-
-                        var reportResultsData = {
-                            labels: reportResultsDates,
-                            datasets: [
-                                {
-                                    label: "Packages " + tokenName + " received",
-                                    fillColor: "rgba(151,187,205,0.5)",
-                                    strokeColor: "rgba(151,187,205,0.8)",
-                                    highlightFill: "rgba(151,187,205,0.75)",
-                                    highlightStroke: "rgba(151,187,205,1)",
-                                    data: reportResultsCount
-                                }
-                            ]
-                        };
-
-                        var pSDCTX = reportResultsGraph.get(0).getContext("2d");
-
-                        reportResultsChart = new Chart(pSDCTX).Bar(reportResultsData, {
-                            barShowStroke: false
-                        });
                     }
+
+                    var reportResultsData = {
+                        labels: reportResultsDates,
+                        datasets: [
+                            {
+                                label: "Packages " + tokenName + " received",
+                                fillColor: "rgba(151,187,205,0.5)",
+                                strokeColor: "rgba(151,187,205,0.8)",
+                                highlightFill: "rgba(151,187,205,0.75)",
+                                highlightStroke: "rgba(151,187,205,1)",
+                                data: reportResultsCount
+                            }
+                        ]
+                    };
+
+                    var pSDCTX = reportResultsGraph.get(0).getContext("2d");
+
+                    reportResultsChart = new Chart(pSDCTX).Bar(reportResultsData, {
+                        barShowStroke: false
+                    });
                 } else {
                     $("#emptySetModal").modal('show');
                 }
-
             } else {
                 $("#queryDatabaseErrorModal").modal('show');
             }

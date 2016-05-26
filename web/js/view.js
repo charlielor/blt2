@@ -129,9 +129,6 @@ $(document).ready(function() {
             dataTable.clear().draw();
 
             $.get('packages', date, function(response) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(response) || $.parseJSON(response);
-
                 if (results['result'] == 'success') {
                     // For however long the array is from the JSON parse, add the data to the DataTable
                     for (var i = 0; i < results['object'].length; i++) {
@@ -166,9 +163,6 @@ $(document).ready(function() {
         dataTable.clear().draw();
 
         $.get('/getPackagesForDate', date, function(response) {
-            // Parse through JSON data and return array
-            var results = JSON && JSON.parse(response) || $.parseJSON(response);
-
             if (results['result'] == 'success') {
                 for (var i = 0; i < results['object'].length; i++) {
                     dataTable.row.add(results['object'][i]).draw();

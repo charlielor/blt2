@@ -18,6 +18,11 @@ $(document).ready(function() {
     });
 
     addNewShipperModal.on("shown.bs.modal", function() {
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            addNewShipperModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
+
         clearErrors();
         newShipperName.focus();
     });
@@ -47,17 +52,22 @@ $(document).ready(function() {
             newShipperName.focus();
         } else {
             // Submit new shipper information
-            $.post("addNewShipper",
+            $.post("shipper/new",
                 {
                     name: newShipper
                 }
             ).fail(function() {
-
-                }
-            ).done(function(data) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+                n = noty({
+                    layout: "bottom",
+                    theme: "bootstrapTheme",
+                    type: "error",
+                    text: "Connection error; please try again",
+                    maxVisible: 2,
+                    timeout: 2000,
+                    killer: true,
+                    buttons: false
+                });
+            }).done(function(results) {
                 // If there's an error, display the error
                 if (results['result'] == 'error') {
                     addError(results['message']);
@@ -65,9 +75,9 @@ $(document).ready(function() {
                     // Display a noty notification towards the bottom telling the user that the new vendor information was submitted successfully
                     n = noty({
                         layout: "bottom",
-                        theme: "bootstrap",
+                        theme: "bootstrapTheme",
                         type: "success",
-                        text: "New Shipper successfully created!",
+                        text: results['message'],
                         maxVisible: 2,
                         timeout: 2000,
                         killer: true,
@@ -76,20 +86,16 @@ $(document).ready(function() {
 
                     // Add the newly created vendor to the select2 input box
                     if (select2) {
-                        var putInSelect2 = {
-                            'id': results['object']['id'],
-                            'text': results['object']['name']
-                        };
+                        var option = new Option(results['object'][0]['name'], results['object'][0]['id']);
 
-                        $("#select2-Shipper").select2('data', putInSelect2);
+                        $("#select2-Shipper").html(option).trigger("change");
                     }
 
                     // Close the modal
                     addNewShipperModal.modal('hide');
 
                 } else {
-                    // If error, append error
-
+                    alert("Error with creating new Shipper");
                 }
             });
         }

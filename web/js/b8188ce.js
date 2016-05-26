@@ -38,14 +38,14 @@ $(document).ready(function() {
                     if (results['result'] == 'success') {
                         $("#searchPackageText").val('');
 
-                        if (results['object'].length == 0) {
+                        if (results['object'].length === 0) {
                             $("#emptySetModal").modal('show');
                         } else {
                             $.each(results['object'], function(i) {
                                 var pack = results['object'][i];
                                 var downloadLinks = "";
 
-                                if (pack['packingSlips'].length != 0) {
+                                if (pack['packingSlips'].length !== 0) {
                                     $.each(pack['packingSlips'], function(j) {
                                         downloadLinks += '<a href="preview/' + pack['packingSlips'][j].downloadLink + '">' + pack['packingSlips'][j].extension.toUpperCase() + '</a> ';
                                     });
@@ -178,7 +178,7 @@ $(document).ready(function() {
                     if (results['result'] == 'success') {
                         $("#searchVendorText").val('');
 
-                        if (results['object'].length == 0) {
+                        if (results['object'].length === 0) {
                             $("#emptySetModal").modal('show');
                         } else {
                             $.each(results['object'], function(i) {

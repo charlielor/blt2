@@ -170,10 +170,6 @@ $(document).ready(function() {
         defaultDate: currentDate,
         maxDate: currentDate,
         onSelect: function(selectedDate) {
-            var date = {
-                'date': new Date(selectedDate).toDateString()
-            };
-
             // Change the button to the date to the selected date
             dateBeginButton.text(selectedDate);
 
@@ -185,10 +181,6 @@ $(document).ready(function() {
         defaultDate: currentDate,
         maxDate: currentDate,
         onSelect: function(selectedDate) {
-            var date = {
-                'date': new Date(selectedDate).toDateString()
-            };
-
             // Change the button to the date to the selected date
             dateEndButton.text(selectedDate);
 

@@ -186,6 +186,9 @@ $(document).ready(function() {
                             });
                         } else {
                             if ((results['result'] == 'success') && (results['object'] !== null)) {
+                                // TODO: probably should check for page to make sure that the appropriate action happens
+                                // such as in receiving and adding it to the table or if maintenance do something else
+
                                 // Add a row to the current table with the last uploaded packageObject information
                                 $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
 
@@ -251,10 +254,11 @@ $(document).ready(function() {
                                     buttons: false
                                 });
 
+                                // TODO: probably should check for page to make sure that the appropriate action happens
+                                // such as in receiving and adding it to the table or if maintenance do something else
+                                
                                 // Depending on the returned object, either update the dataTable or ignore
                                 var trackingNumberUpdated = results["object"]["trackingNumber"];
-
-                                console.log(results["object"]);
 
                                 // Get the row index the row is on if any
                                 // NOTICE: The DataTable constructor used here is "Hungarian" casing to use

@@ -32,7 +32,7 @@ $(document).ready(function() {
             {data: 'numberOfPackages'},
             {data: 'userWhoReceived'},
             {
-                data: 'packingSlips[]',
+                data: 'packingSlips',
                 render: function(data) {
                     // Create links for all packing slips
                     var packingSlipLinks = 'None';

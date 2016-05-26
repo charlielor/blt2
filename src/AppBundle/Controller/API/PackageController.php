@@ -206,15 +206,16 @@ class PackageController extends Controller
 
                         $deletedPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
 
-                        // Make sure the entity manager sees the entity as a new entity
-                        $em->persist($deletedPackingSlip);
-
-                        // Commit deleted packing slips to the server
-                        $em->flush();
 
                         rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
 
                         $package->removePackingSlips($deletedPackingSlip, $user);
+
+                        // Persist the deleted file
+                        $em->persist($deletedPackingSlip);
+
+                        // Commit deleted packing slips to the server
+                        $em->flush();
                     }
                 }
 

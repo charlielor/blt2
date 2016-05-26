@@ -38,7 +38,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => '\'' . $trackingNumberOfNewPackage . '\' already exists',
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -124,7 +124,7 @@ class PackageController extends Controller
                         $results = array(
                             'result' => 'error',
                             'message' => 'Error in moving uploaded file',
-                            'object' => NULL
+                            'object' => []
                         );
 
                         return new JsonResponse($results);
@@ -169,7 +169,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find package given tracking number: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -263,7 +263,7 @@ class PackageController extends Controller
                         $results = array(
                             'result' => 'error',
                             'message' => 'Error in moving uploaded file',
-                            'object' => NULL
+                            'object' => []
                         );
 
                         return new JsonResponse($results);
@@ -340,7 +340,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find package given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -349,7 +349,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Package has already been delivered',
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -358,7 +358,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Package has already been picked up' ,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -406,7 +406,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find package given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -415,7 +415,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Package has already been delivered',
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -424,7 +424,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Package has already been picked up' ,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -492,7 +492,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Did not find package with tracking number: ' . $term,
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON
@@ -536,7 +536,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Did not find packages with tracking number like: ' . $term,
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON
@@ -561,7 +561,7 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find package given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -622,13 +622,13 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'No Packages for ' . $dateTimeBegin->format("Y-m-d"),
-                'object' => NULL
+                'object' => []
             );
         } else {
             $results = array(
                 'result' => 'error',
                 'message' => 'No Packages between ' . $dateTimeBegin->format("Y-m-d") . ' and ' . $dateTimeEnd->format("Y-m-d"),
-                'object' => NULL
+                'object' => []
             );
         }
 

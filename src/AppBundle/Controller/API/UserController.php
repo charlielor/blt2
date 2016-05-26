@@ -66,7 +66,7 @@ class UserController extends Controller {
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
         }
 
@@ -107,7 +107,7 @@ class UserController extends Controller {
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
         }
 

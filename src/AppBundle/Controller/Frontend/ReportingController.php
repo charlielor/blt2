@@ -345,7 +345,7 @@ class ReportingController extends Controller
                         $results = array(
                             'result' => 'error',
                             'message' => 'Unable to determine request type',
-                            'object' => NULL
+                            'object' => []
                         );
 
                         return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
@@ -635,7 +635,7 @@ class ReportingController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => 'Unable to determine request type',
-                    'object' => NULL
+                    'object' => []
                 );
 
                 return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
@@ -807,7 +807,7 @@ class ReportingController extends Controller
                 'message' => 'No packages found for given query',
                 'requestedQuery' => $requestQuery,
                 'tokenId' => $tokenId,
-                'object' => NULL,
+                'object' => [],
                 'type' => $typeOfRequest,
             );
 
@@ -816,7 +816,7 @@ class ReportingController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Error querying database',
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);

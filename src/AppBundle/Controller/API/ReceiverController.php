@@ -38,7 +38,7 @@ class ReceiverController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewReceiver . '\' already exists; disabled',
-                    'object' => NULL
+                    'object' => []
                 );
 
                 return new JsonResponse($results);
@@ -47,7 +47,7 @@ class ReceiverController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewReceiver . '\' already exists',
-                    'object' => NULL
+                    'object' => []
                 );
 
                 return new JsonResponse($results);
@@ -99,7 +99,7 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -152,7 +152,7 @@ class ReceiverController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => 'Another Receiver already has update name: ' . $receiverName,
-                    'object' => NULL
+                    'object' => []
                 );
 
                 return new JsonResponse($results);
@@ -176,7 +176,7 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -222,7 +222,7 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -269,7 +269,7 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -332,7 +332,7 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON
@@ -380,7 +380,7 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON

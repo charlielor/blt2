@@ -35,7 +35,7 @@ class ShipperController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewShipper . '\' already exists; disabled',
-                    'object' => NULL
+                    'object' => []
                 );
 
                 return new JsonResponse($results);
@@ -44,7 +44,7 @@ class ShipperController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewShipper . '\' already exists',
-                    'object' => NULL
+                    'object' => []
                 );
 
                 return new JsonResponse($results);
@@ -96,7 +96,7 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -143,7 +143,7 @@ class ShipperController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => 'Another Shipper already has update name: ' . $newShipperName,
-                    'object' => NULL
+                    'object' => []
                 );
 
                 return new JsonResponse($results);
@@ -167,7 +167,7 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -213,7 +213,7 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -260,7 +260,7 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
             return new JsonResponse($results);
@@ -323,7 +323,7 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON
@@ -371,7 +371,7 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON

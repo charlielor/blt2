@@ -164,7 +164,7 @@ class MaintenanceController extends Controller
         $results = array(
             'result' => 'error',
             'message' => 'There was an error in extracting GET parameters',
-            'object' => NULL
+            'object' => []
         );
 
         if (empty($term) || empty($repositoryInfo)) {

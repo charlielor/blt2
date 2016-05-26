@@ -25,7 +25,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -41,7 +41,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -57,14 +57,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -88,7 +88,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -98,7 +98,7 @@ class PackageControllerTest extends WebTestCase
         # Testing against duplicates
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -118,7 +118,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $duplicatePackage);
         $this->assertArrayHasKey('message', $duplicatePackage);
         $this->assertArrayHasKey('object', $duplicatePackage);
-        $this->assertNull($duplicatePackage['object']);
+        $this->assertEmpty($duplicatePackage['object']);
         $this->assertEquals('error', $duplicatePackage['result']);
 
         # Testing with errors
@@ -142,7 +142,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $errorParamsResponse);
         $this->assertArrayHasKey('message', $errorParamsResponse);
         $this->assertArrayHasKey('object', $errorParamsResponse);
-        $this->assertNull($errorParamsResponse['object']);
+        $this->assertEmpty($errorParamsResponse['object']);
         $this->assertEquals('error', $errorParamsResponse['result']);
 
         $package = $newPackage['object'];
@@ -164,7 +164,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
@@ -174,7 +174,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -184,7 +184,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -194,7 +194,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
@@ -226,7 +226,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -242,7 +242,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -258,14 +258,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -289,7 +289,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -298,7 +298,7 @@ class PackageControllerTest extends WebTestCase
 
         // Test for update
         $client->request('PUT', '/package/testPackage/update', array(
-            "numOfPackages" => 1,
+            "numberOfPackages" => 1,
             "deletePackingSlipIds" => array(
                 "removePackingSlipOne", "removePackingSlipTwo"
             )
@@ -318,13 +318,13 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $updatedPackage);
         $this->assertArrayHasKey('message', $updatedPackage);
         $this->assertArrayHasKey('object', $updatedPackage);
-        $this->assertNotNull($updatedPackage['object']);
+        $this->assertNotEmpty($updatedPackage['object']);
         $this->assertEquals('success', $updatedPackage['result']);
         $this->assertEquals(1, $updatedPackage['object']['numberOfPackages']);
 
         // Test for errors
         $client->request('PUT', '/package/test/update', array(
-            "numOfPackages" => 1,
+            "numberOfPackages" => 1,
             "removedPackingSlipIds" => array(
                 "removePackingSlipOne", "removePackingSlipTwo"
             )
@@ -344,7 +344,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('error', $errorResponse['result']);
 
         $package = $newPackage['object'];
@@ -366,7 +366,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
@@ -376,7 +376,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -386,7 +386,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -396,7 +396,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
@@ -427,7 +427,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -443,7 +443,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -459,14 +459,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -490,7 +490,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -516,7 +516,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $searchPackage);
         $this->assertArrayHasKey('message', $searchPackage);
         $this->assertArrayHasKey('object', $searchPackage);
-        $this->assertNotNull($searchPackage['object']);
+        $this->assertNotEmpty($searchPackage['object']);
         $this->assertEquals('success', $searchPackage['result']);
         $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
 
@@ -539,7 +539,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('error', $errorResponse['result']);
 
         $client->request('GET', '/package/search', array(
@@ -548,7 +548,7 @@ class PackageControllerTest extends WebTestCase
 
         $packageResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($packageResponse['object']);
+        $this->assertNotEmpty($packageResponse['object']);
 
         $package = $packageResponse['object'][0];
 
@@ -569,7 +569,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
@@ -579,7 +579,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -589,7 +589,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -599,7 +599,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
@@ -630,7 +630,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -646,7 +646,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -662,14 +662,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -693,7 +693,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -720,7 +720,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deliveredPackage);
 
         $this->assertArrayHasKey('object', $deliveredPackage);
-        $this->assertNotNull($deliveredPackage['object']);
+        $this->assertNotEmpty($deliveredPackage['object']);
         $this->assertEquals(4, $deliveredPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $deliveredPackage['object']['trackingNumber']);
         $this->assertEquals(1, $deliveredPackage['object']['delivered']);
@@ -745,7 +745,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
@@ -755,7 +755,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -765,7 +765,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -775,7 +775,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
@@ -806,7 +806,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -822,7 +822,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -838,14 +838,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -869,7 +869,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -899,7 +899,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $pickedUpPackage);
 
         $this->assertArrayHasKey('object', $pickedUpPackage);
-        $this->assertNotNull($pickedUpPackage['object']);
+        $this->assertNotEmpty($pickedUpPackage['object']);
         $this->assertEquals('testPackage', $pickedUpPackage['object']['trackingNumber']);
         $this->assertEquals(1, $pickedUpPackage['object']['pickedUp']);
         $this->assertEquals('stuffedchickenwings', $pickedUpPackage['object']['userWhoPickedUp']);
@@ -924,7 +924,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
@@ -934,7 +934,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -944,7 +944,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -954,7 +954,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
@@ -985,7 +985,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -1001,7 +1001,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -1017,14 +1017,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -1048,7 +1048,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -1074,7 +1074,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $searchPackage);
         $this->assertArrayHasKey('message', $searchPackage);
         $this->assertArrayHasKey('object', $searchPackage);
-        $this->assertNotNull($searchPackage['object']);
+        $this->assertNotEmpty($searchPackage['object']);
         $this->assertEquals('success', $searchPackage['result']);
         $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
 
@@ -1097,7 +1097,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('error', $errorResponse['result']);
 
         $package = $newPackage['object'];
@@ -1119,7 +1119,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
@@ -1129,7 +1129,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -1139,7 +1139,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -1149,7 +1149,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
@@ -1180,7 +1180,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -1196,7 +1196,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -1212,14 +1212,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -1243,7 +1243,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -1269,7 +1269,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Test for errors
@@ -1289,7 +1289,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('error', $errorResponse['result']);
 
         // Search database for existing entities and delete them
@@ -1299,7 +1299,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -1309,7 +1309,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -1319,7 +1319,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
@@ -1350,7 +1350,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $receiverResponse);
 
         $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
         $this->assertCount(1, $receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
@@ -1366,7 +1366,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $shipperResponse);
 
         $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotNull($shipperResponse['object']);
+        $this->assertNotEmpty($shipperResponse['object']);
         $this->assertCount(1, $shipperResponse['object']);
 
         $shipper = $shipperResponse['object'];
@@ -1382,14 +1382,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $vendorResponse);
 
         $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
         $this->assertCount(1, $vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 
         $client->request('POST', '/package/new', array(
             "trackingNumber" => "testPackage",
-            "numOfPackages" => 4,
+            "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -1413,7 +1413,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $newPackage);
 
         $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotNull($newPackage['object']);
+        $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
         $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
@@ -1443,7 +1443,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packageDeleted);
         $this->assertArrayHasKey('message', $packageDeleted);
         $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotNull($packageDeleted['object']);
+        $this->assertNotEmpty($packageDeleted['object']);
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
@@ -1453,7 +1453,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiverResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $receiver = $receiverResponse['object'];
 
@@ -1463,7 +1463,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipperResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($receiverResponse['object']);
+        $this->assertNotEmpty($receiverResponse['object']);
 
         $shipper = $shipperResponse['object'];
 
@@ -1473,7 +1473,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendorResponse = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertNotNull($vendorResponse['object']);
+        $this->assertNotEmpty($vendorResponse['object']);
 
         $vendor = $vendorResponse['object'];
 

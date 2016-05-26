@@ -130,7 +130,7 @@ $(document).ready(function() {
             $("#addAPackage").focus();
             return;
         } else {
-            formData.append("numOfPackages", parseInt($("#numberOfPackages").val()));
+            formData.append("numberOfPackages", parseInt($("#numberOfPackages").val()));
         }
 
         // Get all pictures

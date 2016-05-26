@@ -33,7 +33,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was unsuccessfully created, duplicate
@@ -49,7 +49,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $duplicateResponse);
 
         $this->assertArrayHasKey('object', $duplicateResponse);
-        $this->assertNull($duplicateResponse['object']);
+        $this->assertEmpty($duplicateResponse['object']);
 
         // Assert that given entity is disabled, display error
         $client->request('PUT', '/receiver/' . $successResponse["object"][0]["id"] . '/disable');
@@ -71,7 +71,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $disabledResponse);
 
         $this->assertArrayHasKey('object', $disabledResponse);
-        $this->assertNotNull($disabledResponse['object']);
+        $this->assertNotEmpty($disabledResponse['object']);
 
         // Assert that receiver was unsuccessfully created, entity disabled
         $client->request('POST', '/receiver/new', array(
@@ -96,7 +96,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $dupDisabledResponse);
 
         $this->assertArrayHasKey('object', $dupDisabledResponse);
-        $this->assertNull($dupDisabledResponse['object']);
+        $this->assertEmpty($dupDisabledResponse['object']);
 
         // Re-enable receiver
         // Assert that given entity is disabled, display error
@@ -119,7 +119,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $enabledResponse);
 
         $this->assertArrayHasKey('object', $enabledResponse);
-        $this->assertNotNull($enabledResponse['object']);
+        $this->assertNotEmpty($enabledResponse['object']);
 
 
         // Assert that receiver was successfully deleted
@@ -142,7 +142,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testUpdateReceiverRoute() {
@@ -171,7 +171,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully updated
@@ -197,7 +197,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
 
         $this->assertEquals('testUpdated', $successResponse['object'][0]['name']);
         $this->assertEquals('1212', $successResponse['object'][0]['deliveryRoom']);
@@ -225,7 +225,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $sameNameResponse);
 
         $this->assertArrayHasKey('object', $sameNameResponse);
-        $this->assertNull($sameNameResponse['object']);
+        $this->assertEmpty($sameNameResponse['object']);
 
         // Assert that a entity that does not exist is not updated
         $client->request('PUT', '/receiver/stuffedchickenwings/update', array(
@@ -250,7 +250,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
         $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
@@ -272,7 +272,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
 
@@ -302,7 +302,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully enabled
@@ -326,7 +326,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $enabledResponse);
 
         $this->assertArrayHasKey('object', $enabledResponse);
-        $this->assertNotNull($enabledResponse['object']);
+        $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that enabling a entity with no id gives errors
         $client->request('PUT', '/receiver/stuffedchickenwings/enable');
@@ -349,7 +349,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $noIdErrorResponse);
 
         $this->assertArrayHasKey('object', $noIdErrorResponse);
-        $this->assertNull($noIdErrorResponse['object']);
+        $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that receiver was successfully deleted
         $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
@@ -373,7 +373,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testDisableReceiverRoute() {
@@ -402,7 +402,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully disabled
@@ -426,7 +426,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $enabledResponse);
 
         $this->assertArrayHasKey('object', $enabledResponse);
-        $this->assertNotNull($enabledResponse['object']);
+        $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that disabling a entity with no id gives errors
         $client->request('PUT', '/receiver/stuffedchickenwings/disable');
@@ -449,7 +449,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $noIdErrorResponse);
 
         $this->assertArrayHasKey('object', $noIdErrorResponse);
-        $this->assertNull($noIdErrorResponse['object']);
+        $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that receiver was successfully deleted
         $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
@@ -473,7 +473,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testSearchReceiverRoute() {
@@ -502,7 +502,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
@@ -527,7 +527,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
@@ -553,7 +553,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
         $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
@@ -575,7 +575,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testLikeReceiverRoute() {
@@ -604,7 +604,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
@@ -629,7 +629,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
@@ -655,7 +655,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
         $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
@@ -677,7 +677,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testDeleteReceiverRoute() {
@@ -706,7 +706,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was successfully deleted
@@ -729,7 +729,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
         
         // Assert that route with invalid id gives errors
         $client->request('DELETE', '/receiver/stuffedchickenwings/delete');
@@ -751,7 +751,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
     }
 
     public function testAllReceiversRoute() {
@@ -796,7 +796,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that going to the entity's page is successful
@@ -824,7 +824,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
 }

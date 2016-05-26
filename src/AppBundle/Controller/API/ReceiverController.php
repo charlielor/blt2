@@ -398,7 +398,7 @@ class ReceiverController extends Controller
 
         // Get the enabled Receivers
         $receivers = $receiverRepository->findBy([
-            "enabled" => true
+            "enabled" => 1
         ]);
 
         // Set up the response
@@ -409,6 +409,32 @@ class ReceiverController extends Controller
         );
 
         return new JsonResponse($results);
+    }
+
+    /**
+     * @Route("/receiver/{id}/packages", name="receiverPackages")
+     * @Method({"GET"})
+     */
+    public function allPackagesAction(Request $request, $id) {
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get all packages received by receiver
+        $packages = $packageRepository->findBy([
+            'receiver' => $id,
+            'delivered' => 0,
+            'pickedUp' => 0
+        ]);
+
+        // Set up the response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Successfully retrieved ' . count($packages) . ' Package(s)' ,
+            'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+        );
+
+        return new JsonResponse($results);
+
     }
 
     /**

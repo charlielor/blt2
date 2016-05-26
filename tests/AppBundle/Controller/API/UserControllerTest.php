@@ -47,7 +47,7 @@ class UserControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
         $this->assertEquals("anon.", $successResponse['object'][0]['username']);
 
@@ -64,7 +64,7 @@ class UserControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
     }
 
     public function testLikeUserRoute() {
@@ -92,8 +92,8 @@ class UserControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
-        $this->assertCount(1, $successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
+        $this->assertCount(2, $successResponse['object']);
         $this->assertEquals("anon.", $successResponse['object'][0]['username']);
 
         // Assert error
@@ -109,6 +109,6 @@ class UserControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
     }
 }

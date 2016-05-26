@@ -7,13 +7,6 @@ $(document).ready(function() {
 
     // DataTable for today's packages for the receiving page
     $('#datatable-Receiving').DataTable({
-        dom: "<'row'<'col-sm-6 hidden-xs'l><'col-sm-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-5 hidden-xs'i><'col-sm-7 hidden-xs'p>>" +
-        "<'row'<'col-sm-12 text-center'B>>",
-        buttons: [
-            'csv', 'pdf'
-        ],
         autoWidth: false,
         responsive: true,
         ajax: {

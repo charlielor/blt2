@@ -59,10 +59,10 @@ class PackageController extends Controller
             $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
                 ->find($request->request->get("vendorId"));
 
-            $numOfPackagesFromPOST = $request->request->get("numOfPackages");
+            $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
 
             // None of the post variables can be empty
-            if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numOfPackagesFromPOST)) {
+            if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numberOfPackagesFromPOST)) {
                 // Set up the response
                 $results = array(
                     'result' => 'error',
@@ -74,7 +74,7 @@ class PackageController extends Controller
             }
 
             // Create a new Package entity and set its properties
-            $newPackage = new Package($trackingNumberOfNewPackage, $numOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
+            $newPackage = new Package($trackingNumberOfNewPackage, $numberOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
             // If there are pictures that were uploaded, put them in an array
             if (!empty($request->request->get("packingSlipPictures"))) {
@@ -302,8 +302,8 @@ class PackageController extends Controller
             }
 
             // If the number of packages changed, then update the number of packages
-            if (!empty($updatePackage["numOfPackages"])) {
-                $package->setNumberOfPackages($updatePackage["numOfPackages"], $user);
+            if (!empty($updatePackage["numberOfPackages"])) {
+                $package->setNumberOfPackages($updatePackage["numberOfPackages"], $user);
             }
             
             // Make sure the entity manager sees the entity as a new entity

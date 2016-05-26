@@ -32,7 +32,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was unsuccessfully created, duplicate
@@ -47,7 +47,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $duplicateResponse);
 
         $this->assertArrayHasKey('object', $duplicateResponse);
-        $this->assertNull($duplicateResponse['object']);
+        $this->assertEmpty($duplicateResponse['object']);
 
         // Assert that given entity is disabled, display error
         $client->request('PUT', '/shipper/' . $successResponse["object"][0]["id"] . '/disable');
@@ -69,7 +69,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $disabledResponse);
 
         $this->assertArrayHasKey('object', $disabledResponse);
-        $this->assertNotNull($disabledResponse['object']);
+        $this->assertNotEmpty($disabledResponse['object']);
 
         // Assert that shipper was unsuccessfully created, entity disabled
         $client->request('POST', '/shipper/new', array(
@@ -93,7 +93,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $dupDisabledResponse);
 
         $this->assertArrayHasKey('object', $dupDisabledResponse);
-        $this->assertNull($dupDisabledResponse['object']);
+        $this->assertEmpty($dupDisabledResponse['object']);
 
         // Re-enable shipper
         // Assert that given entity is disabled, display error
@@ -116,7 +116,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $enabledResponse);
 
         $this->assertArrayHasKey('object', $enabledResponse);
-        $this->assertNotNull($enabledResponse['object']);
+        $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that shipper was successfully deleted
         $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
@@ -138,7 +138,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testUpdateShipperRoute() {
@@ -166,7 +166,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully updated
@@ -191,7 +191,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
 
         $this->assertEquals('testUpdated', $successResponse['object'][0]['name']);
 
@@ -217,7 +217,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $sameNameResponse);
 
         $this->assertArrayHasKey('object', $sameNameResponse);
-        $this->assertNull($sameNameResponse['object']);
+        $this->assertEmpty($sameNameResponse['object']);
 
         // Assert that a entity that does not exist is not updated
         $client->request('PUT', '/shipper/stuffedchickenwings/update', array(
@@ -241,7 +241,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
 
         // Assert that shipper was successfully deleted
         $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
@@ -263,7 +263,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testEnableShipperRoute() {
@@ -291,7 +291,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully enabled
@@ -315,7 +315,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $enabledResponse);
 
         $this->assertArrayHasKey('object', $enabledResponse);
-        $this->assertNotNull($enabledResponse['object']);
+        $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that enabling a entity with no id gives errors
         $client->request('PUT', '/shipper/stuffedchickenwings/enable');
@@ -338,7 +338,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $noIdErrorResponse);
 
         $this->assertArrayHasKey('object', $noIdErrorResponse);
-        $this->assertNull($noIdErrorResponse['object']);
+        $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that shipper was successfully deleted
         $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
@@ -362,7 +362,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testDisableShipperRoute() {
@@ -390,7 +390,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully disabled
@@ -414,7 +414,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $enabledResponse);
 
         $this->assertArrayHasKey('object', $enabledResponse);
-        $this->assertNotNull($enabledResponse['object']);
+        $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that disabling a entity with no id gives errors
         $client->request('PUT', '/shipper/stuffedchickenwings/disable');
@@ -437,7 +437,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $noIdErrorResponse);
 
         $this->assertArrayHasKey('object', $noIdErrorResponse);
-        $this->assertNull($noIdErrorResponse['object']);
+        $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that shipper was successfully deleted
         $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
@@ -461,7 +461,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testSearchShipperRoute() {
@@ -489,7 +489,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
@@ -514,7 +514,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
@@ -540,7 +540,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
 
         // Assert that shipper was successfully deleted
         $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
@@ -562,7 +562,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testLikeShipperRoute() {
@@ -590,7 +590,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
@@ -615,7 +615,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
@@ -641,7 +641,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
 
         // Assert that shipper was successfully deleted
         $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
@@ -663,7 +663,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 
     public function testDeleteShipperRoute() {
@@ -691,7 +691,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was successfully deleted
@@ -714,7 +714,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
 
         // Assert that route with invalid id gives errors
         $client->request('DELETE', '/shipper/stuffedchickenwings/delete');
@@ -736,7 +736,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
 
         $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertNull($errorResponse['object']);
+        $this->assertEmpty($errorResponse['object']);
     }
 
     public function testAllShippersRoute() {
@@ -780,7 +780,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
 
         $this->assertArrayHasKey('object', $successResponse);
-        $this->assertNotNull($successResponse['object']);
+        $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that going to the entity's page is successful
@@ -808,6 +808,6 @@ class ShipperControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $deletedResponse);
 
         $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotNull($deletedResponse['object']);
+        $this->assertNotEmpty($deletedResponse['object']);
     }
 }

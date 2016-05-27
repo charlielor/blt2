@@ -756,7 +756,7 @@ class PackageController extends Controller
     }
 
     /**
-     * Check uploaded file for errors and file type validation then move it to the uploads folder
+     * Check uploaded file for errors and file type validation then move it to the upload folder
      *
      * @param $uploadedFile
      * @param $trackingNumber
@@ -769,7 +769,7 @@ class PackageController extends Controller
         // Get the location of where the file should be uploaded to
         $dirRoot = $this->get('kernel')->getRootDir() . '/../';
 
-        $path = "uploads/" . $date . "/" . $trackingNumber . "/";
+        $path = "upload/" . $date . "/" . $trackingNumber . "/";
 
         $uploadedFileResults = array(
             "filename" => "",
@@ -786,7 +786,7 @@ class PackageController extends Controller
                 // If that folder doesn't exist, create it
                 if (!file_exists($moveDir)) {
                     if (!(mkdir($moveDir, 0755, true))) {
-                        $folderWithoutRootDirectory = strstr($moveDir, '/uploads');
+                        $folderWithoutRootDirectory = strstr($moveDir, '/upload');
                         $this->logger->error('Unable to create ...' . $folderWithoutRootDirectory . ' on the server');
                         return FALSE;
                     }
@@ -816,19 +816,19 @@ class PackageController extends Controller
                  */
                 if (is_uploaded_file($uploadedFile["tmp_name"])) {
                     if (!(move_uploaded_file($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
                         $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
                 } else if (($uploadedFile["type"] == "image/png") || ($uploadedFile["type"] == "image/jpeg")) {
                     if (!(rename($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
                         $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
 
                     if (!chmod($moveToDir, 0644)) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
+                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
                         $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
@@ -848,7 +848,7 @@ class PackageController extends Controller
 
                 // Existence of file
                 if (!file_exists($moveToDir)) {
-                    $folderWithoutRootDirectory = strstr($moveToDir, '/uploads');
+                    $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
                     $this->logger->error('The file that got uploaded does not exist at location ...' . $folderWithoutRootDirectory);
                     return FALSE;
                 }
@@ -892,7 +892,7 @@ class PackageController extends Controller
 
                     break;
                 case UPLOAD_ERR_NO_TMP_DIR:
-                    $this->logger->error('Error: Missing temporary folder for uploads. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+                    $this->logger->error('Error: Missing temporary folder for upload. (ERR_CODE: ' . $uploadedFile["error"] . ')');
 
                     break;
                 case UPLOAD_ERR_CANT_WRITE:

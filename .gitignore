@@ -160,5 +160,5 @@ sftp-config.json
 *.bak
 
 ### BLT2 ###
-/uploads/*
-uploads/
+/upload/*
+upload/

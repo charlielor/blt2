@@ -18,7 +18,7 @@ class PackingSlipController extends Controller
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
         // Set the path of download
-        $path = $this->get('kernel')->getRootDir() . '/../uploads/' . $date . '/' . $trackingNumber . '/' . $filename;
+        $path = $this->get('kernel')->getRootDir() . '/../upload/' . $date . '/' . $trackingNumber . '/' . $filename;
 
         // Set the content
         $content = file_get_contents($path);
@@ -43,7 +43,7 @@ class PackingSlipController extends Controller
      */
     public function previewPackingSlipAction($date, $trackingNumber, $filename) {
         // Set the path of download
-        $path = $this->get('kernel')->getRootDir() . '/../uploads/' . $date . '/' . $trackingNumber . '/' . $filename;
+        $path = $this->get('kernel')->getRootDir() . '/../upload/' . $date . '/' . $trackingNumber . '/' . $filename;
 
         // Get PHP's file info tool
         $finfo = finfo_open(FILEINFO_MIME_TYPE);

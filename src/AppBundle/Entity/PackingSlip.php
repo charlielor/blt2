@@ -311,7 +311,7 @@ class PackingSlip {
      */
     public function getDownloadLink() {
         // Remove 'upload/' from path
-        $pathWithoutRoot = str_replace("upload/", "", $this->path);
+        $pathWithoutRoot = str_replace("uploads/", "", $this->path);
 
         return $pathWithoutRoot . $this->filename . '.' . $this->extension;
     }

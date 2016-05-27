@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% use 'blocks/newPackage.block.html.twig' %}
+{% use 'blocks/package.block.html.twig' %}
 {% use 'blocks/pickupPackage.block.html.twig' %}
 
 {% block userActions %}
@@ -17,12 +17,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
 
-    {{ block('formStyleSheets') }}
+    {{ block('packageStyleSheets') }}
 {% endblock %}
 
 {% block body %}
     {{ parent() }}
-    {{ block('form') }}
+    {{ block('package') }}
     {{ block('pickupPackage') }}
 
     <div id="emptyTrackingNumberModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="trackingNumberError">
@@ -147,6 +147,6 @@
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-    {{ block('formJavascripts') }}
+    {{ block('packageJavascripts') }}
     {{ block('pickupPackageJavascripts') }}
 {% endblock %}

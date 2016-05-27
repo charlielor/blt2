@@ -457,21 +457,21 @@ $(document).ready(function() {
             dataTable.clear().draw();
 
             $.get('packages', date, function(response) {
-                if (results['result'] == 'success') {
+                if (response['result'] == 'success') {
                     // For however long the array is from the JSON parse, add the data to the DataTable
-                    for (var i = 0; i < results['object'].length; i++) {
-                        dataTable.row.add(results['object'][i]).draw();
+                    for (var i = 0; i < response['object'].length; i++) {
+                        dataTable.row.add(response['object'][i]).draw();
                     }
 
                     // Change the button to the date to the selected date
                     selectDateButton.text(selectedDate);
-
-                    // Close the modal enclosing the datepicker
-                    datepickerModal.modal('hide');
-
-                    hideOrShowGoToTodayButton();
                 }
             });
+
+            // Close the modal enclosing the datepicker
+            datepickerModal.modal('hide');
+
+            hideOrShowGoToTodayButton();
         }
     });
 
@@ -491,9 +491,9 @@ $(document).ready(function() {
         dataTable.clear().draw();
 
         $.get('/getPackagesForDate', date, function(response) {
-            if (results['result'] == 'success') {
-                for (var i = 0; i < results['object'].length; i++) {
-                    dataTable.row.add(results['object'][i]).draw();
+            if (response['result'] == 'success') {
+                for (var i = 0; i < response['object'].length; i++) {
+                    dataTable.row.add(response['object'][i]).draw();
                 }
 
                 var month = (currentDate.getMonth() + 1);

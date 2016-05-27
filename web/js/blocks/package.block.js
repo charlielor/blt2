@@ -79,13 +79,22 @@ $(document).ready(function() {
     });
 
     packageModal.on("shown.bs.modal", function() {
+        if (!window.newPackage) {
 
+        } else {
+
+        }
     });
 
     packageModal.on("hidden.bs.modal", function() {
         clearForm();
-        $("#trackingNumberInput").val("");
-        $("#trackingNumberInput").focus();
+
+        var location = window.location.href.toString().split("/");
+
+        if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
+            $("#trackingNumberInput").val("");
+            $("#trackingNumberInput").focus();
+        }
     });
 
     $("#submitPackage").on("click", function() {
@@ -186,9 +195,6 @@ $(document).ready(function() {
                             });
                         } else {
                             if ((results['result'] == 'success') && (results['object'] !== null)) {
-                                // TODO: probably should check for page to make sure that the appropriate action happens
-                                // such as in receiving and adding it to the table or if maintenance do something else
-
                                 // Add a row to the current table with the last uploaded packageObject information
                                 $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
 
@@ -254,20 +260,22 @@ $(document).ready(function() {
                                     buttons: false
                                 });
 
-                                // TODO: probably should check for page to make sure that the appropriate action happens
-                                // such as in receiving and adding it to the table or if maintenance do something else
-                                
-                                // Depending on the returned object, either update the dataTable or ignore
-                                var trackingNumberUpdated = results["object"]["trackingNumber"];
+                                var location = window.location.href.toString().split("/");
 
-                                // Get the row index the row is on if any
-                                // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
-                                // legacy plugins created for 1.9 and lower
-                                var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
+                                if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
+                                    // Depending on the returned object, either update the dataTable or ignore
+                                    var trackingNumberUpdated = results["object"]["trackingNumber"];
 
-                                if (row.length != 0) {
-                                    $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
+                                    // Get the row index the row is on if any
+                                    // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
+                                    // legacy plugins created for 1.9 and lower
+                                    var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
+
+                                    if (row.length != 0) {
+                                        $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
+                                    }
                                 }
+
                             }
                         }
                     })

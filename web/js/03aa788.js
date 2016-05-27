@@ -5879,7 +5879,7 @@ $(document).ready(function() {
 
         requestDownload["type"] = "d-csv";
 
-        window.location.href = "reporting/queryRequest?" + "request=" + requestDownload["request"] + "&tokenId=" + requestDownload["tokenId"] + "&dateBegin=" + requestDownload["dateBegin"] + "&dateEnd=" + requestDownload["dateEnd"] + "&type=" + requestDownload["type"];
+        window.location.href = "reporting/query?" + "request=" + requestDownload["request"] + "&tokenId=" + requestDownload["tokenId"] + "&dateBegin=" + requestDownload["dateBegin"] + "&dateEnd=" + requestDownload["dateEnd"] + "&type=" + requestDownload["type"];
     });
 
     $(request).on("change", request, function() {
@@ -5892,10 +5892,6 @@ $(document).ready(function() {
         defaultDate: currentDate,
         maxDate: currentDate,
         onSelect: function(selectedDate) {
-            var date = {
-                'date': new Date(selectedDate).toDateString()
-            };
-
             // Change the button to the date to the selected date
             dateBeginButton.text(selectedDate);
 
@@ -5907,10 +5903,6 @@ $(document).ready(function() {
         defaultDate: currentDate,
         maxDate: currentDate,
         onSelect: function(selectedDate) {
-            var date = {
-                'date': new Date(selectedDate).toDateString()
-            };
-
             // Change the button to the date to the selected date
             dateEndButton.text(selectedDate);
 

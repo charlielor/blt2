@@ -16,6 +16,18 @@ $(document).ready(function() {
 
     cameraModal.on("show.bs.modal", function(e) {
         referer = $(e.relatedTarget).data('referer');
+
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            cameraModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
+    });
+
+    imageConfirmModal.on("show.bs.modal", function(e) {
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            imageConfirmModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
     });
 
     confirmPicture.on("click", function() {
@@ -30,7 +42,7 @@ $(document).ready(function() {
         createThumbnail(allHiddenImageTagsLength, image.src);
     });
 
-    cameraModal.on("show.bs.modal", function() {
+    cameraModal.on("shown.bs.modal", function() {
         camera.startCamera(function success(){
             $(video).one("click", function() {
                 camera.takePicture(function() {
@@ -50,7 +62,7 @@ $(document).ready(function() {
         });
     });
 
-    cameraModal.on("hide.bs.modal", function() {
+    cameraModal.on("hidden.bs.modal", function() {
         if (camera.on == true) {
             camera.stopCamera(function() {
                 console.log('Successfully stopped');

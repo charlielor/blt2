@@ -922,15 +922,15 @@ jQuery.fn.dataTableExt.oApi.fnFindCellRowIndexes = function ( oSettings, sSearch
         return $.notyRenderer.init(options);
     };
 
-$.noty.layouts.bottom = {
-    name     : 'bottom',
+$.noty.layouts.top = {
+    name     : 'top',
     options  : {},
     container: {
-        object  : '<ul id="noty_bottom_layout_container" />',
-        selector: 'ul#noty_bottom_layout_container',
+        object  : '<ul id="noty_top_layout_container" />',
+        selector: 'ul#noty_top_layout_container',
         style   : function() {
             $(this).css({
-                bottom       : 0,
+                top          : 0,
                 left         : '5%',
                 position     : 'fixed',
                 width        : '90%',
@@ -952,7 +952,6 @@ $.noty.layouts.bottom = {
     },
     addClass : ''
 };
-
 $.noty.themes.bootstrapTheme = {
     name: 'bootstrapTheme',
     modal: {
@@ -1013,198 +1012,402 @@ $.noty.themes.bootstrapTheme = {
 
 
 $(document).ready(function() {
-    var trackingNumberInput = $('#trackingNumberInput');
+    // Variables
+    // Error placement
+    var deliveringError = $('#deliveringError');
 
-    window.packageObject = null;
+    var moreThanOnePackageModal = $("#moreThanOnePackageModal");
 
-    window.newPackage = true;
+    // Get the barcode text box
+    var barcodeTextBox = $("#barcodeTextBox");
 
-    // DataTable for today's packages for the receiving page
-    $('#datatable-Receiving').DataTable({
+    // Get the receiver span
+    var receiverSpan = $('#receiverSpan');
+
+    // Receiver variable
+    var receiver = null;
+
+    // Array of packages
+    var undeliveredPackages = [];
+
+    // Get the ASCII value for ENTER
+    var ENTER = 13;
+
+    // noty
+    var n = null;
+
+    // When the moreThanOnePackageModal closes, focus on textbox input
+    $("#moreThanOnePackageModal").on("hidden.bs.modal", function() {
+        clearAndFocus();
+    });
+
+    $("#moreThanOnePackagesModal").on("hidden.bs.modal", function() {
+        clearAndFocus();
+    });
+
+    // Today's date
+    var dateFromToday = new Date();
+
+    // Global variable to allow different settings of DataTables for mobile and desktop
+    // DataTable for the main table on delivering
+    var dataTableDelivering = $('#datatable-Delivering').DataTable({
+        paging: false,
+        searching: false,
         autoWidth: false,
         responsive: true,
-        ajax: {
-            url: 'packages',
-            data: {
-                dateBegin: 'now',
-                dateEnd: 'now'
-            },
-            dataSrc: 'object'
-        },
         columns: [
             {data: 'trackingNumber'},
             {data: 'vendor.name'},
-            {data: 'shipper.name'},
             {data: 'receiver.name'},
             {data: 'numberOfPackages'},
-            {data: 'userWhoReceived'},
-            {
-                data: 'packingSlips',
-                render: function(data) {
-                    // Create links for all packing slips
-                    var packingSlipLinks = 'None';
-                    if (data.length != 0) {
-                        packingSlipLinks = "";
-                        $.each(data, function(index) {
-                            packingSlipLinks += '<a href="download/' + data[index]['downloadLink'] + '">' + data[index]['extension'].toUpperCase() + '</a> ';
-                        });
-                    }
-
-                    return packingSlipLinks;
-                }
-            },
             {
                 data: 'dateReceived.timestamp',
-                render: function(data) {
-                    // Get the date and times it by 1000
+                'render': function(data) {
                     var dateFromPackage = new Date(data * 1000);
 
-                    // Get the month and add 1 to it (zero-base)
                     var month = (dateFromPackage.getMonth() + 1);
-                    // If the month is less than 10 then append a 0 to the month
                     month = month < 10 ? '0' + month : month;
 
-                    // Get the date
                     var date = dateFromPackage.getDate();
-                    // If the date is less than 10 then append a 0 to the month
                     date = date < 10 ? '0' + date : date;
 
-                    // Return date
+                    return (dateFromPackage.getFullYear() + '/' + month + '/' + date);
+
+                }
+            }
+        ],
+        columnDefs: [
+            { "visible": false, "targets": 4}
+        ],
+        drawCallback: function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+
+            api.column(4, {page:'current'} ).data().each( function ( group, i ) {
+                var dateFromPackage = new Date(group * 1000);
+                var day = null;
+
+                if ((dateFromPackage.getFullYear() === dateFromToday.getFullYear()) && (dateFromPackage.getMonth() === dateFromToday.getMonth()) && (dateFromPackage.getDate() === dateFromToday.getDate())) {
+                    day = 'Today';
+                } else {
+                    var monthFromPackage = (dateFromPackage.getMonth() + 1) < 10 ? '0' + (dateFromPackage.getMonth() + 1) : (dateFromPackage.getMonth() + 1);
+                    var dayFromPackage = dateFromPackage.getDate() < 10 ? '0' + dateFromPackage.getDate() : dateFromPackage.getDate();
+                    day = dateFromPackage.getFullYear() + '/' + monthFromPackage + '/' + dayFromPackage;
+                }
+
+                if (last !== day) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group" style="background-color: #d3d3d3; font-weight: bold;"><td colspan="4">'+ day +'</td></tr>'
+                    );
+                }
+
+                last = day;
+            } );
+        }
+    });
+
+    // Global variable to allow different settings of DataTables for mobile and desktop
+    // DataTable for when there are more than one package for the given tracking number
+    var dataTableMoreThanOnePackage = $('#datatable-MoreThanOnePackage').DataTable({
+        autoWidth: false,
+        responsive: true,
+        columns: [
+            {
+                data: null,
+                'render': function() {
+                    return '<button type="button" class="btn btn-default btn-sm submitPackage">Submit</button>';
+                }
+            },
+            {data: 'trackingNumber'},
+            {data: 'vendor.name'},
+            {data: 'numberOfPackages'},
+            {
+                data: 'dateReceived.timestamp',
+                'render': function(data) {
+                    var dateFromPackage = new Date(data * 1000);
+
+                    var month = (dateFromPackage.getMonth() + 1);
+                    month = month < 10 ? '0' + month : month;
+
+                    var date = dateFromPackage.getDate();
+                    date = date < 10 ? '0' + date : date;
+
                     return (month + '-' + date + '-' + dateFromPackage.getFullYear());
                 }
             }
         ]
     });
 
-    var selectShipperModal = $('#selectShipperModal');
-    var shipperSpan = $('#shipperSpan');
-    var shipperSpanInForm = $('#shipperSpanInForm');
-
-    var emptyTrackingNumberModal = $("#emptyTrackingNumberModal");
-    var packageAlreadyExistsModal = $("#packageAlreadyExistsModal");
-
-    selectShipperModal.on("show.bs.modal", function() {
-        // Show a spinner gif while the page is retrieving a list of enabled shippers
-        $('#spinner').show();
-
-        // Remove all previous shipper buttons
-        $('.shipperRow').remove();
-
-        // Do an AJAX call to the server to get a list of enabled shippers and append them to the dialog
-        $.getJSON('shippers', function(results) {
-            if (results['object'].length !== 0) {
-
-                var retrievedShippers = results['object'];
-                var listOfShippers = [];
-
-                $.each(retrievedShippers, function(index) {
-                    listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="' + retrievedShippers[index]['id'] + '" class="btn btn-default btn-lg btn-block text-center shipperSelected">' + retrievedShippers[index]['name'] + '</button></div></div>');
-                });
-
-                listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="addANewShipper" class="btn btn-default btn-lg btn-block text-center" data-toggle="modal" data-target="#addNewShipperModal" data-referer="selectAShipper" data-select2=false>Add New Shipper</button></div></div>');
-
-                // Hide the spinner.gif
-                $('#spinner').hide();
-
-                // Append the list of shipper
-                $("#shippers").append(listOfShippers);
-            } else {
-
-            }
-        });
-    });
-
-    emptyTrackingNumberModal.on("hidden.bs.modal", function() {
-        trackingNumberInput.val("");
-        trackingNumberInput.focus();
-    });
-
-    selectShipperModal.modal({
-        backdrop: "static",
-        keyboard: false
-    });
-
-    selectShipperModal.on('click', ".shipperSelected", function() {
-        var selectedShipper = $(this).text();
-
-        shipperSpan.empty();
-        shipperSpanInForm.empty();
-        shipperSpan.append(selectedShipper);
-        shipperSpanInForm.append(selectedShipper);
-
-        shipperSpan.attr('value', $(this).attr('id'));
-
-        selectShipperModal.modal('hide');
-
-        trackingNumberInput.focus();
-    });
-
-    selectShipperModal.on('click', '#addANewShipper', function() {
-        selectShipperModal.modal('hide');
-    });
-
-    // When the user clicks on the select shipper button, show shipper
-    $('#shipper').click(function() {
-        selectShipperModal.modal({
-            backdrop: "static"
-        });
-    });
-
     //////////////////// Page Functions ////////////////////
 
-    // When the user presses the enter key on the keyboard, proceed with "Enter in Details".
+    moreThanOnePackageModal.on("hide.bs.modal", function() {
+        window.dataTableMoreThanOnePackage.clear().draw();
+    });
+
+    /*
+     When the user selects a tracking number that pretains to the package he/she is delivering and submit the package information.
+     */
+    $('#datatable-MoreThanOnePackage tbody').on("click", ".submitPackage", function() {
+        // Get the receivedPackage object
+        var selectedPackage = dataTableMoreThanOnePackage.row($(this).parents('tr')).data();
+
+        submitPackageInformation(selectedPackage);
+
+        moreThanOnePackageModal.modal("hide");
+
+        clearAndFocus();
+
+    });
+
+    // When a key is pressed on the delivering page
     $(document).keypress(function(e) {
-        if (e.keyCode == 13) {
-            if (!($(".modal").hasClass("in"))) {
-                $("#enterInDetails").click();
-            } else if ($("#packageModal").hasClass("in")) {
-            }
+        // If the key pressed was ENTER
+        if (e.keyCode == ENTER) {
+            validateBarcode();
         }
+
     });
 
-    $('#clear').click(function() {
-        clearAndFocusTrackingNumberField();
-    });
+    // Focus on the barcode textbox when the page loads
+    barcodeTextBox.focus();
 
-    // The "Enter in Details" button on the page.
-    $('#enterInDetails').click(function() {
-        // Get the tracking number with no spaces
-        var trackingNumber = trackingNumberInput.val().replace(/\s/g, "");
-
-        // Check to see if it's empty
-        if (trackingNumber.length === 0) {
-            emptyTrackingNumberModal.modal('show');
-        } else {
-            $.get('package/search', {'term': trackingNumber})
-                .done(function(data) {
-                    if (data['result'] == 'success') {
-                        if (data['object'].length !== 0) {
-                            window.existingPackageObject = data['object'][0];
-                            window.newPackage = false;
-
-                            $("#existingPackage").text(window.existingPackageObject['trackingNumber'] + " already exists");
-
-                            packageAlreadyExistsModal.modal("show");
-                        }
-                    } else { // If searching for package with tracking number doesn't return anything
-                        window.newPackage = true;
-
-                        $("#packageModal").modal({
-                            backdrop: "static"
-                        });
-                    }
-
-                });
-        }
-    });
+    //////////////////// Helper Functions ////////////////////
 
     /**
-     * Clear the tracking number input field and focus it
+     * When the user scans in a barcode, interpret what the barcode means.
+
+     * If it's not a part of the undeliveredPackages array, then it's either a receiver or invalid. Submit the barcode to see if it's a receiver.
+     * If so, then return all of the undelivered packages for that receiver. If not, display error.
+
+     * If it's part of the undeliveredPackages array, then it's a tracking number for the receiver. Submit the receiver and the barcode
+     * to have it updated.
      */
-    function clearAndFocusTrackingNumberField() {
-        // Focus on trackingNumberInput
-        trackingNumberInput.val('');
-        trackingNumberInput.focus();
+    function interpretBarcode() {
+        var barcode = barcodeTextBox.val();
+
+        /*
+         Barcodes that are tracking numbers are sometimes spliced base on known shipper patterns (pre 1.5 update).
+
+         Take the barcodes in the undeliveredPackage array and compare it to the scanned barcode.
+         If the scanned barcode contains (indexOf) anything in the undeliveredPackage array, push them
+         into a new array. If that array is greater than 1, then display a dialog with those packages as options
+         to submit.
+         */
+        //var similarTrackingNumbers = [];
+        //for (var i = 0; i < undeliveredPackages.length; i++) {
+        //    if (barcode.indexOf(undeliveredPackages[i].trackingNumber) !== -1) {
+        //        similarTrackingNumbers.push(undeliveredPackages[i]);
+        //    }
+        //}
+
+        var indexOfPackage = $.inArray(barcode, undeliveredPackages);
+
+        // If similarTrackingNumbers array is 0, then the barcode could be a receiver instead
+        // Try to get the receiver's undelievered packages
+        if (indexOfPackage == -1) {
+
+            $.ajax({
+                type: "GET",
+                url: "receiver/packages",
+                data: {
+                    name: barcode
+                }
+            })
+                . done(function(results) {
+                    // If the results come back with an error, display a noty with the error
+                    if (results['result'] == 'error') {
+                        // Display a noty letting the user know what the error is
+                        displayError(results['message']);
+
+                    } else if (results["object"].length != 0) {
+                        clearPageData();
+                        receiver = barcode;
+
+                        if (results["object"][0]['receiver']['deliveryRoom']) {
+                            receiverSpan.text(receiver + ' | ' + results["object"][0]['receiver']['deliveryRoom']);
+                        } else {
+                            receiverSpan.text(receiver);
+                        }
+
+                        for (var i = 0; i < results["object"].length; i++) {
+                            undeliveredPackages.push(results["object"][i].trackingNumber);
+                            dataTableDelivering.row.add(results["object"][i]).draw();
+                        }
+                    } else {
+                        // Display a noty letting the user know what the error is
+                        displaySuccess("All package for " + barcode + " has been delivered");
+                    }
+
+                    clearAndFocus();
+                })
+                . fail(function() {
+                    deliveringError.text("Connection error! Please try again");
+                });
+
+
+        } else if (indexOfPackage != -1) {
+            submitPackageInformation(undeliveredPackages[indexOfPackage]);
+        } else if (undeliveredPackages.length >= 1) {
+            for (var j = 0; j < undeliveredPackages.length; j++) {
+                dataTableMoreThanOnePackage.row.add(undeliveredPackages[j]).draw();
+            }
+
+            moreThanOnePackageModal.modal("show");
+        }
+
     }
 
+
+    /**
+     * When the user scans in a barcode, validate it to make sure that it's not empty or just spaces
+     */
+    function validateBarcode() {
+        // Remove errors
+        deliveringError.text('');
+        barcodeTextBox.removeClass('error');
+
+        // Get the value of the barcode textbox
+        var barcodeTextBoxValue = barcodeTextBox.val();
+
+        // If the barcode is not empty or does not contain just spaces
+        if ((barcodeTextBoxValue == null) || (barcodeTextBoxValue.replace(/\s/g, "") == "")) {
+            deliveringError.text("Please scan in a valid barcode");
+            barcodeTextBox.addClass('error');
+        } else {
+            interpretBarcode();
+        }
+    }
+
+    /**
+     * Submit the package information the server. If it's successful, remove it from the table and display
+     * a successful noty.
+     *
+     * @param packageInformation - Package information from the undelivered package array
+     */
+    function submitPackageInformation(trackingNumber) {
+
+        if (trackingNumber)
+            $.ajax({
+                type: "PUT",
+                url: "package/" + trackingNumber + "/deliver",
+                data: {
+                    barcode: trackingNumber,
+                    receiver: receiver
+                }
+            })
+                .done(function(results) {
+                    var n = null;
+
+                    // If the results is an error, display a noty letting the user know that there was an error
+                    // Else remove the submitted package information from there current array and display a noty to let the user know that the package has been successfully updated in database
+                    if (results['result'] === 'error') {
+                        displayError(results['message']);
+
+                        clearAndFocus();
+                    } else if (results['result'] === 'success') {
+                        var deliveredPackage = results['object'];
+
+                        // Get the number of packages for the package
+                        var numberOfPackages = deliveredPackage.numberOfPackages;
+                        // If there are more than one package, alert the user that there are more more than one package
+                        if (numberOfPackages > 1) {
+                            $("#moreThanOnePackages").text('There are ' + numberOfPackages + ' packages for ' + deliveredPackage.trackingNumber);
+
+                            $("#moreThanOnePackagesModal").modal("show");
+
+                            $("#moreThanOnePackagesModal").on("hide.bs.modal", function() {
+                                displaySuccess("Successfully marked as delivered");
+                            });
+
+                        } else {
+                            displaySuccess("Successfully marked as delivered!");
+                        }
+
+                        // Remove from array and from table
+                        for (var i = 0; i < undeliveredPackages.length; i++) {
+                            if (trackingNumber === undeliveredPackages[i]) {
+                                undeliveredPackages.splice(i, 1);
+                                dataTableDelivering.row(i).remove().draw();
+                                break;
+                            }
+                        }
+
+                        // Remove receiver text if the undelivered packages array is empty
+                        if (undeliveredPackages.length === 0) {
+                            receiverSpan.text('');
+                            undeliveredPackages = [];
+                            dataTableDelivering.clear().draw();
+                            dataTableMoreThanOnePackage.clear().draw();
+                        }
+
+                        deliveredPackage = null;
+                    } else {
+                        displayError('Error in submitting package information');
+                    }
+                })
+                .fail(function() {
+                    displayError("Connection error! Please try again");
+                });
+
+        clearAndFocus();
+    }
+
+    /**
+     * Clear the textbox and focus on it
+     */
+    function clearAndFocus() {
+        barcodeTextBox.val("");
+        barcodeTextBox.focus();
+    }
+
+    /**
+     * Clear the page of current data
+     */
+    function clearPageData() {
+        receiver = null;
+        undeliveredPackages = [];
+        receiverSpan.text('');
+        barcodeTextBox.removeClass('error');
+        deliveringError.text('');
+        dataTableDelivering.clear().draw();
+    }
+
+    // Order by the grouping
+    $('#datatable-Delivering tbody').on( 'click', 'tr.group', function () {
+        var currentOrder = dataTableDelivering.order()[0];
+        if ( currentOrder[0] === 4 && currentOrder[1] === 'asc' ) {
+            dataTableDelivering.order( [ 4, 'desc' ] ).draw();
+        }
+        else {
+            dataTableDelivering.order( [ 4, 'asc' ] ).draw();
+        }
+    } );
+
+    function displaySuccess(message) {
+        // Display a noty
+        n = noty({
+            layout: "top",
+            theme: "bootstrapTheme",
+            type: "success",
+            text: message,
+            maxVisible: 1,
+            timeout: 2000,
+            killer: true,
+            buttons: false
+        });
+    }
+
+    function displayError(error) {
+        n = noty({
+            layout: "top",
+            theme: "bootstrapTheme",
+            type: "error",
+            text: error,
+            maxVisible: 1,
+            timeout: 2000,
+            killer: true,
+            buttons: false
+        });
+    }
 });

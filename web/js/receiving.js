@@ -32,7 +32,7 @@ $(document).ready(function() {
                     if (data.length != 0) {
                         packingSlipLinks = "";
                         $.each(data, function(index) {
-                            packingSlipLinks += '<a href="download/' + data[index]['downloadLink'] + '">' + data[index]['extension'].toUpperCase() + '</a> ';
+                            packingSlipLinks += '<a href="preview/' + data[index]['downloadLink'] + '" target="_blank">' + data[index]['extension'].toUpperCase() + '</a> ';
                         });
                     }
 

@@ -1,10 +1,10 @@
 $(document).ready(function() {
     /*
-     Allows for remote data AJAX searches within the database. For User.
+     Allows for remote data AJAX searches within the database. For ShibbolethUser.
      */
-    $("#select2-User").select2({
+    $("#select2-ShibbolethUser").select2({
         theme: "bootstrap",
-        placeholder: "Select a User",
+        placeholder: "Select a ShibbolethUser",
         width: "off"
     });
 });

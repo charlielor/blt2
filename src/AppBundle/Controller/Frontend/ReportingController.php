@@ -136,7 +136,7 @@ class ReportingController extends Controller
 
                         break;
                     /*
-                     * Get all received packages received by User
+                     * Get all received packages received by ShibbolethUser
                      */
                     case 1:
                         if ($typeOfRequestExplode[0] == "g") {

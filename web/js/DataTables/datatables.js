@@ -27749,7 +27749,7 @@
 	    return err(strm, Z_BUF_ERROR);
 	  }
 
-	  /* User must not provide more input after the first FINISH: */
+	  /* ShibbolethUser must not provide more input after the first FINISH: */
 	  if (s.status === FINISH_STATE && strm.avail_in !== 0) {
 	    return err(strm, Z_BUF_ERROR);
 	  }
@@ -67076,7 +67076,7 @@ window.pdfMake = window.pdfMake || {}; window.pdfMake.vfs = {"LICENSE.txt":"DQog
 			}
 		}
 	
-		/* User specified column options */
+		/* ShibbolethUser specified column options */
 		if ( oOptions !== undefined && oOptions !== null )
 		{
 			// Backwards compatibility
@@ -85541,7 +85541,7 @@ Responsive.display = {
 
 	childRowImmediate: function ( row, update, render ) {
 		if ( (! update && row.child.isShown()) || ! row.responsive.hasHidden() ) {
-			// User interaction and the row is show, or nothing to show
+			// ShibbolethUser interaction and the row is show, or nothing to show
 			row.child( false );
 			$( row.node() ).removeClass( 'parent' );
 

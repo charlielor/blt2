@@ -3761,7 +3761,7 @@ $(document).ready(function() {
     var select2Receiver = $("#select2-Receiver");
 
     var userSelect = $(".userSelect");
-    var select2User = $("#select2-User");
+    var select2User = $("#select2-ShibbolethUser");
 
     var submitReportRequest = $("#submitReportRequest");
 
@@ -4102,11 +4102,11 @@ $(document).ready(function() {
     });
 
     /*
-     Allows for remote data AJAX searches within the database. For User.
+     Allows for remote data AJAX searches within the database. For ShibbolethUser.
      */
     select2User.select2({
         dropdownCssClass: "bootstrap",
-        placeholder: "Select a User",
+        placeholder: "Select a ShibbolethUser",
         width: 355
     }).on("select2-close", function() {
         select2User.blur();

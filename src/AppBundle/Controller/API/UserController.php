@@ -57,7 +57,7 @@ class UserController extends Controller {
             // Set up response
             $results = array(
                 'result' => 'success',
-                'message' => 'Retrieved ' . count($users) . ' User',
+                'message' => 'Retrieved ' . count($users) . ' ShibbolethUser',
                 'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
             );
 
@@ -98,7 +98,7 @@ class UserController extends Controller {
             // Set up response
             $results = array(
                 'result' => 'success',
-                'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
+                'message' => 'Retrieved ' . count($users) . ' ShibbolethUser(s) like \'' . $term . '\'',
                 'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
             );
 

@@ -20,7 +20,7 @@ $(document).ready(function() {
     var select2Receiver = $("#select2-Receiver");
 
     var userSelect = $(".userSelect");
-    var select2User = $("#select2-User");
+    var select2User = $("#select2-ShibbolethUser");
 
     var submitReportRequest = $("#submitReportRequest");
 

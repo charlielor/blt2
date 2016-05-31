@@ -1501,11 +1501,11 @@ S2.define('select2/selection/single',[
     });
 
     this.$selection.on('focus', function (evt) {
-      // User focuses on the container
+      // ShibbolethUser focuses on the container
     });
 
     this.$selection.on('blur', function (evt) {
-      // User exits the container
+      // ShibbolethUser exits the container
     });
 
     container.on('selection:update', function (params) {
@@ -5712,11 +5712,11 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
     /*
-     Allows for remote data AJAX searches within the database. For User.
+     Allows for remote data AJAX searches within the database. For ShibbolethUser.
      */
-    $("#select2-User").select2({
+    $("#select2-ShibbolethUser").select2({
         theme: "bootstrap",
-        placeholder: "Select a User",
+        placeholder: "Select a ShibbolethUser",
         width: "off"
     });
 });
@@ -5742,7 +5742,7 @@ $(document).ready(function() {
     var select2Receiver = $("#select2-Receiver");
 
     var userSelect = $(".userSelect");
-    var select2User = $("#select2-User");
+    var select2User = $("#select2-ShibbolethUser");
 
     var submitReportRequest = $("#submitReportRequest");
 

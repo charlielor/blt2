@@ -673,15 +673,16 @@ class PackageController extends Controller
         $organizedUploadedFilesArray[] = array();
 
         for ($i = 0; $i < count($uploadedFilesArray["name"]); $i++) {
-            if ($uploadedFilesArray["name"][$i] != "") {
-                $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray["name"][$i];
-                $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
-                $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
-                $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
-                $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
+            if ($uploadedFilesArray["error"][$i] == 0) {
+                if ($uploadedFilesArray["name"][$i] != "") {
+                    $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray["name"][$i];
+                    $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
+                    $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
+                    $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
+                    $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
+                }
             }
         }
-
         return array_values(array_filter($organizedUploadedFilesArray));
     }
 

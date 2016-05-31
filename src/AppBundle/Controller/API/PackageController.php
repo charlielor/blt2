@@ -9,9 +9,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Monolog\Logger;
 use AppBundle\Entity\Package;
 use AppBundle\Entity\PackingSlip;
+use Doctrine\ORM\Query\Expr;
 
 class PackageController extends Controller
 {
@@ -38,10 +38,10 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => '\'' . $trackingNumberOfNewPackage . '\' already exists',
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else { // Create a new Package
 
             // Get user | anon. is temp for testing
@@ -59,10 +59,10 @@ class PackageController extends Controller
             $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
                 ->find($request->request->get("vendorId"));
 
-            $numOfPackagesFromPOST = $request->request->get("numOfPackages");
+            $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
 
             // None of the post variables can be empty
-            if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numOfPackagesFromPOST)) {
+            if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numberOfPackagesFromPOST)) {
                 // Set up the response
                 $results = array(
                     'result' => 'error',
@@ -70,11 +70,11 @@ class PackageController extends Controller
                     'object' => $request->request->all()
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
 
             // Create a new Package entity and set its properties
-            $newPackage = new Package($trackingNumberOfNewPackage, $numOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
+            $newPackage = new Package($trackingNumberOfNewPackage, $numberOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
             // If there are pictures that were uploaded, put them in an array
             if (!empty($request->request->get("packingSlipPictures"))) {
@@ -99,12 +99,6 @@ class PackageController extends Controller
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
             }
 
-
-            // If there are any pictures taken, move them to the uploadedFiles array
-            if (!(empty($uploadedPictures))) {
-                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
-            }
-
             // Get the current date
             $currentDate = new \DateTime("NOW");
 
@@ -120,7 +114,7 @@ class PackageController extends Controller
                     $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $trackingNumberOfNewPackage, $i, $currentDate->format('Ymd'));
 
                     if ($moveUploadedFileLocation != NULL) {
-                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
+                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
 
                         $em->persist($packingSlip);
 
@@ -130,10 +124,10 @@ class PackageController extends Controller
                         $results = array(
                             'result' => 'error',
                             'message' => 'Error in moving uploaded file',
-                            'object' => NULL
+                            'object' => []
                         );
 
-                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                        return new JsonResponse($results);
                     }
                 }
 
@@ -149,15 +143,13 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $trackingNumberOfNewPackage . '\'',
-                'object' => $newPackage
+                'object' => json_decode($this->get('serializer')->serialize($newPackage, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
 
 
         }
-
-
     }
 
     /**
@@ -176,14 +168,12 @@ class PackageController extends Controller
             // Set up the response
             $results = array(
                 'result' => 'error',
-                'message' => 'Can not find package given id: ' . $id,
-                'object' => NULL
+                'message' => 'Can not find package given tracking number: ' . $id,
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
-            // Cannot update tracking number --> ID
-
             // Get all that has been submitted through PUT
             $updatePackage = $request->request->all();
 
@@ -196,34 +186,39 @@ class PackageController extends Controller
             // Get the current date
             $currentDate = new \DateTime("NOW");
 
-            $deletedPackingSlipIDs = $updatePackage['removedPackingSlipIds'];
+            // For each updatable field
+            if (!empty($updatePackage['deletePackingSlipIds'])) {
+                $deletedPackingSlipIDs = $updatePackage['deletePackingSlipIds'];
 
-            $packingSlipRepository = $this->getDoctrine()->getRepository("AppBundle:PackingSlip");
+                $packingSlipRepository = $this->getDoctrine()->getRepository("AppBundle:PackingSlip");
 
-            // Remove packing slips from package
-            foreach ($deletedPackingSlipIDs as $id) {
-                $deletedPackingSlip = $packingSlipRepository->find($id);
+                // Remove packing slips from package
+                foreach ($deletedPackingSlipIDs as $packingSlipID) {
+                    $deletedPackingSlip = $packingSlipRepository->find($packingSlipID);
 
-                if (!empty($deletedPackingSlip)) {
-                    // Get the location of where the file should be uploaded to
-                    $originalPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+                    if (!empty($deletedPackingSlip)) {
+                        // Get the location of where the file should be uploaded to
+                        $originalPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
 
-                    $generatedDeletedPackingSlipName = ($this->generateDeletedFileName($deletedPackingSlip->getPath(), $deletedPackingSlip->getCompleteFileName(), 0));
+                        $generatedDeletedPackingSlipName = ($this->generateDeletedFileName($deletedPackingSlip->getPath(), $deletedPackingSlip->getCompleteFileName(), 0));
 
-                    $deletedPackingSlip->renamePackingSlipToDeleted($generatedDeletedPackingSlipName);
+                        $deletedPackingSlip->renamePackingSlipToDeleted($generatedDeletedPackingSlipName);
 
-                    $deletedPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
+                        $deletedPathToPackingSlip = $this->get('kernel')->getRootDir() . '/../' . $deletedPackingSlip->getRelativePath();
 
-                    // Make sure the entity manager sees the entity as a new entity
-                    $em->persist($deletedPackingSlip);
 
-                    // Commit deleted packing slips to the server
-                    $em->flush();
+                        rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
 
-                    rename($originalPathToPackingSlip, $deletedPathToPackingSlip);
+                        $package->removePackingSlips($deletedPackingSlip, $user);
 
-                    $package->removePackingSlips($deletedPackingSlip);
+                        // Persist the deleted file
+                        $em->persist($deletedPackingSlip);
+
+                        // Commit deleted packing slips to the server
+                        $em->flush();
+                    }
                 }
+
             }
 
             // If there are pictures that were uploaded, put them in an array
@@ -234,22 +229,16 @@ class PackageController extends Controller
             if (!empty($_FILES["attachedPackingSlips"])) {
                 // Get an array of what the uploaded file object is
                 $uploadedFiles = $_FILES["attachedPackingSlips"];
-            }
 
-            if (!(empty($uploadedFiles))) {
                 // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
                 $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
 
                 // Remove any duplicates
                 $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+            } else {
+                $uploadedFiles = [];
             }
 
-            // If there are any pictures taken, move them to the uploadedFiles array
-            if (!(empty($uploadedPictures))) {
-                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
-            }
-
-            
             // If there are any pictures taken, move them to the uploadedFiles array
             if (!(empty($uploadedPictures))) {
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
@@ -264,7 +253,7 @@ class PackageController extends Controller
                     $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $id, $i, $currentDate->format('Ymd'));
 
                     if ($moveUploadedFileLocation != NULL) {
-                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['deleted'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $this->getUser()->getUsername());
+                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
 
                         $em->persist($packingSlip);
 
@@ -274,10 +263,10 @@ class PackageController extends Controller
                         $results = array(
                             'result' => 'error',
                             'message' => 'Error in moving uploaded file',
-                            'object' => NULL
+                            'object' => []
                         );
 
-                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                        return new JsonResponse($results);
                     }
                 }
 
@@ -313,10 +302,10 @@ class PackageController extends Controller
             }
 
             // If the number of packages changed, then update the number of packages
-            if (!empty($updatePackage["numOfPackages"])) {
-                $package->setNumberOfPackages($updatePackage["numOfPackages"], $user);
+            if (!empty($updatePackage["numberOfPackages"])) {
+                $package->setNumberOfPackages($updatePackage["numberOfPackages"], $user);
             }
-
+            
             // Make sure the entity manager sees the entity as a new entity
             $em->persist($package);
 
@@ -325,13 +314,146 @@ class PackageController extends Controller
 
             $results = array(
                 'result' => 'success',
-                'message' => 'Successfully updated ' . $id,
-                'object' => $package
+                'message' => 'Successfully updated ' . $id . '!',
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
             );
 
             // Return the results
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
+    }
+
+    /**
+     * @Route("/package/{id}/deliver", name="deliverPackage")
+     * @Method({"PUT"})
+     */
+    public function deliverPackageAction($id) {
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        // If package doesn't exist, return
+        if (empty($package)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not find package given id: ' . $id,
+                'object' => []
+            );
+
+            return new JsonResponse($results);
+        } else if ($package->getDelivered()) { // If package is already delivered
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been delivered',
+                'object' => []
+            );
+
+            return new JsonResponse($results);
+        } if ($package->getPickedUp()) { // If package is already picked up
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been picked up' ,
+                'object' => []
+            );
+
+            return new JsonResponse($results);
+        } else {
+            // Get user | anon. is temp for testing
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+
+            // Get the entity manager
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            $package->setDelivered(1, $user);
+
+            // Make sure the entity manager sees the entity as a new entity
+            $em->persist($package);
+
+            // Commit changes to the server
+            $em->flush();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Package delivered successfully!',
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
+            );
+
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/package/{id}/pickup", name="pickupPackage")
+     * @Method({"PUT"})
+     */
+    public function pickupPackageAction(Request $request, $id) {
+
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        // If package doesn't exist, return
+        if (empty($package)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Can not find package given id: ' . $id,
+                'object' => []
+            );
+
+            return new JsonResponse($results);
+        } else if ($package->getDelivered()) { // If package is already delivered
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been delivered',
+                'object' => []
+            );
+
+            return new JsonResponse($results);
+        } if ($package->getPickedUp()) { // If package is already picked up
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Package has already been picked up' ,
+                'object' => []
+            );
+
+            return new JsonResponse($results);
+        } else {
+            // Get user | anon. is temp for testing
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+
+            // Get the entity manager
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            $package->setPickedUp(1, $user);
+            $package->setUserWhoPickedUp($request->request->get('userWhoPickedUp'), $user);
+
+            // Make sure the entity manager sees the entity as a new entity
+            $em->persist($package);
+
+            // Commit changes to the server
+            $em->flush();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Package picked up successfully!',
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
+            );
+
+            return new JsonResponse($results);
+        }
+
     }
 
     /**
@@ -339,6 +461,50 @@ class PackageController extends Controller
      * @Method({"GET"})
      */
     public function searchPackageAction(Request $request) {
+        // Get the term
+        $term = $request->query->get('term');
+
+        // Get the entity manager
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        // Set up query the database for packages that is like term
+        $query = $em->createQuery(
+            'SELECT p FROM AppBundle:Package p
+            WHERE p.trackingNumber = :term'
+        )->setParameter('term', $term);
+
+        // Run query and save it
+        $packages = $query->getResult();
+
+        // If $package is not null, then set up $results to reflect successful query
+        if (!(empty($packages))) {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($packages) . ' Package',
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Did not find package with tracking number: ' . $term,
+                'object' => []
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/package/like", name="likePackage")
+     * @Method({"Get"})
+     */
+    public function likePackageAction(Request $request) {
         // Get the term
         $term = $request->query->get('term');
 
@@ -360,21 +526,21 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($packages) . ' Package(s) like \'' . $term . '\'',
-                'object' => $packages
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
                 'result' => 'error',
                 'message' => 'Did not find packages with tracking number like: ' . $term,
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -395,10 +561,10 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find package given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -411,11 +577,90 @@ class PackageController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully deleted Package: ' . $package->getTrackingNumber(),
-                'object' => $package
+                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
+    }
+
+    /**
+     * @Route("/packages", name="packages")
+     * @Method({"GET"})
+     */
+    public function getPackagesAction(Request $request) {
+        // A new time variable that points to the beginning of the day
+        $dateTimeBegin = new \DateTime($request->query->get('dateBegin'));
+        $dateTimeBegin->setTime(00, 00, 00);
+        $dateTimeBeginString = $dateTimeBegin->format("Y-m-d H:i:s");
+
+        // A new time variable that points to the end of the day
+        $dateTimeEnd = new \DateTime($request->query->get('dateEnd'));
+        $dateTimeEnd->setTime(23, 59, 59);
+        $dateTimeEndString = $dateTimeEnd->format("Y-m-d H:i:s");
+
+        // Get the repository
+        $em = $this->getDoctrine()->getManager();
+
+        $qb = $em->createQueryBuilder();
+
+        $qb->add('select', new Expr\Select(array('p')))
+            ->add('from', new Expr\From('AppBundle:Package', 'p'))
+            ->add('where', $qb->expr()->between(
+                'p.dateReceived',
+                ':dateTimeBegin',
+                ":dateTimeEnd"
+            )
+            )->setParameters(array(
+                "dateTimeBegin" => $dateTimeBeginString,
+                "dateTimeEnd" => $dateTimeEndString
+            ));
+
+        $query = $qb->getQuery();
+
+        if ($request->query->get('dateBegin') === $request->query->get('dateEnd')) {
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Packages for ' . $dateTimeBegin->format("Y-m-d"),
+                'object' => []
+            );
+        } else {
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Packages between ' . $dateTimeBegin->format("Y-m-d") . ' and ' . $dateTimeEnd->format("Y-m-d"),
+                'object' => []
+            );
+        }
+
+
+        $queryResults = $query->getResult();
+
+        if (!(empty($queryResults))) {
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($queryResults) . ' Packages',
+                'object' => json_decode($this->get('serializer')->serialize($queryResults, 'json'))
+            );
+        }
+
+        return new JsonResponse($results);
+    }
+
+    /**
+     * @Route("/package/{id}", name="package")
+     * @Method({"GET"})
+     */
+    public function packageAction(Request $request, $id) {
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        return $this->render('entity.html.twig', [
+            "type" => "package",
+            "entity" => $package
+        ]);
     }
 
     /**
@@ -428,15 +673,16 @@ class PackageController extends Controller
         $organizedUploadedFilesArray[] = array();
 
         for ($i = 0; $i < count($uploadedFilesArray["name"]); $i++) {
-            if ($uploadedFilesArray["name"][$i] != "") {
-                $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray["name"][$i];
-                $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
-                $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
-                $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
-                $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
+            if ($uploadedFilesArray["error"][$i] == 0) {
+                if ($uploadedFilesArray["name"][$i] != "") {
+                    $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray["name"][$i];
+                    $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
+                    $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
+                    $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
+                    $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
+                }
             }
         }
-
         return array_values(array_filter($organizedUploadedFilesArray));
     }
 
@@ -647,7 +893,7 @@ class PackageController extends Controller
 
                     break;
                 case UPLOAD_ERR_NO_TMP_DIR:
-                    $this->logger->error('Error: Missing temporary folder for uploads. (ERR_CODE: ' . $uploadedFile["error"] . ')');
+                    $this->logger->error('Error: Missing temporary folder for upload. (ERR_CODE: ' . $uploadedFile["error"] . ')');
 
                     break;
                 case UPLOAD_ERR_CANT_WRITE:

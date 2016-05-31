@@ -35,19 +35,19 @@ class ShipperController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewShipper . '\' already exists; disabled',
-                    'object' => NULL
+                    'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             } else {
                 // Set up the response
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewShipper . '\' already exists',
-                    'object' => NULL
+                    'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         } else { // Create a new Shipper
 
@@ -64,14 +64,17 @@ class ShipperController extends Controller
             $em->persist($newShipper);
             $em->flush();
 
+            // Get the new shipper and return it
+            $submittedShipper = $shipperRepository->findBy(["name" => $nameOfNewShipper]);
+
             // Set up the response
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $nameOfNewShipper . '\'',
-                'object' => $newShipper
+                'object' => json_decode($this->get('serializer')->serialize($submittedShipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
 
@@ -93,10 +96,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             $newShipperName = $request->request->get("name");
 
@@ -114,7 +117,7 @@ class ShipperController extends Controller
                 $shipper->setName($request->get('name'), $user);
 
                 // Updating a Shipper will automatically enable it
-                $shipper->enabled(TRUE);
+                $shipper->setEnabled(TRUE, $user);
 
                 // Get entity manager
                 $em = $this->get('doctrine.orm.entity_manager');
@@ -123,24 +126,27 @@ class ShipperController extends Controller
                 $em->persist($shipper);
                 $em->flush();
 
+                // Get the new shipper and return it
+                $submittedShipper = $shipperRepository->findBy(["name" => $newShipperName]);
+
                 // Set up the response
                 $results = array(
                     'result' => 'success',
                     'message' => 'Successfully updated ' . $shipperOldName . ' to ' . $shipper->getName(),
-                    'object' => $shipper
+                    'object' => json_decode($this->get('serializer')->serialize($submittedShipper, 'json'))
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
 
             } else {
                 // Set up the response
                 $results = array(
                     'result' => 'error',
                     'message' => 'Another Shipper already has update name: ' . $newShipperName,
-                    'object' => NULL
+                    'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         }
     }
@@ -161,10 +167,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -183,10 +189,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully enabled ' . $shipper->getName(),
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
     }
@@ -207,10 +213,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -229,10 +235,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully disabled ' . $shipper->getName(),
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -254,10 +260,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find shipper given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -270,10 +276,10 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully deleted Shipper: ' . $shipper->getName(),
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -282,6 +288,54 @@ class ShipperController extends Controller
      * @Method({"GET"})
      */
     public function searchShipperAction(Request $request) {
+        // Get the term
+        $term = $request->query->get('term');
+
+        // Get the entity manager
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        // Set up query the database for shippers that is like term
+        $query = $em->createQuery(
+            'SELECT s FROM AppBundle:Shipper s
+            WHERE s.name = :term
+            AND s.enabled = :enabled'
+        )->setParameters(array(
+                'term' => $term,
+                'enabled' => 1)
+        );
+
+        // Run query and save it
+        $shipper = $query->getResult();
+
+        // If $receiver is not null, then set up $results to reflect successful query
+        if (!(empty($shipper))) {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($shipper) . ' Shipper',
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Was not able to query database',
+                'object' => []
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/shipper/like", name="likeShipper")
+     * @Method({"GET"})
+     */
+    public function likeShipperAction(Request $request) {
         // Get the term
         $term = $request->query->get('term');
 
@@ -307,21 +361,61 @@ class ShipperController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
-                'object' => $shipper
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
+    }
+
+    /**
+     * @Route("/shippers", name="shippers")
+     * @Method({"GET"})
+     */
+    public function allShippersAction() {
+        // Get the Shipper repository
+        $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
+
+        // Get the enabled Shippers
+        $shippers = $shipperRepository->findBy([
+            "enabled" => true
+        ]);
+
+        // Set up the response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Successfully retrieved all enabled Shippers',
+            'object' => json_decode($this->get('serializer')->serialize($shippers, 'json'))
+        );
+
+        return new JsonResponse($results);
+    }
+
+    /**
+     * @Route("/shipper/{id}", name="shipper")
+     * @Method({"GET"})
+     */
+    public function shipperAction($id) {
+        // Get the Shipper repository
+        $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
+
+        // Get the enabled Shippers
+        $shipper = $shipperRepository->find($id);
+
+        return $this->render('entity.html.twig', [
+            "type" => "shipper",
+            "entity" => $shipper
+        ]);
     }
 }

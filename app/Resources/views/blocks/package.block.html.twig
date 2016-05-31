@@ -1,0 +1,154 @@
+{% use 'blocks/newShipper.block.html.twig' %}
+{% use 'blocks/newVendor.block.html.twig' %}
+{% use 'blocks/newReceiver.block.html.twig' %}
+{% use 'blocks/camera.block.html.twig' %}
+
+{% block packageStyleSheets %}
+    {{ block('cameraStyleSheets') }}
+
+    {% stylesheets
+    'components/select2/select2-built.css'
+    'css/blocks/package.block.less'
+    'css/select2-bootstrap-theme/dist/select2-bootstrap.css' filter="cssrewrite" %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block package %}
+    {{ block('newShipper') }}
+    {{ block('newVendor') }}
+    {{ block('newReceiver') }}
+    {{ block('camera') }}
+
+    <div id="packageModal" class="modal modal-overflow" tabindex="-1" role="dialog" aria-labelledby="packageModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex="-1"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="packageModalTitle">Enter in Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+
+                        <div class="form-group existingPackage">
+                            <label for="select2-Shipper" class="control-label col-md-4">Shipper:</label>
+                            <div id="packageShipperDiv" class="col-md-7">
+                                <div class="input-group select2-bootstrap-append">
+                                    <select name="vendor" id="select2-Shipper" tabindex="1"></select>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewShipperModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group newPackage">
+                            <label for="packageShipper" class="control-label col-md-4">Shipper:</label>
+                            <div id="packageShipperDiv" class="col-md-6">
+                                <p id="packageShipper" class="form-control-static" data-value=""></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="packageTrackingNumber" class="control-label col-md-4">Tracking Number:</label>
+                            <div id="packageTrackingNumberDiv" class="col-md-6">
+                                <p id="packageTrackingNumber" class="form-control-static"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="select2-Vendor" class="control-label col-md-4">Vendor:</label>
+                            <div id="packageVendorDiv" class="col-md-7">
+                                <div class="input-group select2-bootstrap-append">
+                                    <select name="vendor" id="select2-Vendor" tabindex="2"></select>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewVendorModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="select2-Receiver" class="control-label col-md-4">Receiver:</label>
+                            <div id="packageReceiverDiv" class="col-md-7">
+                                <div class="input-group select2-bootstrap-append">
+                                    <select name="receiver" id="select2-Receiver" tabindex="3"></select>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewReceiverModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="packageNumOfPackages" class="control-label col-md-4">Number of Packages:</label>
+                            <div id="packageNumOfPackagesDiv" class="col-md-3">
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button type="button" id="minusAPackage" class="btn btn-default" tabindex="-1">-</button>
+                                    </div>
+                                    <input type="text" name="numberOfPackages" id="numberOfPackages" class="form-control text-center" value="1" min="1" readonly tabindex="-1" />
+                                    <div class="input-group-btn">
+                                        <button type="button" id="addAPackage" class="btn btn-default" tabindex="4">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="existingPackingSlips" class="form-group existingPackage">
+                            <label for="listOfExistingPackingSlips" class="control-label col-md-4">Existing Packing Slips:</label>
+                            <div id="listOfExistingPackingSlips" class="col-md-6">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="attachedPackingSlips" class="control-label col-md-4">Packing Slips:</label>
+                            <div class="col-md-5">
+                                <form id="uploadFiles" enctype="multipart/form-data" name="uploadFiles" class="divInForm">
+                                    <input id="attachedPackingSlips" class="form-control-static" type="file" name="attachedPackingSlips[]" multiple tabindex="-1" />
+                                </form>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" id="clearAttachedPackingSlips" class="btn btn-danger btn-sm" tabindex="-1">Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="hidden-xs col-md-2 col-md-offset-4">
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cameraModal" tabindex="5">Take a Picture</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div id="thumbnailsDiv">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" tabindex="-1">Cancel</button>
+                    <button type="button" id="submitPackage" class="btn btn-default" tabindex="6">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block packageJavascripts %}
+    {{ block('newShipperJavascripts') }}
+    {{ block('newVendorJavascripts') }}
+    {{ block('newReceiverJavascripts') }}
+    {{ block('cameraJavascripts') }}
+
+    {% javascripts
+    'components/select2/select2-built.js'
+    'js/blocks/package.block.js'
+    'js/select2Blocks/select2Vendor.js'
+    'js/select2Blocks/select2Receiver.js'
+    'js/select2Blocks/select2Shipper.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

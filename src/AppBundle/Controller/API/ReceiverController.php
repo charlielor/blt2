@@ -38,19 +38,19 @@ class ReceiverController extends Controller
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewReceiver . '\' already exists; disabled',
-                    'object' => NULL
+                    'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             } else {
                 // Set up the response
                 $results = array(
                     'result' => 'error',
                     'message' => '\'' . $nameOfNewReceiver . '\' already exists',
-                    'object' => NULL
+                    'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         } else { // Create a new Receiver
 
@@ -67,14 +67,17 @@ class ReceiverController extends Controller
             $em->persist($newReceiver);
             $em->flush();
 
+            // Get new Receiver
+            $submittedReceiver = $receiverRepository->findBy(array('name' => $nameOfNewReceiver));
+
             // Set up the response
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully created \'' . $nameOfNewReceiver . '\'',
-                'object' => $newReceiver
+                'object' => json_decode($this->get('serializer')->serialize($submittedReceiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
 
@@ -96,15 +99,15 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
-            $newReceiverName = $request->request->get("name");
+            $receiverName = $request->request->get("name");
 
             // Existing Receiver with the same name
-            $existingReceiverGivenName = $receiverRepository->findBy(array('name' => $newReceiverName));
+            $existingReceiverGivenName = $receiverRepository->findBy(array('name' => $receiverName));
 
             // If no other Receiver has the same name, then update it
             if (empty($existingReceiverGivenName)) {
@@ -113,11 +116,18 @@ class ReceiverController extends Controller
                 // Get user | anon. is temp for testing
                 $user = $this->get('security.token_storage')->getToken()->getUser();
 
-                // Set the current Receiver to its new name
-                $receiver->setName($request->get('name'), $user);
+                if (!empty($request->get('name'))) {
+                    // Set the current Receiver to its new name
+                    $receiver->setName($request->get('name'), $user);
+                }
+
+                if (!empty($request->get('deliveryRoom'))) {
+                    // Set the current Receiver's delivery room to its new name
+                    $receiver->setDeliveryRoom($request->get('deliveryRoom'), $user);
+                }
 
                 // Updating a Receiver will automatically enable it
-                $receiver->enabled(TRUE);
+                $receiver->setEnabled(TRUE, $user);
 
                 // Get entity manager
                 $em = $this->get('doctrine.orm.entity_manager');
@@ -126,24 +136,26 @@ class ReceiverController extends Controller
                 $em->persist($receiver);
                 $em->flush();
 
+                $updatedReceiver = $receiverRepository->findBy(array('name' => $receiver->getName()));
+
                 // Set up the response
                 $results = array(
                     'result' => 'success',
-                    'message' => 'Successfully updated ' . $receiverOldName . ' to ' . $receiver->getName(),
-                    'object' => $receiver
+                    'message' => 'Successfully updated ' . $receiverOldName,
+                    'object' => json_decode($this->get('serializer')->serialize($updatedReceiver, 'json'))
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
 
             } else {
                 // Set up the response
                 $results = array(
                     'result' => 'error',
-                    'message' => 'Another Receiver already has update name: ' . $newReceiverName,
-                    'object' => NULL
+                    'message' => 'Another Receiver already has update name: ' . $receiverName,
+                    'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
             }
         }
     }
@@ -164,10 +176,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -186,10 +198,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully enabled ' . $receiver->getName(),
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
 
     }
@@ -210,10 +222,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -232,10 +244,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully disabled ' . $receiver->getName(),
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -257,10 +269,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'error',
                 'message' => 'Can not find receiver given id: ' . $id,
-                'object' => NULL
+                'object' => []
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Get entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -273,10 +285,10 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Successfully deleted Receiver: ' . $receiver->getName(),
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
     }
 
@@ -285,6 +297,54 @@ class ReceiverController extends Controller
      * @Method({"GET"})
      */
     public function searchReceiverAction(Request $request) {
+        // Get the term
+        $term = $request->query->get('term');
+
+        // Get the entity manager
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        // Set up query the database for receivers that is like terms
+        $query = $em->createQuery(
+            'SELECT r FROM AppBundle:Receiver r
+            WHERE r.name = :term
+            AND r.enabled = :enabled'
+        )->setParameters(array(
+                'term' => $term,
+                'enabled' => 1)
+        );
+
+        // Run query and save it
+        $receiver = $query->getResult();
+
+        // If $receiver is not null, then set up $results to reflect successful query
+        if (!(empty($receiver))) {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Was not able to query database',
+                'object' => []
+            );
+
+            // Return response as JSON
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/receiver/like", name="likeReceiver")
+     * @Method({"GET"})
+     */
+    public function likeReceiverAction(Request $request) {
         // Get the term
         $term = $request->query->get('term');
 
@@ -310,21 +370,100 @@ class ReceiverController extends Controller
             $results = array(
                 'result' => 'success',
                 'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
-                'object' => $receiver
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         } else {
             // Set up response
             $results = array(
                 'result' => 'error',
                 'message' => 'Was not able to query database',
-                'object' => NULL
+                'object' => []
             );
 
             // Return response as JSON
-            return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+            return new JsonResponse($results);
         }
+    }
+
+    /**
+     * @Route("/receivers", name="receivers")
+     * @Method({"GET"})
+     */
+    public function allReceiversAction() {
+        // Get the Receiver repository
+        $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
+
+        // Get the enabled Receivers
+        $receivers = $receiverRepository->findBy([
+            "enabled" => 1
+        ]);
+
+        // Set up the response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Successfully retrieved all enabled Receivers',
+            'object' => json_decode($this->get('serializer')->serialize($receivers, 'json'))
+        );
+
+        return new JsonResponse($results);
+    }
+
+    /**
+     * @Route("/receiver/packages", name="receiverPackages")
+     * @Method({"GET"})
+     */
+    public function receiverPackagesAction(Request $request) {
+        if (empty($request->query->get('name'))) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Error in retrieving packages',
+                'object' => []
+            );
+
+            return new JsonResponse($results);
+        } else {
+            $name = $request->query->get('name');
+
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            $query = $em->createQuery(
+                'SELECT p FROM AppBundle:Package p, AppBundle:Receiver r
+                                     WHERE r.name = :name
+                                     AND r.id = p.receiver
+                                     AND p.delivered = false
+                                     AND p.pickedUp = false'
+            )->setParameter("name", $name);
+
+            $packages = $query->getResult();
+
+            // Set up the response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Successfully retrieved ' . count($packages) . ' Package(s)' ,
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+            );
+
+            return new JsonResponse($results);
+        }
+    }
+
+    /**
+     * @Route("/receiver/{id}", name="receiver")
+     * @Method({"GET"})
+     */
+    public function receiverAction($id) {
+        // Get the Receiver repository
+        $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
+
+        $receiver = $receiverRepository->find($id);
+
+        return $this->render('entity.html.twig', [
+            "type" => "receiver",
+            "entity" => $receiver
+        ]);
     }
 }

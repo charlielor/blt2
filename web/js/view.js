@@ -18,13 +18,15 @@ $(document).ready(function() {
         buttons: [
             'csv', 'pdf'
         ],
+        autoWidth: false,
         responsive: true,
         ajax: {
-            url: 'getPackagesForDate',
+            url: 'packages',
             data: {
-                date: "now"
+                dateBegin: "now",
+                dateEnd: "now"
             },
-            'dataSrc': 'object'
+            dataSrc: 'object'
         },
         columns: [
             {data: 'trackingNumber'},
@@ -117,32 +119,31 @@ $(document).ready(function() {
         defaultDate: new Date(),
         maxDate: new Date(),
         onSelect: function(selectedDate) {
+            var dateSelected = new Date(selectedDate).toDateString();
             var date = {
-                date: new Date(selectedDate).toDateString()
+                dateBegin: dateSelected,
+                dateEnd: dateSelected
             };
 
             // When the user selects a date, send a request to the server to get data for that date
             dataTable.clear().draw();
 
-            $.get('getPackagesForDate', date, function(response) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(response) || $.parseJSON(response);
-
-                if (results['result'] == 'success') {
+            $.get('packages', date, function(response) {
+                if (response['result'] == 'success') {
                     // For however long the array is from the JSON parse, add the data to the DataTable
-                    for (var i = 0; i < results['object'].length; i++) {
-                        dataTable.row.add(results['object'][i]).draw();
+                    for (var i = 0; i < response['object'].length; i++) {
+                        dataTable.row.add(response['object'][i]).draw();
                     }
 
                     // Change the button to the date to the selected date
                     selectDateButton.text(selectedDate);
-
-                    // Close the modal enclosing the datepicker
-                    datepickerModal.modal('hide');
-
-                    hideOrShowGoToTodayButton();
                 }
             });
+
+            // Close the modal enclosing the datepicker
+            datepickerModal.modal('hide');
+
+            hideOrShowGoToTodayButton();
         }
     });
 
@@ -161,13 +162,10 @@ $(document).ready(function() {
 
         dataTable.clear().draw();
 
-        $.get('getPackagesForDate', date, function(response) {
-            // Parse through JSON data and return array
-            var results = JSON && JSON.parse(response) || $.parseJSON(response);
-
-            if (results['result'] == 'success') {
-                for (var i = 0; i < results['object'].length; i++) {
-                    dataTable.row.add(results['object'][i]).draw();
+        $.get('/getPackagesForDate', date, function(response) {
+            if (response['result'] == 'success') {
+                for (var i = 0; i < response['object'].length; i++) {
+                    dataTable.row.add(response['object'][i]).draw();
                 }
 
                 var month = (currentDate.getMonth() + 1);
@@ -204,15 +202,15 @@ $(document).ready(function() {
     /*
      Refreshes the datatable every 30 seconds if the date on the datatable is the current date
      */
-    // setInterval(function() {
-    //     var dateOnDatePickerButton = new Date(selectDateButton.text());
-    //
-    //     if (((currentDate.getFullYear() === dateOnDatePickerButton.getFullYear()) &&
-    //         (currentDate.getMonth() === dateOnDatePickerButton.getMonth()) &&
-    //         (currentDate.getDate() === dateOnDatePickerButton.getDate()))) {
-    //         dataTable.ajax.reload();
-    //     }
-    //
-    // }, 30000);
+    setInterval(function() {
+        var dateOnDatePickerButton = new Date(selectDateButton.text());
+
+        if (((currentDate.getFullYear() === dateOnDatePickerButton.getFullYear()) &&
+            (currentDate.getMonth() === dateOnDatePickerButton.getMonth()) &&
+            (currentDate.getDate() === dateOnDatePickerButton.getDate()))) {
+            dataTable.ajax.reload();
+        }
+
+    }, 30000);
 
 });

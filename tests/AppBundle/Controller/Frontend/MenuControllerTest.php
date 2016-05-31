@@ -35,19 +35,19 @@ class MenuControllerTest extends WebTestCase {
 
         # Reporting link
         $client->click($crawler->selectLink("Reporting")->link());
-//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/reporting', $client->getRequest()->getRequestUri());
         $client->back();
 
         # Receiving link
         $client->click($crawler->selectLink("Receiving")->link());
-//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/receiving', $client->getRequest()->getRequestUri());
         $client->back();
 
         # Delivering link
         $client->click($crawler->selectLink("Delivering")->link());
-//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/delivering', $client->getRequest()->getRequestUri());
     }
 }

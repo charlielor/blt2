@@ -22,11 +22,14 @@ class LoadShipper extends AbstractFixture implements OrderedFixtureInterface, Co
     }
 
     public function load(ObjectManager $manager) {
-        $testShipper = new Shipper("fixtureShipper", "anon.");
+        $fixtureShipper = new Shipper("fixtureShipper", "anon.");
+        $fixtureShipper2 = new Shipper("fixtureShipper2", "anon.");
 
-        $this->addReference("fixtureShipper", $testShipper);
+        $this->addReference("fixtureShipper", $fixtureShipper);
+        $this->addReference("fixtureShipper2", $fixtureShipper2);
 
-        $manager->persist($testShipper);
+        $manager->persist($fixtureShipper);
+        $manager->persist($fixtureShipper2);
 
         $manager->flush();
     }

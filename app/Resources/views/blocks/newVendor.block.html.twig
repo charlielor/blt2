@@ -1,0 +1,39 @@
+{% block newVendor %}
+    <div id="addNewVendorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="newVendorModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="newVendorTitle">Add a new Vendor</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label for="newVendorName" class="control-label col-md-4">Vendor Name:</label>
+                                <div id="newVendorNameDiv" class="col-md-6">
+                                    <input type="text" id="newVendorName" class="form-control" placeholder="Ex. DoIT" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label id="newVendorLabel" class="col-md-10 col-md-offset-1 label label-primary">
+                            New Vendor Name must be less than 50 characters
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="submitNewVendor" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block newVendorJavascripts %}
+    {% javascripts
+    'js/blocks/newVendor.block.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

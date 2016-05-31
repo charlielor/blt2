@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block userActions %}
+    <li><a href="/" tabindex="-1">Back to Menu</a></li>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    'css/DataTables/datatables.min.css' filter='cssrewrite' %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <div id="moreThanOnePackageModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="moreThanOnePackage">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="moreThanOnePackageTitle">Select a Package</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="datatable-MoreThanOnePackage" class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th data-priority="1">Tracking Number</th>
+                            <th data-priority="3">Vendor</th>
+                            <th data-priority="2">Number of Packages</th>
+                            <th>Date Received</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-striped table-hover text-center">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="moreThanOnePackagesModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="moreThanOnePackages">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="moreThanOnePackagesTitle">More than one package</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="moreThanOnePackages" class="text-default center-block text-center"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 input-group-lg">
+                <input type="text" id="barcodeTextBox" name="barcode" placeholder="Scan in barcode" class="form-control text-center" />
+            </div>
+        </div>
+        <div class="row">
+            <div id="receiverDiv" class="col-md-12 center-block">
+                <h3 class="text-center"><span id="receiverSpan"></span></h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="listOfPackages" class="col-md-12">
+                <table id="datatable-Delivering" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th data-priority="1">Tracking Number</th>
+                        <th data-priority="3">Vendor</th>
+                        <th data-priority="2">Number of Packages</th>
+                        <th>Date Received</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-striped table-hover text-center">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    'js/DataTables/datatables.min.js'
+    'js/DataTables/fnFindCellRowIndexes.js'
+    '../vendor/needim/noty/js/noty/jquery.noty.js'
+    '../vendor/needim/noty/js/noty/layouts/top.js'
+    '../vendor/needim/noty/js/noty/themes/bootstrap.js'
+    'js/delivering.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

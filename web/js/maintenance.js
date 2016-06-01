@@ -26,14 +26,12 @@ $(document).ready(function() {
 
             $.ajax({
                     type: "GET",
-                    url: "maintenance/search",
+                    url: "package/like",
                     data: {
-                        repository: 'package',
                         term: $("#searchPackageText").val()
                     }
                 })
-                .done(function(data) {
-                    var results = JSON && JSON.parse(data) || $.parseJSON(data);
+                .done(function(results) {
 
                     if (results['result'] == 'success') {
                         $("#searchPackageText").val('');
@@ -142,7 +140,7 @@ $(document).ready(function() {
                         $("#spinnerPackage").hide();
                     } else {
                         $("#spinnerPackage").hide();
-                        $("#queryDatabaseErrorModal").modal('show');
+                        $("#emptySetModal").modal('show');
                     }
 
                 })
@@ -166,15 +164,12 @@ $(document).ready(function() {
 
             $.ajax({
                     type: "GET",
-                    url: "maintenance/search",
+                    url: "vendor/like",
                     data: {
-                        repository: 'vendor',
                         term: $("#searchVendorText").val()
                     }
                 })
-                .done(function(data) {
-                    var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+                .done(function(results) {
                     if (results['result'] == 'success') {
                         $("#searchVendorText").val('');
 
@@ -232,18 +227,10 @@ $(document).ready(function() {
         var button = this;
         // Make the AJAX call to the server to switch the on or off the receiver
         $.ajax({
-                type: "POST",
-                url: "maintenance/switch",
-                data: {
-                    repository: 'receiver',
-                    id: id,
-                    action: action
-                }
+                type: "PUT",
+                url: "receiver/" + id + "/" + action.toLowerCase()
             })
-            .done(function(data) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+            .done(function(results) {
                 // If the results are successful, change the color and text within the button to reflect the change
                 if (results['result'] == 'success') {
                     if (action == 'Enable') {
@@ -273,18 +260,10 @@ $(document).ready(function() {
         var button = this;
         // Make the AJAX call to the server to switch the on or off the shipper
         $.ajax({
-                type: "POST",
-                url: "maintenance/switch",
-                data: {
-                    repository: 'shipper',
-                    id: id,
-                    action: action
-                }
+                type: "PUT",
+                url: "shipper/" + id + "/" + action.toLowerCase()
             })
-            .done(function(data) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+            .done(function(results) {
                 // If the results are successful, change the color and text within the button to reflect the change
                 if (results['result'] == 'success') {
                     if (action == 'Enable') {
@@ -314,18 +293,10 @@ $(document).ready(function() {
         var button = this;
         // Make the AJAX call to the server to switch the on or off the vendor
         $.ajax({
-                type: "POST",
-                url: "maintenance/switch",
-                data: {
-                    repository: 'vendor',
-                    id: id,
-                    action: action
-                }
+                type: "PUT",
+                url: "vendor/" + id + "/" + action.toLowerCase()
             })
-            .done(function(data) {
-                // Parse through JSON data and return array
-                var results = JSON && JSON.parse(data) || $.parseJSON(data);
-
+            .done(function(results) {
                 // If the results are successful, change the color and text within the button to reflect the change
                 if (results['result'] == 'success') {
                     if (action == 'Enable') {

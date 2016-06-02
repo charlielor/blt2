@@ -45,18 +45,20 @@ $(document).ready(function() {
 
             // If the packageObject has packing slips, set up preview links
             if (window.existingPackageObject.packingSlips.length > 0) {
-
                 window.existingPackageObject.packingSlips.forEach(function (element, index, array) {
 
                     listOfExistingPackingSlips.append(
                         '<div id="' + element['id']+ '" class="form-control-static input-group col-md-3">' +
-                        '<a class="btn btn-default btn-xs" data-id="'+ element['id'] + '" role="button" href="preview/' + element['downloadLink']  + '" target="_blank">Link</a>' +
+                        '<a class="btn btn-default btn-xs" data-id="'+ element['id'] + '" role="button" href="preview/' + element['downloadLink']  + '" target="_blank" tabindex="-1">Link</a>' +
                         '<div class="input-group-btn">' +
-                        '<button type="button" data-id="' + element['id'] + '" class="btn btn-danger btn-xs deleteExistingPackingSlip">X</button>' +
+                        '<button type="button" data-id="' + element['id'] + '" class="btn btn-danger btn-xs deleteExistingPackingSlip" tabindex="-1">X</button>' +
                         '</div>' +
                         '</div>'
                     );
                 });
+            } else {
+                // Hide the shipper select2 input
+                $("#existingPackingSlips").hide();
             }
 
         } else { // Package being edited is a new package
@@ -80,9 +82,9 @@ $(document).ready(function() {
 
     packageModal.on("shown.bs.modal", function() {
         if (!window.newPackage) {
-            
+            select2Shipper.select2("open");
         } else {
-
+            select2Vendor.select2("open");
         }
     });
 
@@ -91,7 +93,7 @@ $(document).ready(function() {
 
         var location = window.location.href.toString().split("/");
 
-        if (location[location.length - 1] == "receiving") {
+        if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
             $("#trackingNumberInput").val("");
             $("#trackingNumberInput").focus();
         }
@@ -100,18 +102,16 @@ $(document).ready(function() {
     $("#submitPackage").on("click", function() {
         // Get the elements
         var shipperSpan = $("#shipperSpan");
-        var shipperSelector = $("#select2-Shipper");
-        var vendorSelector = $("#select2-Vendor");
-        var receiverSelector = $("#select2-Receiver");
 
         var formData = new FormData(document.getElementById('uploadFiles'));
 
         if (!window.newPackage) {
-            if (shipperSelector.val() === null) {
-                shipperSelector.select2('open');
+            if (select2Shipper.val() === null) {
+                addError("shipper");
+                select2Shipper.select2('open');
                 return;
             } else {
-                formData.append("shipperId", shipperSelector.val());
+                formData.append("shipperId", select2Shipper.val());
                 deletedPackingSlips.forEach(function(val, index) {
                     formData.append("deletePackingSlipIds[]", val);
                 });
@@ -121,18 +121,20 @@ $(document).ready(function() {
             formData.append("shipperId", shipperSpan.attr('value'));
         }
 
-        if (vendorSelector.val() === null) {
-            vendorSelector.select2('open');
+        if (select2Vendor.val() === null) {
+            addError("vendor");
+            select2Vendor.select2('open');
             return;
         } else {
-            formData.append("vendorId", vendorSelector.val());
+            formData.append("vendorId", select2Vendor.val());
         }
 
-        if (receiverSelector.val() === null) {
-            receiverSelector.select2('open');
+        if (select2Receiver.val() === null) {
+            addError("receiver");
+            select2Receiver.select2('open');
             return;
         } else {
-            formData.append("receiverId", receiverSelector.val());
+            formData.append("receiverId", select2Receiver.val());
         }
 
         if (parseInt($("#numberOfPackages").val()) < 0) {
@@ -262,7 +264,7 @@ $(document).ready(function() {
 
                                 var location = window.location.href.toString().split("/");
 
-                                if (location[location.length - 1] == "receiving") {
+                                if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
                                     // Depending on the returned object, either update the dataTable or ignore
                                     var trackingNumberUpdated = results["object"]["trackingNumber"];
 
@@ -333,6 +335,12 @@ $(document).ready(function() {
         $("#" + idOfPackingSlip).remove();
 
         deletedPackingSlips.push(idOfPackingSlip);
+
+        // If the list is empty, hide the label/div
+        if ($(".deleteExistingPackingSlip").length == 0) {
+            // Hide the shipper select2 input
+            $("#existingPackingSlips").hide();
+        }
     });
 
     /**
@@ -404,7 +412,7 @@ $(document).ready(function() {
 
     });
 
-    function addError(error, label) {
+    function addError(error) {
         if (error == "vendor") {
             $('#packageVendorDiv').addClass('has-error');
         } else if (error == "receiver") {

@@ -32,7 +32,7 @@ $(document).ready(function() {
                     if (data.length != 0) {
                         packingSlipLinks = "";
                         $.each(data, function(index) {
-                            packingSlipLinks += '<a href="download/' + data[index]['downloadLink'] + '">' + data[index]['extension'].toUpperCase() + '</a> ';
+                            packingSlipLinks += '<a href="preview/' + data[index]['downloadLink'] + '" target="_blank">' + data[index]['extension'].toUpperCase() + '</a> ';
                         });
                     }
 
@@ -78,7 +78,7 @@ $(document).ready(function() {
 
         // Do an AJAX call to the server to get a list of enabled shippers and append them to the dialog
         $.getJSON('shippers', function(results) {
-            if (results['object'].length !== 0) {
+            if (results['result'] == "success") {
 
                 var retrievedShippers = results['object'];
                 var listOfShippers = [];
@@ -95,7 +95,7 @@ $(document).ready(function() {
                 // Append the list of shipper
                 $("#shippers").append(listOfShippers);
             } else {
-
+                alert(results['message']);
             }
         });
     });

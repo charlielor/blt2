@@ -87,12 +87,9 @@ var Camera = Camera || function(minWidth, minHeight, video, canvas, image, scale
         this.stopCamera = function(success, error) {
             var self = this;
 
-            // Comment out for Chrome 47
-            // self.mediaStream.stop();
-            self.mediaStream = null;
-            self.video.pause();
+            self.mediaStream.getVideoTracks()[0].stop();
 
-            if ((self.mediaStream == null) && (self.video.paused)) {
+            if (self.mediaStream.getVideoTracks()[0]['readyState'] === "ended") {
                 self.on = false;
                 self.video.removeAttribute("style");
 

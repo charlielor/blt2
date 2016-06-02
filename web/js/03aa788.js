@@ -1501,11 +1501,11 @@ S2.define('select2/selection/single',[
     });
 
     this.$selection.on('focus', function (evt) {
-      // User focuses on the container
+      // ShibbolethUser focuses on the container
     });
 
     this.$selection.on('blur', function (evt) {
-      // User exits the container
+      // ShibbolethUser exits the container
     });
 
     container.on('selection:update', function (params) {

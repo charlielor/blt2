@@ -52,7 +52,7 @@ class VendorController extends Controller
         } else { // Create a new Vendor
 
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
             // Create a new Vendor entity and set its properties
             $newVendor = new Vendor($nameOfNewVendor, $user);
@@ -111,7 +111,7 @@ class VendorController extends Controller
                 $vendorOldName = $vendor->getName();
 
                 // Get user | anon. is temp for testing
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+                $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
                 // Set the current Vendor to its new name
                 $vendor->setName($request->get('name'), $user);
@@ -173,7 +173,7 @@ class VendorController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
             // Updating a Vendor will automatically enable it
             $vendor->setEnabled(TRUE, $user);
@@ -219,7 +219,7 @@ class VendorController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
             // Updating a Vendor will automatically enable it
             $vendor->setEnabled(FALSE, $user);

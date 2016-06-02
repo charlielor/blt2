@@ -45,7 +45,7 @@ class PackageController extends Controller
         } else { // Create a new Package
 
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
             // Get the shipper
             $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")
@@ -178,7 +178,7 @@ class PackageController extends Controller
             $updatePackage = $request->request->all();
 
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
             // Get the entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -364,7 +364,7 @@ class PackageController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
             // Get the entity manager
             $em = $this->get('doctrine.orm.entity_manager');
@@ -430,7 +430,7 @@ class PackageController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
             // Get the entity manager
             $em = $this->get('doctrine.orm.entity_manager');

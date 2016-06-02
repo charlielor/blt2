@@ -24,7 +24,7 @@ class ReceiverEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetName() {
         $receiver = new Receiver("Office", 111, "ReceiverTest");
-        $receiver->setName("IT");
+        $receiver->setName("IT", "ReceiverTest");
 
         $this->assertEquals("IT", $receiver->getName());
     }
@@ -37,7 +37,7 @@ class ReceiverEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetDeliveryRoom() {
         $receiver = new Receiver("Office", 111, "ReceiverTest");
-        $receiver->setDeliveryRoom(1212);
+        $receiver->setDeliveryRoom(1212, "ReceiverTest");
 
         $this->assertEquals(1212, $receiver->getDeliveryRoom());
     }
@@ -50,7 +50,7 @@ class ReceiverEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetEnabled()  {
         $receiver = new Receiver("Office", 111, "ReceiverTest");
-        $receiver->setEnabled(false);
+        $receiver->setEnabled(false, "ReceiverTest");
 
         $this->assertNotTrue($receiver->getEnabled());
     }
@@ -71,7 +71,7 @@ class ReceiverEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "ReceiverTest");
         $testDate = new \DateTime("2016-03-22");
 
-        $receiver->setDateModified($testDate);
+        $receiver->setDateModified($testDate, "ReceiverTest");
 
         $this->assertEquals($testDate, $receiver->getDateModified());
     }

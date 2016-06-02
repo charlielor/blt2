@@ -105,7 +105,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
         $vendor2 = new Vendor("University of Wisconsin", "PackageTest");
-        $package->setVendor($vendor2);
+        $package->setVendor($vendor2, "PackageTest");
 
         $this->assertEquals($vendor2, $package->getVendor());
     }
@@ -128,7 +128,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
         
         $shipper2 = $shipper = new Shipper("FedEx Ground", "PackageTest");
-        $package->setShipper($shipper2);
+        $package->setShipper($shipper2, "PackageTest");
 
         $this->assertEquals($shipper2, $package->getShipper());
     }
@@ -151,7 +151,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
         $receiver2 = $receiver = new Receiver("IT", 1212, "PackageTest");
-        $package->setReceiver($receiver2);
+        $package->setReceiver($receiver2, "PackageTest");
 
         $this->assertEquals($receiver2, $package->getReceiver());
     }
@@ -263,7 +263,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "PackageTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->setDelivered(true);
+        $package->setDelivered(true, "PackageTest");
 
         $this->assertTrue($package->getDelivered());
     }

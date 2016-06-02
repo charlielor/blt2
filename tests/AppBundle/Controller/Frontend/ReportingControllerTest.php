@@ -34,20 +34,20 @@ class ReportingControllerTest extends WebTestCase
     public function testEntitySearchRoute() {
         $client = static::createClient();
 
-        # Testing response code for /vendor/search
-        $client->request('GET', '/vendor/search');
+        # Testing response code for /vendor/like
+        $client->request('GET', '/vendor/like');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        # Testing response code for /vendor/search
-        $client->request('GET', '/receiver/search');
+        # Testing response code for /vendor/like
+        $client->request('GET', '/receiver/like');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        # Testing response code for /shipper/search
-        $client->request('GET', '/shipper/search');
+        # Testing response code for /shipper/like
+        $client->request('GET', '/shipper/like');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-    # Testing response code for /user/search
-        $client->request('GET', '/user/search');
+    # Testing response code for /user/like
+        $client->request('GET', '/user/like');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 

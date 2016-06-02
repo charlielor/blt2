@@ -23,7 +23,7 @@ class VendorEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetName() {
         $vendor = new Vendor("University of Wisconsin - Madison", "VendorTest");
-        $vendor->setName("University of Wisconsin");
+        $vendor->setName("University of Wisconsin", "VendorTest");
 
         $this->assertEquals("University of Wisconsin", $vendor->getName());
     }
@@ -36,7 +36,7 @@ class VendorEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetEnabled()  {
         $vendor = new Vendor("University of Wisconsin - Madison", "VendorTest");
-        $vendor->setEnabled(false);
+        $vendor->setEnabled(false, "VendorTest");
 
         $this->assertNotTrue($vendor->getEnabled());
     }
@@ -57,7 +57,7 @@ class VendorEntityTest extends \PHPUnit_Framework_TestCase
         $vendor = new Vendor("University of Wisconsin - Madison", "VendorTest");
         $testDate = new \DateTime("2016-03-22");
 
-        $vendor->setDateModified($testDate);
+        $vendor->setDateModified($testDate, "VendorTest");
 
         $this->assertEquals($testDate, $vendor->getDateModified());
     }

@@ -307,28 +307,15 @@ class VendorController extends Controller
         // Run query and save it
         $vendor = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($vendor))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($vendor) . ' Vendor',
-                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($vendor) . ' Vendor',
+            'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**
@@ -355,28 +342,15 @@ class VendorController extends Controller
         // Run query and save it
         $vendor = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($vendor))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($vendor) . ' Vendor(s) like \'' . $term . '\'',
-                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($vendor) . ' Vendor(s) like \'' . $term . '\'',
+            'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**

@@ -316,28 +316,15 @@ class ReceiverController extends Controller
         // Run query and save it
         $receiver = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($receiver))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($receiver) . ' Receiver',
-                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($receiver) . ' Receiver',
+            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**
@@ -364,28 +351,15 @@ class ReceiverController extends Controller
         // Run query and save it
         $receiver = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($receiver))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
-                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
+            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**

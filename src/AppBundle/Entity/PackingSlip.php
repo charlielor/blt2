@@ -277,7 +277,7 @@ class PackingSlip {
     /**
      * Set userLastModified
      *
-     * @param \DateTime $userLastModified
+     * @param String $userLastModified
      * @return PackingSlip
      */
     public function setUserLastModified($userLastModified)
@@ -290,7 +290,7 @@ class PackingSlip {
     /**
      * Get userLastModified
      *
-     * @return \DateTime
+     * @return String
      */
     public function getUserLastModified()
     {

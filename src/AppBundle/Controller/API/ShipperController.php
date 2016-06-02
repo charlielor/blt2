@@ -307,28 +307,15 @@ class ShipperController extends Controller
         // Run query and save it
         $shipper = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($shipper))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($shipper) . ' Shipper',
-                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($shipper) . ' Shipper',
+            'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**
@@ -355,28 +342,15 @@ class ShipperController extends Controller
         // Run query and save it
         $shipper = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($shipper))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
-                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
+            'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**

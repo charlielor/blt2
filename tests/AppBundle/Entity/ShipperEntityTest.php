@@ -23,7 +23,7 @@ class ShipperEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetName() {
         $shipper = new Shipper("USPS", "ShipperTest");
-        $shipper->setName("FedEx Ground");
+        $shipper->setName("FedEx Ground", "ShipperTest");
 
         $this->assertEquals("FedEx Ground", $shipper->getName());
     }
@@ -36,7 +36,7 @@ class ShipperEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetEnabled()  {
         $shipper = new Shipper("USPS", "ShipperTest");
-        $shipper->setEnabled(false);
+        $shipper->setEnabled(false, "ShipperTest");
 
         $this->assertNotTrue($shipper->getEnabled());
     }
@@ -57,7 +57,7 @@ class ShipperEntityTest extends \PHPUnit_Framework_TestCase
         $shipper = new Shipper("USPS", "ShipperTest");
         $testDate = new \DateTime("2016-03-22");
 
-        $shipper->setDateModified($testDate);
+        $shipper->setDateModified($testDate, "ShipperTest");
 
         $this->assertEquals($testDate, $shipper->getDateModified());
     }

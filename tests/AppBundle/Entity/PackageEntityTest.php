@@ -19,7 +19,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
-        $package->addPackingSlip($packingSlip);
+        $package->addPackingSlip($packingSlip, "PackageTest");
 
         $this->assertEquals("12345", $package->getTrackingNumber());
         $this->assertEquals(4, $package->getNumberOfPackages());
@@ -61,7 +61,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "PackageTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->setTrackingNumber("54321");
+        $package->setTrackingNumber("54321", "PackageTest");
 
         $this->assertEquals("54321", $package->getTrackingNumber());
     }
@@ -82,7 +82,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "PackageTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->setNumberOfPackages(1);
+        $package->setNumberOfPackages(1, "PackageTest");
 
         $this->assertEquals(1, $package->getNumberOfPackages());
     }
@@ -105,7 +105,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
         $vendor2 = new Vendor("University of Wisconsin", "PackageTest");
-        $package->setVendor($vendor2);
+        $package->setVendor($vendor2, "PackageTest");
 
         $this->assertEquals($vendor2, $package->getVendor());
     }
@@ -128,7 +128,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
         
         $shipper2 = $shipper = new Shipper("FedEx Ground", "PackageTest");
-        $package->setShipper($shipper2);
+        $package->setShipper($shipper2, "PackageTest");
 
         $this->assertEquals($shipper2, $package->getShipper());
     }
@@ -151,7 +151,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
         $receiver2 = $receiver = new Receiver("IT", 1212, "PackageTest");
-        $package->setReceiver($receiver2);
+        $package->setReceiver($receiver2, "PackageTest");
 
         $this->assertEquals($receiver2, $package->getReceiver());
     }
@@ -173,7 +173,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
-        $package->setUserWhoReceived("PackageTest2");
+        $package->setUserWhoReceived("PackageTest2", "PackageTest");
 
         $this->assertEquals("PackageTest2", $package->getUserWhoReceived());
     }
@@ -196,7 +196,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
         $testDate = new \DateTime("2016-03-22");
-        $package->setDateReceived($testDate);
+        $package->setDateReceived($testDate, "PackageTest");
 
         $this->assertEquals($testDate, $package->getDateReceived());
     }
@@ -208,7 +208,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $packingSlip = new PackingSlip("ps", "jpg", "fakepath/upload", md5("11111111111111111111111111111111"), "PackingSlipTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->addPackingSlip($packingSlip);
+        $package->addPackingSlip($packingSlip, "PackageTest");
 
         $this->assertCount(1, $package->getPackingSlips());
     }
@@ -221,8 +221,8 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $packingSlip2 = new PackingSlip("ps2", "jpg", "fakepath/upload", md5("22222222222222222222222222222222"), "PackingSlipTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->addPackingSlip($packingSlip);
-        $package->addPackingSlip($packingSlip2);
+        $package->addPackingSlip($packingSlip, "PackageTest");
+        $package->addPackingSlip($packingSlip2, "PackageTest");
 
         $this->assertCount(2, $package->getPackingSlips());
     }
@@ -235,14 +235,14 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $packingSlip2 = new PackingSlip("ps2", "jpg", "fakepath/upload", md5("22222222222222222222222222222222"), "PackingSlipTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->addPackingSlip($packingSlip);
-        $package->addPackingSlip($packingSlip2);
+        $package->addPackingSlip($packingSlip, "PackageTest");
+        $package->addPackingSlip($packingSlip2, "PackageTest");
 
-        $package->removePackingSlips($packingSlip);
+        $package->removePackingSlips($packingSlip, "PackageTest");
 
         $this->assertCount(1, $package->getPackingSlips());
 
-        $package->removePackingSlips($packingSlip2);
+        $package->removePackingSlips($packingSlip2, "PackageTest");
 
         $this->assertCount(0, $package->getPackingSlips());
     }
@@ -263,7 +263,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "PackageTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->setDelivered(true);
+        $package->setDelivered(true, "PackageTest");
 
         $this->assertTrue($package->getDelivered());
     }
@@ -285,7 +285,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
-        $package->setUserWhoDelivered("PackageTest");
+        $package->setUserWhoDelivered("PackageTest", "PackageTest");
 
         $this->assertEquals("PackageTest", $package->getUserWhoDelivered());
     }
@@ -308,7 +308,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
         $testDate = new \DateTime("2016-03-22");
-        $package->setDateDelivered($testDate);
+        $package->setDateDelivered($testDate, "PackageTest");
 
         $this->assertEquals($testDate, $package->getDateDelivered());
     }
@@ -329,7 +329,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "PackageTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->setPickedUp(true);
+        $package->setPickedUp(true, "PackageTest");
 
         $this->assertTrue($package->getPickedUp());
     }
@@ -350,7 +350,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "PackageTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->setUserWhoPickedUp("UserWhoPickedUpPackage");
+        $package->setUserWhoPickedUp("UserWhoPickedUpPackage", "PackageTest");
 
         $this->assertEquals("UserWhoPickedUpPackage", $package->getUserWhoPickedUp());
     }
@@ -373,7 +373,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
 
         $testDate = new \DateTime("2016-03-22");
-        $package->setDatePickedUp($testDate);
+        $package->setDatePickedUp($testDate, "PackageTest");
 
         $this->assertEquals($testDate, $package->getDatePickedUp());
     }
@@ -394,7 +394,7 @@ class PackageEntityTest extends \PHPUnit_Framework_TestCase
         $receiver = new Receiver("Office", 111, "PackageTest");
 
         $package = new Package("12345", 4, $shipper, $receiver, $vendor, "PackageTest");
-        $package->setUserWhoAuthorizedPickup("UserWhoAuthorizedPickUp");
+        $package->setUserWhoAuthorizedPickup("UserWhoAuthorizedPickUp", "PackageTest");
 
         $this->assertEquals("UserWhoAuthorizedPickUp", $package->getUserWhoAuthorizedPickUp());
     }

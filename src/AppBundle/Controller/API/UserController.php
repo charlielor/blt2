@@ -52,23 +52,12 @@ class UserController extends Controller {
         // Run query and save it
         $users = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($users))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($users) . ' User',
-                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
-            );
-
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-        }
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($users) . ' User',
+            'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+        );
 
         return new JsonResponse($results);
     }
@@ -93,23 +82,12 @@ class UserController extends Controller {
         // Run query and save it
         $users = $query->getResult();
 
-        // If $receiver is not null, then set up $results to reflect successful query
-        if (!(empty($users))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
-                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
-            );
-
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Was not able to query database',
-                'object' => []
-            );
-        }
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
+            'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+        );
 
         return new JsonResponse($results);
     }

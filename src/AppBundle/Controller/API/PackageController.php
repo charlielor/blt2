@@ -476,28 +476,15 @@ class PackageController extends Controller
         // Run query and save it
         $packages = $query->getResult();
 
-        // If $package is not null, then set up $results to reflect successful query
-        if (!(empty($packages))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($packages) . ' Package',
-                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($packages) . ' Package',
+            'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Did not find package with tracking number: ' . $term,
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**
@@ -521,27 +508,15 @@ class PackageController extends Controller
         $packages = $query->getResult();
 
         // If $package is not null, then set up $results to reflect successful query
-        if (!(empty($packages))) {
-            // Set up response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Retrieved ' . count($packages) . ' Package(s) like \'' . $term . '\'',
-                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
-            );
+        // Set up response
+        $results = array(
+            'result' => 'success',
+            'message' => 'Retrieved ' . count($packages) . ' Package(s) like \'' . $term . '\'',
+            'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+        );
 
-            // Return response as JSON
-            return new JsonResponse($results);
-        } else {
-            // Set up response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Did not find packages with tracking number like: ' . $term,
-                'object' => []
-            );
-
-            // Return response as JSON
-            return new JsonResponse($results);
-        }
+        // Return response as JSON
+        return new JsonResponse($results);
     }
 
     /**

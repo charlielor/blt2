@@ -117,7 +117,7 @@ class PackingSlipEntityTest extends \PHPUnit_Framework_TestCase
 
     public function testSetUserLastModified() {
         $packingSlip = new PackingSlip("ps", "jpg", "fakepath/upload", md5("11111111111111111111111111111111"), "PackingSlipTest");
-        $packingSlip->setUserLastModified("PackingSlipTest2");
+        $packingSlip->setUserLastModified("PackingSlipTest2", "PackageTest");
 
         $this->assertEquals("PackingSlipTest2", $packingSlip->getUserLastModified());
     }

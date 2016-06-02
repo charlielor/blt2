@@ -30,22 +30,4 @@ class MaintenanceControllerTest extends WebTestCase
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
         $client->back();
     }
-
-    public function testSwitchRoute() {
-        $client = static::createClient();
-
-        $client->request('GET', '/maintenance/switch');
-
-        # Testing response code for /maintenance
-        $this->assertTrue($client->getResponse()->isSuccessful());
-    }
-
-    public function testSearchRoute() {
-        $client = static::createClient();
-
-        $client->request('GET', '/maintenance/search');
-
-        # Testing response code for /maintenance
-        $this->assertTrue($client->getResponse()->isSuccessful());
-    }
 }

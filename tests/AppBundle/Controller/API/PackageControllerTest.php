@@ -540,7 +540,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
-        $this->assertEquals('error', $errorResponse['result']);
+        $this->assertEquals('success', $errorResponse['result']);
 
         $client->request('GET', '/package/search', array(
             "term" => "testPackage"
@@ -1098,7 +1098,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
-        $this->assertEquals('error', $errorResponse['result']);
+        $this->assertEquals('success', $errorResponse['result']);
 
         $package = $newPackage['object'];
 

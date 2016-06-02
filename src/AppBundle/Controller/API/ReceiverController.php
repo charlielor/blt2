@@ -55,7 +55,7 @@ class ReceiverController extends Controller
         } else { // Create a new Receiver
 
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // Create a new Receiver entity and set its properties
             $newReceiver = new Receiver($nameOfNewReceiver, $deliveryRoomOfNewReceiver, $user);
@@ -114,7 +114,7 @@ class ReceiverController extends Controller
                 $receiverOldName = $receiver->getName();
 
                 // Get user | anon. is temp for testing
-                $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
 
                 if (!empty($request->get('name'))) {
                     // Set the current Receiver to its new name
@@ -182,7 +182,7 @@ class ReceiverController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // Updating a Receiver will automatically enable it
             $receiver->setEnabled(TRUE, $user);
@@ -228,7 +228,7 @@ class ReceiverController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // Updating a Receiver will automatically enable it
             $receiver->setEnabled(FALSE, $user);

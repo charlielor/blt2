@@ -52,7 +52,7 @@ class ShipperController extends Controller
         } else { // Create a new Shipper
 
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // Create a new Shipper entity and set its properties
             $newShipper = new Shipper($nameOfNewShipper, $user);
@@ -111,7 +111,7 @@ class ShipperController extends Controller
                 $shipperOldName = $shipper->getName();
 
                 // Get user | anon. is temp for testing
-                $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
 
                 // Set the current Shipper to its new name
                 $shipper->setName($request->get('name'), $user);
@@ -173,7 +173,7 @@ class ShipperController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // Updating a Shipper will automatically enable it
             $shipper->setEnabled(TRUE, $user);
@@ -219,7 +219,7 @@ class ShipperController extends Controller
             return new JsonResponse($results);
         } else {
             // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // Updating a Shipper will automatically enable it
             $shipper->setEnabled(FALSE, $user);

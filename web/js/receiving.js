@@ -171,15 +171,14 @@ $(document).ready(function() {
                             $("#existingPackage").text(window.existingPackageObject['trackingNumber'] + " already exists");
 
                             packageAlreadyExistsModal.modal("show");
+                        } else { // If searching for package with tracking number doesn't return anything
+                            window.newPackage = true;
+
+                            $("#packageModal").modal({
+                                backdrop: "static"
+                            });
                         }
-                    } else { // If searching for package with tracking number doesn't return anything
-                        window.newPackage = true;
-
-                        $("#packageModal").modal({
-                            backdrop: "static"
-                        });
                     }
-
                 });
         }
     });

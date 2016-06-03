@@ -29,6 +29,7 @@ Given the amount of packages delivered daily to the Biochemistry department, thi
     $ cd /var/www/html
     ```
 2. Clone the repository into its own folder
+
     ```
     $ git clone https://github.com/charlielor/blt2.git
     ```
@@ -61,9 +62,9 @@ Given the amount of packages delivered daily to the Biochemistry department, thi
 2. Clear caches and install/dump assets
 
     ```
-    $ php bin/console cache:clear --env=prod
-    $ php bin/console assets:install --env=prod
-    $ php bin/console assetic:dump --env=prod
+    $ php bin/console cache:clear --env=prod --no-debug
+    $ php bin/console assets:install --env=prod --no-debug
+    $ php bin/console assetic:dump --env=prod  --no-debug
     ```
 
 ## For anyone who wants to use some sort of authentication/authorization system

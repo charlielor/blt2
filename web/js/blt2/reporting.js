@@ -287,9 +287,10 @@ $(document).ready(function() {
             if (response["result"] == "success") {
                 var requestedQuery = response['requestedQuery'].split("-");
 
-                graphQueryResults.show();
-
                 if (response['object'].length > 0) {
+
+                    graphQueryResults.show();
+
                     var dates = response['object'];
                     var reportResultsDates = [];
                     var reportResultsCount = [];

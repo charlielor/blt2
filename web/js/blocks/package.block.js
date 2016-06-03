@@ -179,7 +179,7 @@ $(document).ready(function() {
                     url: 'package/new',
                     type: 'POST',
                     data: formData,
-                    contentType: false,
+                    contentType: "multipart/form-data",
                     processData: false
                 })
                     .done(function (results) {
@@ -232,7 +232,7 @@ $(document).ready(function() {
                     url: 'package/' + window.existingPackageObject.trackingNumber + '/update',
                     type: 'PUT',
                     data: formData,
-                    contentType: false,
+                    contentType: "multipart/form-data",
                     processData: false
                 })
                     .done(function (results) {

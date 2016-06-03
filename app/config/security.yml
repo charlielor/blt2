@@ -14,3 +14,7 @@ security:
             pattern: ^/
             remote_user:
                 provider: shibboleth
+            logout:
+                path: /logout
+                target: https://login.wisc.edu/logout
+                invalidate_session: true

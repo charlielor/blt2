@@ -45,7 +45,7 @@ $(document).ready(function() {
 
                                 if (pack['packingSlips'].length !== 0) {
                                     $.each(pack['packingSlips'], function(j) {
-                                        downloadLinks += '<a href="preview/' + pack['packingSlips'][j].downloadLink + '">' + pack['packingSlips'][j].extension.toUpperCase() + '</a> ';
+                                        downloadLinks += '<a href="preview/' + pack['packingSlips'][j].downloadLink + '" target="_blank">' + pack['packingSlips'][j].extension.toUpperCase() + '</a> ';
                                     });
                                 } else {
                                     downloadLinks = "None";

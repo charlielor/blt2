@@ -24,6 +24,7 @@ Given the amount of packages delivered daily to the Biochemistry department, thi
 * Must have git installed for git clone
 
 1. Navigate to web root directory
+
     ```
     $ cd /var/www/html
     ```
@@ -32,16 +33,19 @@ Given the amount of packages delivered daily to the Biochemistry department, thi
     $ git clone https://github.com/charlielor/blt2.git
     ```
 3. Navigate into the folder
+
     ```
     $ cd blt2
     ```
 4. Download and install [composer](https://getcomposer.org/download/)
 5. Run composer
+
     ```
     $ php composer.phar install
     ```
 6. Add parameters to database when asked
 7. Create database using Doctrine
+
     ```
     $ php bin/console doctrine:database:create
     $ php bin/console doctrine:schema:update --force
@@ -50,10 +54,12 @@ Given the amount of packages delivered daily to the Biochemistry department, thi
 
 ## How to update
 1. Navigate to blt2 directory and pull from repository
+
     ```
     $ git pull
     ```
 2. Clear caches and install/dump assets
+
     ```
     $ php bin/console cache:clear --env=prod
     $ php bin/console assets:install --env=prod

@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{{ department|first|upper }}LT{% endblock %}</title>
         {% block stylesheets %}
             {% stylesheets
             'css/bootstrap.css'
@@ -25,7 +25,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <span class="navbar-brand">BLT</span>
+                        <span class="navbar-brand">{{ department }} Logistics Tool</span>
                     </div>
 
                     <div id="actions" class="collapse navbar-collapse">

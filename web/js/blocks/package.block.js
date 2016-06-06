@@ -186,7 +186,7 @@ $(document).ready(function() {
                         // If the result is an error, display the error and close the form as the form has already been submitted
                         if (results['result'] == 'error') {
                             n = noty({
-                                layout: "bottom",
+                                layout: "top",
                                 theme: "bootstrapTheme",
                                 type: "error",
                                 text: results['message'],
@@ -202,7 +202,7 @@ $(document).ready(function() {
 
                                 // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
                                 n = noty({
-                                    layout: "bottom",
+                                    layout: "top",
                                     theme: "bootstrapTheme",
                                     type: "success",
                                     text: "Package information sent successfully!",
@@ -217,7 +217,7 @@ $(document).ready(function() {
                     .fail(function () {
                         // Display a noty telling the user that there was an issue submitting the packageObject information
                         n = noty({
-                            layout: "bottom",
+                            layout: "top",
                             theme: "bootstrapTheme",
                             type: "error",
                             text: "Connection error; please try again",
@@ -239,7 +239,7 @@ $(document).ready(function() {
                         // If the result is an error, display the error and close the form as the form has already been submitted
                         if (results['result'] == 'error') {
                             n = noty({
-                                layout: "bottom",
+                                layout: "top",
                                 theme: "bootstrapTheme",
                                 type: "error",
                                 text: results['message'],
@@ -252,7 +252,7 @@ $(document).ready(function() {
                             if ((results['result'] == 'success') && (results['object'] !== null)) {
                                 // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
                                 n = noty({
-                                    layout: "bottom",
+                                    layout: "top",
                                     theme: "bootstrapTheme",
                                     type: "success",
                                     text: results['message'],
@@ -284,7 +284,7 @@ $(document).ready(function() {
                     .fail(function () {
                         // Display a noty telling the user that there was an issue submitting the packageObject information
                         n = noty({
-                            layout: "bottom",
+                            layout: "top",
                             theme: "bootstrapTheme",
                             type: "error",
                             text: "Connection error; please try again",

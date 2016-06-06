@@ -30,9 +30,9 @@ $(document).ready(function() {
             {'data': 'shipper.name'},
             {'data': 'receiver.name'},
             {
-                'data': 'dateReceived',
+                'data': 'dateReceived.timestamp',
                 'render': function(data) {
-                    var dateFromPackage = new Date(Date.parse(data));
+                    var dateFromPackage = new Date(data * 1000);
 
                     var month = (dateFromPackage.getMonth() + 1);
                     month = month < 10 ? '0' + month : month;

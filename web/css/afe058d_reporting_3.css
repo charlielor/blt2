@@ -1,0 +1,39 @@
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+#runAReportHeader {
+  margin-bottom: 15px;
+}
+#reportResultsGraph {
+  width: 1000px;
+  height: 500px;
+}
+#queryResultsText {
+  margin: 15px;
+}
+#graphToTable,
+#tableToCSV {
+  margin-top: 15px;
+}
+#graphQueryResults,
+#tableQueryResults,
+.vendorSelect,
+.shipperSelect,
+.userSelect,
+.receiverSelect {
+  display: none;
+}
+#selectDateDiv {
+  margin-bottom: 30px;
+}
+#dateBegin,
+#dateEnd {
+  display: inline-block;
+}
+/* Small devices (tablets, 768px and up) */
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  #submitReportRequest {
+    margin-top: 24px;
+  }
+}
+/* Large devices (large desktops, 1200px and up) */

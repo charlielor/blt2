@@ -40,10 +40,10 @@ $(document).ready(function() {
                 }
             },
             {
-                data: 'dateReceived',
+                data: 'dateReceived.timestamp',
                 render: function(data) {
                     // Get the date and times it by 1000
-                    var dateFromPackage = new Date(Date.parse(data));
+                    var dateFromPackage = new Date(data * 1000);
 
                     // Get the month and add 1 to it (zero-base)
                     var month = (dateFromPackage.getMonth() + 1);

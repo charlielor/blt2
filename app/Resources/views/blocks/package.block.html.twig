@@ -20,6 +20,23 @@
     {{ block('newReceiver') }}
     {{ block('camera') }}
 
+    <div id="noPackingSlipsModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="noPackingSlips">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="noPackingSlipsTitle">No Packing Slip Attached</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="noPackingSlipsAttached" class="text-default center-block text-center">There are no packing slips attached. Is that okay?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" tabindex="-1">Cancel</button>
+                    <button id="confirmedNoPackingSlipsIsOkay" type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="packageModal" class="modal modal-overflow" tabindex="-1" role="dialog" aria-labelledby="packageModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

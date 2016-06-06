@@ -52,7 +52,7 @@ $(document).ready(function() {
             newShipperName.focus();
         } else {
             // Submit new shipper information
-            $.post("shipper/new",
+            $.post("shippers/new",
                 {
                     name: newShipper
                 }

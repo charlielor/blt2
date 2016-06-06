@@ -12,7 +12,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -30,7 +30,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -46,7 +46,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -62,7 +62,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -70,7 +70,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        # Testing response code for /package/new
+        # Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -96,7 +96,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
         # Testing against duplicates
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -122,7 +122,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('error', $duplicatePackage['result']);
 
         # Testing with errors
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "receiverId" => $receiver[0]['id'],
             "vendorId" => $vendor[0]['id']
@@ -147,8 +147,8 @@ class PackageControllerTest extends WebTestCase
 
         $package = $newPackage['object'];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -168,7 +168,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -178,7 +178,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -188,7 +188,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -198,13 +198,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
     }
@@ -213,7 +213,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -231,7 +231,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -247,7 +247,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -263,7 +263,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -271,7 +271,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        // Testing response code for /package/new
+        // Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -297,7 +297,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
         // Test for update
-        $client->request('PUT', '/package/testPackage/update', array(
+        $client->request('POST', '/packages/testPackage/update', array(
             "numberOfPackages" => 1,
             "deletePackingSlipIds" => array(
                 "removePackingSlipOne", "removePackingSlipTwo"
@@ -323,7 +323,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals(1, $updatedPackage['object']['numberOfPackages']);
 
         // Test for errors
-        $client->request('PUT', '/package/test/update', array(
+        $client->request('POST', '/packages/test/update', array(
             "numberOfPackages" => 1,
             "removedPackingSlipIds" => array(
                 "removePackingSlipOne", "removePackingSlipTwo"
@@ -349,8 +349,8 @@ class PackageControllerTest extends WebTestCase
 
         $package = $newPackage['object'];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -370,7 +370,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -380,7 +380,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -390,7 +390,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -400,13 +400,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -414,7 +414,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -432,7 +432,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -448,7 +448,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -464,7 +464,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -472,7 +472,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        # Testing response code for /package/new
+        # Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -498,7 +498,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
         // Test search like term
-        $client->request('GET', '/package/like', array(
+        $client->request('GET', '/packages/like', array(
             "term" => "test"
         ));
 
@@ -521,7 +521,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
 
         // Test for errors
-        $client->request('GET', '/package/search', array(
+        $client->request('GET', '/packages/search', array(
             "term" => "stuffedchickenwings"
         ));
 
@@ -542,7 +542,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('success', $errorResponse['result']);
 
-        $client->request('GET', '/package/search', array(
+        $client->request('GET', '/packages/search', array(
             "term" => "testPackage"
         ));
 
@@ -552,8 +552,8 @@ class PackageControllerTest extends WebTestCase
 
         $package = $packageResponse['object'][0];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -573,7 +573,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -583,7 +583,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -593,7 +593,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -603,13 +603,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
     
@@ -617,7 +617,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -635,7 +635,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -651,7 +651,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -667,7 +667,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -675,7 +675,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        # Testing response code for /package/new
+        # Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -701,7 +701,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
         // Assert that package is delivered
-        $client->request('PUT', '/package/' . $newPackage['object']['trackingNumber'] . '/deliver');
+        $client->request('PUT', '/packages/' . $newPackage['object']['trackingNumber'] . '/deliver');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -728,8 +728,8 @@ class PackageControllerTest extends WebTestCase
 
         $package = $newPackage['object'];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -749,7 +749,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -759,7 +759,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -769,7 +769,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -779,13 +779,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -793,7 +793,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -811,7 +811,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -827,7 +827,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -843,7 +843,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -851,7 +851,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        # Testing response code for /package/new
+        # Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -878,7 +878,7 @@ class PackageControllerTest extends WebTestCase
 
 
         // Assert that package is picked up
-        $client->request('PUT', '/package/' . $newPackage['object']['trackingNumber'] . '/pickup', array(
+        $client->request('PUT', '/packages/' . $newPackage['object']['trackingNumber'] . '/pickup', array(
             "userWhoPickedUp"=> "stuffedchickenwings"
         ));
 
@@ -907,8 +907,8 @@ class PackageControllerTest extends WebTestCase
 
         $package = $newPackage['object'];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -928,7 +928,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -938,7 +938,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -948,7 +948,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -958,13 +958,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -972,7 +972,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -990,7 +990,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -1006,7 +1006,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -1022,7 +1022,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -1030,7 +1030,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        # Testing response code for /package/new
+        # Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -1055,11 +1055,11 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
         $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
-        $client->request('GET', '/package/search', array(
+        $client->request('GET', '/packages/search', array(
             "term" => "testPackage"
         ));
 
-        # Testing response code for /package/search
+        # Testing response code for /packages/search
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -1079,7 +1079,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
 
         // Test for errors
-        $client->request('GET', '/package/search', array(
+        $client->request('GET', '/packages/search', array(
             "term" => "stuffedchickenwings"
         ));
 
@@ -1102,8 +1102,8 @@ class PackageControllerTest extends WebTestCase
 
         $package = $newPackage['object'];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -1123,7 +1123,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -1133,7 +1133,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -1143,7 +1143,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -1153,13 +1153,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -1167,7 +1167,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -1185,7 +1185,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -1201,7 +1201,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -1217,7 +1217,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -1225,7 +1225,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        # Testing response code for /package/new
+        # Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -1252,8 +1252,8 @@ class PackageControllerTest extends WebTestCase
 
         $package = $newPackage['object'];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -1273,7 +1273,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Test for errors
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -1293,7 +1293,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('error', $errorResponse['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -1303,7 +1303,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -1313,7 +1313,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -1323,13 +1323,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -1337,7 +1337,7 @@ class PackageControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Setting up the database with fake entities
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "testPackageReceiver",
             "deliveryRoom" => 112
         ));
@@ -1355,7 +1355,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "testPackageShipper"
         ));
 
@@ -1371,7 +1371,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('POST', '/vendor/new', array(
+        $client->request('POST', '/vendors/new', array(
             "name" => "testPackageVendor"
         ));
 
@@ -1387,7 +1387,7 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('POST', '/package/new', array(
+        $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
             "shipperId" => $shipper[0]['id'],
@@ -1395,7 +1395,7 @@ class PackageControllerTest extends WebTestCase
             "vendorId" => $vendor[0]['id']
         ));
 
-        # Testing response code for /package/new
+        # Testing response code for /packages/new
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -1420,14 +1420,14 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
         $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
-        $client->request('GET', '/package/' . $newPackage['object']['trackingNumber']);
+        $client->request('GET', '/packages/' . $newPackage['object']['trackingNumber']);
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $package = $newPackage['object'];
 
-        # Testing response code for /package/{id}/delete
-        $client->request('DELETE', '/package/' . $package['trackingNumber'] . '/delete');
+        # Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -1447,7 +1447,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Search database for existing entities and delete them
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "testPackageReceiver"
         ));
 
@@ -1457,7 +1457,7 @@ class PackageControllerTest extends WebTestCase
 
         $receiver = $receiverResponse['object'];
 
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "testPackageShipper"
         ));
 
@@ -1467,7 +1467,7 @@ class PackageControllerTest extends WebTestCase
 
         $shipper = $shipperResponse['object'];
 
-        $client->request('GET', '/vendor/search', array(
+        $client->request('GET', '/vendors/search', array(
             "term" => "testPackageVendor"
         ));
 
@@ -1477,13 +1477,13 @@ class PackageControllerTest extends WebTestCase
 
         $vendor = $vendorResponse['object'];
 
-        $client->request('DELETE', '/receiver/' . $receiver[0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/shipper/' . $shipper[0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('DELETE', '/vendor/' . $vendor[0]['id'] . '/delete');
+        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 

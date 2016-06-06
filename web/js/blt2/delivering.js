@@ -196,7 +196,7 @@ $(document).ready(function() {
 
             $.ajax({
                 type: "GET",
-                url: "receiver/packages",
+                url: "receivers/packages",
                 data: {
                     name: barcode
                 }
@@ -277,7 +277,7 @@ $(document).ready(function() {
         if (trackingNumber)
             $.ajax({
                 type: "PUT",
-                url: "package/" + trackingNumber + "/deliver",
+                url: "packages/" + trackingNumber + "/deliver",
                 data: {
                     barcode: trackingNumber,
                     receiver: receiver

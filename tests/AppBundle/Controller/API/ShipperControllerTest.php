@@ -10,7 +10,7 @@ class ShipperControllerTest extends WebTestCase
     public function testNewShipperRoute() {
         $client = static::createClient();
 
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -36,7 +36,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was unsuccessfully created, duplicate
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -50,7 +50,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($duplicateResponse['object']);
 
         // Assert that given entity is disabled, display error
-        $client->request('PUT', '/shipper/' . $successResponse["object"][0]["id"] . '/disable');
+        $client->request('PUT', '/shippers/' . $successResponse["object"][0]["id"] . '/disable');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -72,7 +72,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertNotEmpty($disabledResponse['object']);
 
         // Assert that shipper was unsuccessfully created, entity disabled
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -97,7 +97,7 @@ class ShipperControllerTest extends WebTestCase
 
         // Re-enable shipper
         // Assert that given entity is disabled, display error
-        $client->request('PUT', '/shipper/' . $successResponse["object"][0]["id"] . '/enable');
+        $client->request('PUT', '/shippers/' . $successResponse["object"][0]["id"] . '/enable');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -119,7 +119,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that shipper was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -145,7 +145,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -170,7 +170,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully updated
-        $client->request('PUT', '/shipper/' . $successResponse['object'][0]['id'] . '/update', array(
+        $client->request('PUT', '/shippers/' . $successResponse['object'][0]['id'] . '/update', array(
             "name" => "testUpdated"
         ));
 
@@ -196,7 +196,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEquals('testUpdated', $successResponse['object'][0]['name']);
 
         // Assert that a entity that gets updated to another entity with the same name is an error
-        $client->request('PUT', '/shipper/' . $successResponse['object'][0]['id'] . '/update', array(
+        $client->request('PUT', '/shippers/' . $successResponse['object'][0]['id'] . '/update', array(
             "name" => "testUpdated"
         ));
 
@@ -220,7 +220,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($sameNameResponse['object']);
 
         // Assert that a entity that does not exist is not updated
-        $client->request('PUT', '/shipper/stuffedchickenwings/update', array(
+        $client->request('PUT', '/shippers/stuffedchickenwings/update', array(
             "name" => "testUpdated"
         ));
 
@@ -244,7 +244,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
 
         // Assert that shipper was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -270,7 +270,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test",
         ));
 
@@ -295,9 +295,9 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully enabled
-        $client->request('PUT', '/shipper/'. $successResponse['object'][0]['id']. '/enable');
+        $client->request('PUT', '/shippers/'. $successResponse['object'][0]['id']. '/enable');
 
-        // Testing response code for /shipper/{id}/enable
+        // Testing response code for /shippers/{id}/enable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -318,9 +318,9 @@ class ShipperControllerTest extends WebTestCase
         $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that enabling a entity with no id gives errors
-        $client->request('PUT', '/shipper/stuffedchickenwings/enable');
+        $client->request('PUT', '/shippers/stuffedchickenwings/enable');
 
-        // Testing response code for /shipper/{id}/enable
+        // Testing response code for /shippers/{id}/enable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -341,7 +341,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that shipper was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -369,7 +369,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -394,9 +394,9 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully disabled
-        $client->request('PUT', '/shipper/'. $successResponse['object'][0]['id']. '/disable');
+        $client->request('PUT', '/shippers/'. $successResponse['object'][0]['id']. '/disable');
 
-        // Testing response code for /shipper/{id}/disable
+        // Testing response code for /shippers/{id}/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -417,9 +417,9 @@ class ShipperControllerTest extends WebTestCase
         $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that disabling a entity with no id gives errors
-        $client->request('PUT', '/shipper/stuffedchickenwings/disable');
+        $client->request('PUT', '/shippers/stuffedchickenwings/disable');
 
-        // Testing response code for /shipper/{id}/enable
+        // Testing response code for /shippers/{id}/enable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -440,7 +440,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that shipper was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -468,7 +468,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -493,7 +493,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "test"
         ));
 
@@ -519,7 +519,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
         // Assert that given entity wasn't found
-        $client->request('GET', '/shipper/search', array(
+        $client->request('GET', '/shippers/search', array(
             "term" => "stuffedchickenwings"
         ));
 
@@ -543,7 +543,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
 
         // Assert that shipper was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -569,7 +569,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -594,7 +594,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
-        $client->request('GET', '/shipper/like', array(
+        $client->request('GET', '/shippers/like', array(
             "term" => "te"
         ));
 
@@ -620,7 +620,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
         // Assert that given entity wasn't found
-        $client->request('GET', '/shipper/like', array(
+        $client->request('GET', '/shippers/like', array(
             "term" => "stuffedchickenwings"
         ));
 
@@ -644,7 +644,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
 
         // Assert that shipper was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -670,7 +670,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -695,7 +695,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -717,7 +717,7 @@ class ShipperControllerTest extends WebTestCase
         $this->assertNotEmpty($deletedResponse['object']);
 
         // Assert that route with invalid id gives errors
-        $client->request('DELETE', '/shipper/stuffedchickenwings/delete');
+        $client->request('DELETE', '/shippers/stuffedchickenwings/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -759,7 +759,7 @@ class ShipperControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/shipper/new', array(
+        $client->request('POST', '/shippers/new', array(
             "name" => "test"
         ));
 
@@ -784,12 +784,12 @@ class ShipperControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that going to the entity's page is successful
-        $client->request('GET', '/shipper/' . $successResponse['object'][0]['id']);
+        $client->request('GET', '/shippers/' . $successResponse['object'][0]['id']);
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         // Assert that entity was successfully deleted
-        $client->request('DELETE', '/shipper/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/shippers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 

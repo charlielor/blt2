@@ -176,7 +176,7 @@ $(document).ready(function() {
             if (window.newPackage) {
                 // Upload form VIA AJAX POST
                 $.ajax({
-                    url: 'package/new',
+                    url: 'packages/new',
                     type: 'POST',
                     data: formData,
                     contentType: "multipart/form-data",
@@ -227,10 +227,10 @@ $(document).ready(function() {
                             buttons: false
                         });
                     });
-            } else { // Update package VIA PUT
+            } else { // Update package VIA POST
                 $.ajax({
-                    url: 'package/' + window.existingPackageObject.trackingNumber + '/update',
-                    type: 'PUT',
+                    url: 'packages/' + window.existingPackageObject.trackingNumber + '/update',
+                    type: 'POST',
                     data: formData,
                     contentType: "multipart/form-data",
                     processData: false

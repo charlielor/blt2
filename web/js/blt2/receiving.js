@@ -161,7 +161,7 @@ $(document).ready(function() {
         if (trackingNumber.length === 0) {
             emptyTrackingNumberModal.modal('show');
         } else {
-            $.get('package/search', {'term': trackingNumber})
+            $.get('packages/search', {'term': trackingNumber})
                 .done(function(data) {
                     if (data['result'] == 'success') {
                         if (data['object'].length !== 0) {

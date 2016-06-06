@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\Expr;
 class PackageController extends Controller
 {
     /**
-     * @Route("/package/new", name="newPackage")
+     * @Route("/packages/new", name="newPackage")
      * @Method({"POST"})
      */
     public function newPackageAction(Request $request) {
@@ -153,8 +153,8 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/{id}/update", name="updatePackage")
-     * @Method({"PUT"})
+     * @Route("/packages/{id}/update", name="updatePackage")
+     * @Method({"POST"})
      */
     public function updatePackageAction(Request $request, $id) {
         // Get the Package repository
@@ -324,7 +324,7 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/{id}/deliver", name="deliverPackage")
+     * @Route("/packages/{id}/deliver", name="deliverPackage")
      * @Method({"PUT"})
      */
     public function deliverPackageAction($id) {
@@ -389,7 +389,7 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/{id}/pickup", name="pickupPackage")
+     * @Route("/packages/{id}/pickup", name="pickupPackage")
      * @Method({"PUT"})
      */
     public function pickupPackageAction(Request $request, $id) {
@@ -457,7 +457,7 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/search", name="searchPackage")
+     * @Route("/packages/search", name="searchPackage")
      * @Method({"GET"})
      */
     public function searchPackageAction(Request $request) {
@@ -488,7 +488,7 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/like", name="likePackage")
+     * @Route("/packages/like", name="likePackage")
      * @Method({"Get"})
      */
     public function likePackageAction(Request $request) {
@@ -520,7 +520,7 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/{id}/delete", name="deletePackage")
+     * @Route("/packages/{id}/delete", name="deletePackage")
      * @Method({"DELETE"})
      *
      */
@@ -622,7 +622,7 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/package/{id}", name="package")
+     * @Route("/packages/{id}", name="package")
      * @Method({"GET"})
      */
     public function packageAction(Request $request, $id) {

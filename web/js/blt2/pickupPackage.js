@@ -88,7 +88,7 @@ $(document).ready(function() {
             // Get the packages base on scanned barcode
             $.ajax({
                     type: "GET",
-                    url: "package/search",
+                    url: "packages/search",
                     data: { 'term': ptn }
                 })
                 .done(function(results) {
@@ -148,7 +148,7 @@ $(document).ready(function() {
                 // Send the AJAX request
                 $.ajax({
                         type: "PUT",
-                        url: "package/" + trackingNumberInPickUp + "/pickup",
+                        url: "packages/" + trackingNumberInPickUp + "/pickup",
                         data: dataBeingSent
                     })
                     .done(function(results) {

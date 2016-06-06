@@ -63,7 +63,7 @@
                         <div class="form-group">
                             <label for="userWhoAuthorized" class="col-md-5 control-label">User who authorized pickup:</label>
                             <div id="userWhoAuthorizedDiv" class="col-md-6">
-                                <input type="text" id="userWhoAuthorized" class="form-control" value="" readonly />
+                                <input type="text" id="userWhoAuthorized" class="form-control" value="{{ app.user.username }}" readonly />
                             </div>
                         </div>
                     </div>

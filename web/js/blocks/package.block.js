@@ -253,24 +253,9 @@ $(document).ready(function() {
                             killer: true,
                             buttons: false
                         });
-<<<<<<< HEAD
-                    });
-            } else { // Update package VIA POST
-                $.ajax({
-                    url: 'packages/' + window.existingPackageObject.trackingNumber + '/update',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false
-                })
-                    .done(function (results) {
-                        // If the result is an error, display the error and close the form as the form has already been submitted
-                        if (results['result'] == 'error') {
-=======
                     } else {
                         if ((results['result'] == 'success') && (results['object'] !== null)) {
                             // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
->>>>>>> dev
                             n = noty({
                                 layout: "top",
                                 theme: "bootstrapTheme",

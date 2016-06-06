@@ -19,6 +19,15 @@ $(document).ready(function() {
     // Set the dropdownParent for all select2 on this page to the package modal
     $.fn.select2.defaults.set("dropdownParent", $("#packageModal"));
 
+    // When the select2 items are selected
+    select2Shipper.on("select2:select", function() {
+        select2Vendor.select2("open");
+    });
+
+    select2Vendor.on("select2:select", function() {
+        select2Receiver.select2("open");
+    });
+
     packageModal.on("show.bs.modal", function() {
         // When the dialogForm opens, check to see if it is an existing packageObject.
         // If so then show the shipper select2 div, create a new packageObject and fill the information
@@ -174,10 +183,104 @@ $(document).ready(function() {
             $("#noPackingSlipsModal").modal({
                 backdrop: "static"
             });
+        } else {
+            sendFormData();
         }
     });
 
+
     $("#confirmedNoPackingSlipsIsOkay").on("click", function() {
+        sendFormData();
+    });
+
+    // When the user clicks on the "-" next to the number of packageObjects text input box, decrease the number in the text box by one
+    $("#minusAPackage").click(function() {
+        var numberOfPackages = document.getElementById("numberOfPackages");
+        var numValue = parseInt(numberOfPackages.value, 10);
+        if (numValue > 1) {
+            numberOfPackages.value = numValue - 1;
+        }
+    });
+
+
+    // When the user clicks on the "+" next to the number of packageObjects text input box, increase the number in the text box by one
+    $("#addAPackage").click(function() {
+        var numberOfPackages = document.getElementById("numberOfPackages");
+        var numValue = parseInt(numberOfPackages.value, 10);
+        numberOfPackages.value = numValue + 1;
+    });
+
+    /*
+     * Remove the selected input type file. If it's the only one, then just remove the input element and add a new one.
+     */
+    $(document).on("click", "#clearAttachedPackingSlips", function() {
+        $("#attachedPackingSlips").val("");
+    });
+
+    /*
+     * Delete existing packing slip
+     */
+    $(document).on("click", ".deleteExistingPackingSlip", function() {
+        var idOfPackingSlip = $(this).data('id');
+
+        $("#" + idOfPackingSlip).remove();
+
+        deletedPackingSlips.push(idOfPackingSlip);
+
+        // If the list is empty, hide the label/div
+        if ($(".deleteExistingPackingSlip").length == 0) {
+            // Hide the shipper select2 input
+            $("#existingPackingSlips").hide();
+        }
+    });
+
+    /**
+     * Clear the form
+     */
+    function clearForm() {
+        // Remove any highlighted errors
+        removeFormErrors();
+
+        // Reset select2 hidden inputs
+        select2Shipper.val(null).trigger("change");
+        select2Vendor.val(null).trigger("change");
+        select2Receiver.val(null).trigger("change");
+
+        formData = null;
+        
+        // Set the number of packageObjects to 1
+        numberOfPackages.val(1);
+
+        // Remove all existing packing slips from the previous packageObject, if any
+        $("#listOfExistingPackingSlips").empty();
+
+        // Clear imput type file
+        $("#attachedPackingSlips").val("");
+
+        // Remove all images
+        $('.thumbnail').remove();
+        $("#image").src = '';
+        $("#thumbnailsDiv").empty();
+
+        // Change newPackage flag to true
+        window.newPackage = true;
+
+        // Clear any deleted packing slips from updates
+        deletedPackingSlips = [];
+    }
+
+    // If the up/down arrow keys are pressed, add or subtract the number of packageObjects
+    $(document).keyup(function(e) {
+        if (!($(".select2-input").is(":visible"))) {
+            if (e.keyCode == 38) {
+                $("#addAPackage").click();
+            } else if (e.keyCode == 40) {
+                $("#minusAPackage").click();
+            }
+        }
+    });
+
+    function sendFormData() {
         if (window.newPackage) {
             // Upload form VIA AJAX POST
             $.ajax({
@@ -303,94 +406,7 @@ $(document).ready(function() {
 
         // Close the form
         packageModal.modal("hide");
-    });
-
-    // When the user clicks on the "-" next to the number of packageObjects text input box, decrease the number in the text box by one
-    $("#minusAPackage").click(function() {
-        var numberOfPackages = document.getElementById("numberOfPackages");
-        var numValue = parseInt(numberOfPackages.value, 10);
-        if (numValue > 1) {
-            numberOfPackages.value = numValue - 1;
-        }
-    });
-
-
-    // When the user clicks on the "+" next to the number of packageObjects text input box, increase the number in the text box by one
-    $("#addAPackage").click(function() {
-        var numberOfPackages = document.getElementById("numberOfPackages");
-        var numValue = parseInt(numberOfPackages.value, 10);
-        numberOfPackages.value = numValue + 1;
-    });
-
-    /*
-     * Remove the selected input type file. If it's the only one, then just remove the input element and add a new one.
-     */
-    $(document).on("click", "#clearAttachedPackingSlips", function() {
-        $("#attachedPackingSlips").val("");
-    });
-
-    /*
-     * Delete existing packing slip
-     */
-    $(document).on("click", ".deleteExistingPackingSlip", function() {
-        var idOfPackingSlip = $(this).data('id');
-
-        $("#" + idOfPackingSlip).remove();
-
-        deletedPackingSlips.push(idOfPackingSlip);
-
-        // If the list is empty, hide the label/div
-        if ($(".deleteExistingPackingSlip").length == 0) {
-            // Hide the shipper select2 input
-            $("#existingPackingSlips").hide();
-        }
-    });
-
-    /**
-     * Clear the form
-     */
-    function clearForm() {
-        // Remove any highlighted errors
-        removeFormErrors();
-
-        // Reset select2 hidden inputs
-        select2Shipper.val(null).trigger("change");
-        select2Vendor.val(null).trigger("change");
-        select2Receiver.val(null).trigger("change");
-
-        formData = null;
-        
-        // Set the number of packageObjects to 1
-        numberOfPackages.val(1);
-
-        // Remove all existing packing slips from the previous packageObject, if any
-        $("#listOfExistingPackingSlips").empty();
-
-        // Clear imput type file
-        $("#attachedPackingSlips").val("");
-
-        // Remove all images
-        $('.thumbnail').remove();
-        $("#image").src = '';
-        $("#thumbnailsDiv").empty();
-
-        // Change newPackage flag to true
-        window.newPackage = true;
-
-        // Clear any deleted packing slips from updates
-        deletedPackingSlips = [];
     }
-
-    // If the up/down arrow keys are pressed, add or subtract the number of packageObjects
-    $(document).keyup(function(e) {
-        if (!($(".select2-input").is(":visible"))) {
-            if (e.keyCode == 38) {
-                $("#addAPackage").click();
-            } else if (e.keyCode == 40) {
-                $("#minusAPackage").click();
-            }
-        }
-    });
 
     /**
      * Remove all form errors

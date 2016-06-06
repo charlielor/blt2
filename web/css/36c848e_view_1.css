@@ -1,0 +1,9 @@
+#goToToday {
+  display: none;
+}
+#selectDateDiv {
+  margin-bottom: 30px;
+}
+#datepicker {
+  display: inline-block;
+}

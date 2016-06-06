@@ -442,7 +442,7 @@ $(document).ready(function() {
                     $.each(packagesFromServer, function(index, element) {
 
                         // Create string-friendly dateReceived
-                        var dateReceived = new Date(Date.parse(element["dateReceived"]));
+                        var dateReceived = new Date(element["dateReceived"]["timestamp"] * 1000);
                         var month = (dateReceived.getMonth() + 1);
                         month = month < 10 ? '0' + month : month;
                         var date = dateReceived.getDate();
@@ -451,7 +451,7 @@ $(document).ready(function() {
 
                         if (element["pickedUp"] === true) {
                             // Create string-friendly dateDelivered
-                            var datePickedUp = new Date(Date.parse(element["datePickedUp"]));
+                            var datePickedUp = new Date(element["datePickedUp"]["timestamp"] * 1000);
                             month = (datePickedUp.getMonth() + 1);
                             month = month < 10 ? '0' + month : month;
                             date = datePickedUp.getDate();
@@ -475,7 +475,7 @@ $(document).ready(function() {
                             );
                         } else if (element["delivered"] === true) {
                             // Create string-friendly dateDelivered
-                            var dateDelivered = new Date(Date.parse(element["dateDelivered"]));
+                            var dateDelivered = new Date(element["dateDelivered"]["timestamp"] * 1000);
                             month = (dateDelivered.getMonth() + 1);
                             month = month < 10 ? '0' + month : month;
                             date = dateDelivered.getDate();

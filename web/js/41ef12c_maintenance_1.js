@@ -51,7 +51,7 @@ $(document).ready(function() {
                                     downloadLinks = "None";
                                 }
 
-                                var dateReceived = new Date(Date.parse(pack.dateReceived));
+                                var dateReceived = new Date(pack.dateReceived.timestamp * 1000);
 
                                 var month = (dateReceived.getMonth() + 1);
                                 month = month < 10 ? '0' + month : month;
@@ -62,7 +62,7 @@ $(document).ready(function() {
                                 dateReceived =  (month + '-' + date + '-' + dateReceived.getFullYear());
 
                                 if (pack.delivered == true) {
-                                    var dateDelivered = new Date(Date.parse(pack.dateDelivered));
+                                    var dateDelivered = new Date(pack.dateDelivered.timestamp * 1000);
 
                                     var month = (dateDelivered.getMonth() + 1);
                                     month = month < 10 ? '0' + month : month;
@@ -88,7 +88,7 @@ $(document).ready(function() {
                                         '</tr>'
                                     );
                                 } else if (pack.pickedUp == true) {
-                                    var datePickedUp = new Date(Date.parse(pack.datePickedUp));
+                                    var datePickedUp = new Date(pack.datePickedUp.timestamp * 1000);
 
                                     var month = (datePickedUp.getMonth() + 1);
                                     month = month < 10 ? '0' + month : month;

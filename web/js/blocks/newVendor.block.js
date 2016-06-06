@@ -45,7 +45,7 @@ $(document).ready(function() {
             newVendorName.focus();
         } else {
             // Submit new vendor
-            $.post("vendor/new",
+            $.post("vendors/new",
                 {
                     name: vendorName
                 }

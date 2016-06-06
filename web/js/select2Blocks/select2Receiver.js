@@ -8,7 +8,7 @@ $(document).ready(function() {
         placeholder: "Search for a Receiver",
         width: "off",
         ajax: {
-            url: 'receiver/like',
+            url: 'receivers/like',
             delay: 250,
             data: function(params) {
                 var query = {

@@ -101,8 +101,11 @@ $(document).ready(function() {
     });
 
     emptyTrackingNumberModal.on("hidden.bs.modal", function() {
-        trackingNumberInput.val("");
-        trackingNumberInput.focus();
+        clearAndFocusTrackingNumberField();
+    });
+
+    packageAlreadyExistsModal.on("hidden.bs.modal", function() {
+        clearAndFocusTrackingNumberField();
     });
 
     selectShipperModal.modal({

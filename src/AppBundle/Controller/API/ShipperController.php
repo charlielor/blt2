@@ -13,7 +13,7 @@ use AppBundle\Entity\Shipper;
 class ShipperController extends Controller
 {
     /**
-     * @Route("/shipper/new", name="newShipper")
+     * @Route("/shippers/new", name="newShipper")
      * @Method({"POST"})
      */
     public function newShipperAction(Request $request) {
@@ -81,7 +81,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/{id}/update", name="updateShipper")
+     * @Route("/shippers/{id}/update", name="updateShipper")
      * @Method({"PUT"})
      */
     public function updateShipperAction(Request $request, $id) {
@@ -152,7 +152,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/{id}/enable", name="enableShipper")
+     * @Route("/shippers/{id}/enable", name="enableShipper")
      * @Method({"PUT"})
      */
     public function enableShipperAction(Request $request, $id) {
@@ -198,7 +198,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/{id}/disable", name="disableShipper")
+     * @Route("/shippers/{id}/disable", name="disableShipper")
      * @Method({"PUT"})
      */
     public function disableShipperAction(Request $request, $id) {
@@ -243,7 +243,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/{id}/delete", name="deleteShipper")
+     * @Route("/shippers/{id}/delete", name="deleteShipper")
      * @Method({"DELETE"})
      *
      * TODO: Can not delete Shipper: will not cascade into Package table
@@ -284,7 +284,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/search", name="searchShipper")
+     * @Route("/shippers/search", name="searchShipper")
      * @Method({"GET"})
      */
     public function searchShipperAction(Request $request) {
@@ -319,7 +319,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/like", name="likeShipper")
+     * @Route("/shippers/like", name="likeShipper")
      * @Method({"GET"})
      */
     public function likeShipperAction(Request $request) {
@@ -377,7 +377,7 @@ class ShipperController extends Controller
     }
 
     /**
-     * @Route("/shipper/{id}", name="shipper")
+     * @Route("/shippers/{id}", name="shipper")
      * @Method({"GET"})
      */
     public function shipperAction($id) {

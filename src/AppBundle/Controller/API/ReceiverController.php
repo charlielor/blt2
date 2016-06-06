@@ -13,7 +13,7 @@ use AppBundle\Entity\Receiver;
 class ReceiverController extends Controller
 {
     /**
-     * @Route("/receiver/new", name="newReceiver")
+     * @Route("/receivers/new", name="newReceiver")
      * @Method({"POST"})
      */
     public function newReceiverAction(Request $request) {
@@ -84,7 +84,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/{id}/update", name="updateReceiver")
+     * @Route("/receivers/{id}/update", name="updateReceiver")
      * @Method({"PUT"})
      */
     public function updateReceiverAction(Request $request, $id) {
@@ -161,7 +161,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/{id}/enable", name="enableReceiver")
+     * @Route("/receivers/{id}/enable", name="enableReceiver")
      * @Method({"PUT"})
      */
     public function enableReceiverAction(Request $request, $id) {
@@ -207,7 +207,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/{id}/disable", name="disableReceiver")
+     * @Route("/receivers/{id}/disable", name="disableReceiver")
      * @Method({"PUT"})
      */
     public function disableReceiverAction(Request $request, $id) {
@@ -252,7 +252,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/{id}/delete", name="deleteReceiver")
+     * @Route("/receivers/{id}/delete", name="deleteReceiver")
      * @Method({"DELETE"})
      *
      * TODO: Can not delete Receiver: will not cascade into Package table
@@ -293,7 +293,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/search", name="searchReceiver")
+     * @Route("/receivers/search", name="searchReceiver")
      * @Method({"GET"})
      */
     public function searchReceiverAction(Request $request) {
@@ -328,7 +328,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/like", name="likeReceiver")
+     * @Route("/receivers/like", name="likeReceiver")
      * @Method({"GET"})
      */
     public function likeReceiverAction(Request $request) {
@@ -386,7 +386,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/packages", name="receiverPackages")
+     * @Route("/receivers/packages", name="receiverPackages")
      * @Method({"GET"})
      */
     public function receiverPackagesAction(Request $request) {
@@ -426,7 +426,7 @@ class ReceiverController extends Controller
     }
 
     /**
-     * @Route("/receiver/{id}", name="receiver")
+     * @Route("/receivers/{id}", name="receiver")
      * @Method({"GET"})
      */
     public function receiverAction($id) {

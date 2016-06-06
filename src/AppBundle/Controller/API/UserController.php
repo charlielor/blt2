@@ -33,7 +33,7 @@ class UserController extends Controller {
     }
 
     /**
-     * @Route("/user/search", name="searchUser")
+     * @Route("/users/search", name="searchUser")
      * @Method({"GET"})
      */
     public function searchUserAction(Request $request) {
@@ -63,7 +63,7 @@ class UserController extends Controller {
     }
 
     /**
-     * @Route("/user/like", name="likeUser")
+     * @Route("/users/like", name="likeUser")
      * @Method({"GET"})
      */
     public function likeUserAction(Request $request) {

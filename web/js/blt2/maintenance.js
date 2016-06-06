@@ -26,7 +26,7 @@ $(document).ready(function() {
 
             $.ajax({
                     type: "GET",
-                    url: "package/like",
+                    url: "packages/like",
                     data: {
                         term: $("#searchPackageText").val()
                     }
@@ -164,7 +164,7 @@ $(document).ready(function() {
 
             $.ajax({
                     type: "GET",
-                    url: "vendor/like",
+                    url: "vendors/like",
                     data: {
                         term: $("#searchVendorText").val()
                     }
@@ -228,7 +228,7 @@ $(document).ready(function() {
         // Make the AJAX call to the server to switch the on or off the receiver
         $.ajax({
                 type: "PUT",
-                url: "receiver/" + id + "/" + action.toLowerCase()
+                url: "receivers/" + id + "/" + action.toLowerCase()
             })
             .done(function(results) {
                 // If the results are successful, change the color and text within the button to reflect the change
@@ -261,7 +261,7 @@ $(document).ready(function() {
         // Make the AJAX call to the server to switch the on or off the shipper
         $.ajax({
                 type: "PUT",
-                url: "shipper/" + id + "/" + action.toLowerCase()
+                url: "shippers/" + id + "/" + action.toLowerCase()
             })
             .done(function(results) {
                 // If the results are successful, change the color and text within the button to reflect the change
@@ -294,7 +294,7 @@ $(document).ready(function() {
         // Make the AJAX call to the server to switch the on or off the vendor
         $.ajax({
                 type: "PUT",
-                url: "vendor/" + id + "/" + action.toLowerCase()
+                url: "vendors/" + id + "/" + action.toLowerCase()
             })
             .done(function(results) {
                 // If the results are successful, change the color and text within the button to reflect the change

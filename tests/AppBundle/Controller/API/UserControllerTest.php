@@ -12,7 +12,7 @@ class UserControllerTest extends WebTestCase
 
         $client->request('GET', '/users');
 
-        # Testing response code for /user/all
+        # Testing response code for /users/all
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -26,11 +26,11 @@ class UserControllerTest extends WebTestCase
     public function testSearchUserRoute() {
         $client = static::createClient();
 
-        $client->request('GET', '/user/search', array(
+        $client->request('GET', '/users/search', array(
             "term" => "anon."
         ));
 
-        // Testing response code for /user/search
+        // Testing response code for /users/search
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -52,7 +52,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals("anon.", $successResponse['object'][0]['username']);
 
         // Assert error
-        $client->request('GET', '/user/search', array(
+        $client->request('GET', '/users/search', array(
             "term" => "stuffedchickenwings"
         ));
 
@@ -70,11 +70,11 @@ class UserControllerTest extends WebTestCase
     public function testLikeUserRoute() {
         $client = static::createClient();
 
-        $client->request('GET', '/user/like', array(
+        $client->request('GET', '/users/like', array(
             "term" => "an"
         ));
 
-        // Testing response code for /user/search
+        // Testing response code for /users/search
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -97,7 +97,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals("anon.", $successResponse['object'][0]['username']);
 
         // Assert error
-        $client->request('GET', '/user/like', array(
+        $client->request('GET', '/users/like', array(
             "term" => "stuffedchickenwings"
         ));
 

@@ -11,7 +11,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -37,7 +37,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was unsuccessfully created, duplicate
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -52,7 +52,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEmpty($duplicateResponse['object']);
 
         // Assert that given entity is disabled, display error
-        $client->request('PUT', '/receiver/' . $successResponse["object"][0]["id"] . '/disable');
+        $client->request('PUT', '/receivers/' . $successResponse["object"][0]["id"] . '/disable');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -74,7 +74,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertNotEmpty($disabledResponse['object']);
 
         // Assert that receiver was unsuccessfully created, entity disabled
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -100,7 +100,7 @@ class ReceiverControllerTest extends WebTestCase
 
         // Re-enable receiver
         // Assert that given entity is disabled, display error
-        $client->request('PUT', '/receiver/' . $successResponse["object"][0]["id"] . '/enable');
+        $client->request('PUT', '/receivers/' . $successResponse["object"][0]["id"] . '/enable');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -123,7 +123,7 @@ class ReceiverControllerTest extends WebTestCase
 
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -149,7 +149,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -175,7 +175,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully updated
-        $client->request('PUT', '/receiver/' . $successResponse['object'][0]['id'] . '/update', array(
+        $client->request('PUT', '/receivers/' . $successResponse['object'][0]['id'] . '/update', array(
             "name" => "testUpdated",
             "deliveryRoom" => 1212
         ));
@@ -203,7 +203,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEquals('1212', $successResponse['object'][0]['deliveryRoom']);
 
         // Assert that a entity that gets updated to another entity with the same name is an error
-        $client->request('PUT', '/receiver/' . $successResponse['object'][0]['id'] . '/update', array(
+        $client->request('PUT', '/receivers/' . $successResponse['object'][0]['id'] . '/update', array(
             "name" => "testUpdated",
             "deliveryRoom" => 1212
         ));
@@ -228,7 +228,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEmpty($sameNameResponse['object']);
 
         // Assert that a entity that does not exist is not updated
-        $client->request('PUT', '/receiver/stuffedchickenwings/update', array(
+        $client->request('PUT', '/receivers/stuffedchickenwings/update', array(
             "name" => "testUpdated",
             "deliveryRoom" => 1212
         ));
@@ -253,7 +253,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -280,7 +280,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -306,9 +306,9 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully enabled
-        $client->request('PUT', '/receiver/'. $successResponse['object'][0]['id']. '/enable');
+        $client->request('PUT', '/receivers/'. $successResponse['object'][0]['id']. '/enable');
 
-        // Testing response code for /receiver/{id}/enable
+        // Testing response code for /receivers/{id}/enable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -329,9 +329,9 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that enabling a entity with no id gives errors
-        $client->request('PUT', '/receiver/stuffedchickenwings/enable');
+        $client->request('PUT', '/receivers/stuffedchickenwings/enable');
 
-        // Testing response code for /receiver/{id}/enable
+        // Testing response code for /receivers/{id}/enable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -352,7 +352,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -380,7 +380,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -406,9 +406,9 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity is successfully disabled
-        $client->request('PUT', '/receiver/'. $successResponse['object'][0]['id']. '/disable');
+        $client->request('PUT', '/receivers/'. $successResponse['object'][0]['id']. '/disable');
 
-        // Testing response code for /receiver/{id}/disable
+        // Testing response code for /receivers/{id}/disable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -429,9 +429,9 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertNotEmpty($enabledResponse['object']);
 
         // Assert that disabling a entity with no id gives errors
-        $client->request('PUT', '/receiver/stuffedchickenwings/disable');
+        $client->request('PUT', '/receivers/stuffedchickenwings/disable');
 
-        // Testing response code for /receiver/{id}/enable
+        // Testing response code for /receivers/{id}/enable
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -452,7 +452,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEmpty($noIdErrorResponse['object']);
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -480,7 +480,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -506,7 +506,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "test"
         ));
 
@@ -532,7 +532,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
         // Assert that given entity wasn't found
-        $client->request('GET', '/receiver/search', array(
+        $client->request('GET', '/receivers/search', array(
             "term" => "stuffedchickenwings"
         ));
 
@@ -556,7 +556,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -582,7 +582,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -608,7 +608,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that the entity was successfully found
-        $client->request('GET', '/receiver/like', array(
+        $client->request('GET', '/receivers/like', array(
             "term" => "te"
         ));
 
@@ -634,7 +634,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEquals("test", $successResponse['object'][0]['name']);
 
         // Assert that given entity wasn't found
-        $client->request('GET', '/receiver/like', array(
+        $client->request('GET', '/receivers/like', array(
             "term" => "stuffedchickenwings"
         ));
 
@@ -658,7 +658,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
 
         // Assert that receiver was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -684,7 +684,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -710,7 +710,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that entity was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -732,7 +732,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertNotEmpty($deletedResponse['object']);
         
         // Assert that route with invalid id gives errors
-        $client->request('DELETE', '/receiver/stuffedchickenwings/delete');
+        $client->request('DELETE', '/receivers/stuffedchickenwings/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -774,7 +774,7 @@ class ReceiverControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/receiver/new', array(
+        $client->request('POST', '/receivers/new', array(
             "name" => "test",
             "deliveryRoom" => 112
         ));
@@ -800,12 +800,12 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertCount(1, $successResponse['object']);
 
         // Assert that going to the entity's page is successful
-        $client->request('GET', '/receiver/' . $successResponse['object'][0]['id']);
+        $client->request('GET', '/receivers/' . $successResponse['object'][0]['id']);
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         // Assert that entity was successfully deleted
-        $client->request('DELETE', '/receiver/' . $successResponse['object'][0]['id'] . '/delete');
+        $client->request('DELETE', '/receivers/' . $successResponse['object'][0]['id'] . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 

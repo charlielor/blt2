@@ -56,7 +56,7 @@ $(document).ready(function() {
             newReceiverName.focus();
         } else {
             // Submit the newReceiver information
-            $.post("receiver/new",
+            $.post("receivers/new",
                 {
                     name: receiverName,
                     deliveryRoom: receiverRoomNumber

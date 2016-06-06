@@ -19,24 +19,36 @@ Given the amount of packages delivered daily to the Biochemistry department, thi
 
 ## How to install
 1) Navigate to www root
-2) 
-```
-$ git clone -b deployment/shipping.biochem.wisc.edu https://github.com/charlielor/blt2.git shipping.biochem.wisc.edu/
-```
+2) Clone branch into folder
+
+    ```
+    $ git clone -b deployment/shipping.biochem.wisc.edu https://github.com/charlielor/blt2.git shipping.biochem.wisc.edu/
+    ```
 3) Download composer --> https://getcomposer.org/download/
-4)
-```
-$ php composer.phar install (make sure php is version 5.6.* and up)
-```
+4) Install Symfony and related project files/libraries
+
+    ```
+    $ php composer.phar install (make sure php is version 5.6.* and up)
+    ```
 5) Fill in parameters when asked
 6) Set up database:
-```
-$ php bin/console doctrine:database:create
-$ php bin/console doctrine:schema:update --force
-```
 
-7) Set permissions to allow apache (or _www or www) to write to:
-```
-var/
-upload/
-```
+    ```
+    $ php bin/console doctrine:database:create
+    $ php bin/console doctrine:schema:update --force
+    ```
+
+7) Set permissions to allow apache (_www or www) to write to:
+
+    ```
+    var/
+    upload/
+    ```
+
+## To Update
+1) Navigate to blt2 folder
+2) Do a pull from the repository
+
+    ```
+    $ git pull
+    ```

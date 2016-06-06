@@ -25,12 +25,6 @@ $(document).ready(function() {
         'info': false,
         'dataSrc': '',
         'columns': [
-            {
-                'data': null,
-                'render': function() {
-                    return '<button type="button" class="btn btn-default btn-sm deleteRowInPickUpTable">Delete</button>';
-                }
-            },
             {'data': 'trackingNumber'},
             {'data': 'vendor.name'},
             {'data': 'shipper.name'},
@@ -97,19 +91,23 @@ $(document).ready(function() {
                         addError("input", results['message']);
                         pickupTrackingNumber.focus();
                     }  else {
-                        // Add the results to a datatable
-                        for (var i = 0; i < results['object'].length; i++) {
-                            dataTablePickUp.row.add(results['object'][i]).draw();
+                        if (results['object'].length < 1) {
+                            addError("input", "No package given " + ptn);
+                            pickupTrackingNumber.focus();
+                        } else {
+                            // Add the results to a datatable
+                            for (var i = 0; i < results['object'].length; i++) {
+                                dataTablePickUp.row.add(results['object'][i]).draw();
+                            }
+
+                            // Close the dialog box
+                            pickupPackageModal.modal('hide');
+
+                            // Open the pickup results dialog box
+                            pickupPackageResultsModal.modal({
+                                backdrop: "static"
+                            });
                         }
-
-                        // If there are more than one package, enable the 'delete' button to allow the user to delete rows
-                        enableDisableDeleteButtonsForPickUp();
-
-                        // Close the dialog box
-                        pickupPackageModal.modal('hide');
-
-                        // Open the pickup results dialog box
-                        pickupPackageResultsModal.modal('show');
                     }
                 })
                 .fail(function() {
@@ -189,32 +187,6 @@ $(document).ready(function() {
             }
         }
     });
-
-    // For one of those rare cases where there's a long tracking number and a number of stored tracking numbers match
-    // the long tracking number. The response from the server will be a table with an extra column with a delete button.
-    // This will allow the user to see which package it is exactly and delete the others.
-    $('#datatable-PickupResults tbody').on("click", ".deleteRowInPickUpTable", function() {
-        dataTablePickUp.row($(this).parents('tr')).remove().draw();
-        enableDisableDeleteButtonsForPickUp();
-    });
-
-    /**
-     * Enable or disable delete buttons for pickup tables
-     */
-    function enableDisableDeleteButtonsForPickUp() {
-        // Get all the rows with the class 'deleteRowInPickUpTable'
-        var numberOfDeleteButtonsInPickUpTable = $('.deleteRowInPickUpTable');
-
-        // If there are more than one rows, enable the 'delete' button to allow the row to be deleted from datatable
-        // Else disable the button
-        if (numberOfDeleteButtonsInPickUpTable.length > 1) {
-            for (var i = 0; i < numberOfDeleteButtonsInPickUpTable.length; i++) {
-                $(numberOfDeleteButtonsInPickUpTable[i]).removeAttr('disabled');
-            }
-        } else {
-            $(numberOfDeleteButtonsInPickUpTable[0]).attr('disabled', 'disabled');
-        }
-    }
 
     function addError(error, label) {
         if (error == "input") {

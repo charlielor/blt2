@@ -161,7 +161,7 @@ $(document).ready(function() {
                             pickupPackageResultsModal.modal('hide');
 
                             n = noty({
-                                layout: "bottom",
+                                layout: "top",
                                 theme: "bootstrapTheme",
                                 type: "success",
                                 text: results['message'],

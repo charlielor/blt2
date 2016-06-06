@@ -23,7 +23,7 @@ class PackingSlip {
     protected $filename;
 
     /**
-     * @ORM\Column(type="string", length=3)
+     * @ORM\Column(type="string", length=4)
      */
     protected $extension;
 

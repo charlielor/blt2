@@ -88,7 +88,7 @@ $(document).ready(function() {
                 }
             },
             {
-                data: 'datePickedUpDate(Date.parse(data))',
+                data: 'datePickedUp',
                 // If data, display the date otherwise display 'Not Picked Up'
                 render: function(data) {
                     if (data) {

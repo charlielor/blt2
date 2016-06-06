@@ -380,7 +380,7 @@ class PackageController extends Controller
             // Set up the response
             $results = array(
                 'result' => 'success',
-                'message' => 'Package delivered successfully!',
+                'message' => 'Package marked as delivered successfully!',
                 'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
             );
 
@@ -447,7 +447,7 @@ class PackageController extends Controller
             // Set up the response
             $results = array(
                 'result' => 'success',
-                'message' => 'Package picked up successfully!',
+                'message' => 'Package marked as picked up successfully!',
                 'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
             );
 

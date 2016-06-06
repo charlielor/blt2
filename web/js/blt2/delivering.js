@@ -196,7 +196,7 @@ $(document).ready(function() {
 
             $.ajax({
                 type: "GET",
-                url: "receiver/packages",
+                url: "receivers/packages",
                 data: {
                     name: barcode
                 }

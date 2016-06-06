@@ -13,7 +13,7 @@ use AppBundle\Entity\Vendor;
 class VendorController extends Controller
 {
     /**
-     * @Route("/vendor/new", name="newVendor")
+     * @Route("/vendors/new", name="newVendor")
      * @Method({"POST"})
      */
     public function newVendorAction(Request $request) {
@@ -81,7 +81,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/{id}/update", name="updateVendor")
+     * @Route("/vendors/{id}/update", name="updateVendor")
      * @Method({"PUT"})
      */
     public function updateVendorAction(Request $request, $id) {
@@ -152,7 +152,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/{id}/enable", name="enableVendor")
+     * @Route("/vendors/{id}/enable", name="enableVendor")
      * @Method({"PUT"})
      */
     public function enableVendorAction(Request $request, $id) {
@@ -198,7 +198,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/{id}/disable", name="disableVendor")
+     * @Route("/vendors/{id}/disable", name="disableVendor")
      * @Method({"PUT"})
      */
     public function disableVendorAction(Request $request, $id) {
@@ -243,7 +243,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/{id}/delete", name="deleteVendor")
+     * @Route("/vendors/{id}/delete", name="deleteVendor")
      * @Method({"DELETE"})
      *
      * TODO: Can not delete Vendor: will not cascade into Package table
@@ -284,7 +284,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/search", name="searchVendor")
+     * @Route("/vendors/search", name="searchVendor")
      * @Method({"GET"})
      */
     public function searchVendorAction(Request $request) {
@@ -319,7 +319,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/like", name="likeVendor")
+     * @Route("/vendors/like", name="likeVendor")
      * @Method({"GET"})
      */
     public function likeVendorAction(Request $request) {
@@ -377,7 +377,7 @@ class VendorController extends Controller
     }
 
     /**
-     * @Route("/vendor/{id}", name="vendor")
+     * @Route("/vendors/{id}", name="vendor")
      * @Method({"GET"})
      */
     public function vendorAction($id) {

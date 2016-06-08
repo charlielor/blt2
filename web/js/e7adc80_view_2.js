@@ -52,10 +52,10 @@ $(document).ready(function() {
 
             },
             {
-                data: 'dateReceived.timestamp',
+                data: 'dateReceived',
                 render: function(data) {
                     // There is no check for data because for each package, there has to be a date received
-                    var selectedDate = new Date(data * 1000);
+                    var selectedDate = new Date(Date.parse(data));
 
                     var month = (selectedDate.getMonth() + 1);
                     month = month < 10 ? '0' + month : month;
@@ -67,12 +67,12 @@ $(document).ready(function() {
                 }
             },
             {
-                data: 'dateDelivered.timestamp',
+                data: 'dateDelivered',
                 render: function(data) {
                     // If data, display the date otherwise display 'Not Delivered'
                     if (data) {
                         // Create a new date object and format it for the column
-                        var selectedDate = new Date(data * 1000);
+                        var selectedDate = new Date(Date.parse(data));
 
                         var month = (selectedDate.getMonth() + 1);
                         month = month < 10 ? '0' + month : month;
@@ -88,12 +88,12 @@ $(document).ready(function() {
                 }
             },
             {
-                data: 'datePickedUp.timestamp',
+                data: 'datePickedUp',
                 // If data, display the date otherwise display 'Not Picked Up'
                 render: function(data) {
                     if (data) {
                         // Create a new date object and format it for the column
-                        var selectedDate = new Date(data * 1000);
+                        var selectedDate = new Date(Date.parse(data));
 
                         var month = (selectedDate.getMonth() + 1);
                         month = month < 10 ? '0' + month : month;

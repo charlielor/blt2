@@ -39,11 +39,10 @@ $(document).ready(function() {
         searching: false,
         autoWidth: false,
         responsive: true,
-        order: [[4, "desc"]],
+        order: [[3, "desc"]],
         columns: [
             {data: 'trackingNumber'},
             {data: 'vendor.name'},
-            {data: 'receiver.name'},
             {data: 'numberOfPackages'},
             {
                 data: 'dateReceived',
@@ -62,14 +61,18 @@ $(document).ready(function() {
             }
         ],
         columnDefs: [
-            { "visible": false, "targets": 4}
+            {
+                "targets": [ 3 ],
+                "visible": false,
+                "searchable": false
+            }
         ],
         drawCallback: function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'current'} ).nodes();
             var last=null;
 
-            api.column(4, {page:'current'} ).data().each( function ( group, i ) {
+            api.column(3, {page:'current'} ).data().each( function ( group, i ) {
                 var dateFromPackage = new Date(Date.parse(group));
                 var day = null;
 

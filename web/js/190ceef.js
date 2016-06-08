@@ -1052,6 +1052,7 @@ $(document).ready(function() {
         searching: false,
         autoWidth: false,
         responsive: true,
+        order: [[4, "desc"]],
         columns: [
             {data: 'trackingNumber'},
             {data: 'vendor.name'},
@@ -1074,7 +1075,11 @@ $(document).ready(function() {
             }
         ],
         columnDefs: [
-            { "visible": false, "targets": 4}
+            {
+                "targets": [ 4 ],
+                "visible": false,
+                "searchable": false
+            }
         ],
         drawCallback: function ( settings ) {
             var api = this.api();
@@ -1090,7 +1095,7 @@ $(document).ready(function() {
                 } else {
                     var monthFromPackage = (dateFromPackage.getMonth() + 1) < 10 ? '0' + (dateFromPackage.getMonth() + 1) : (dateFromPackage.getMonth() + 1);
                     var dayFromPackage = dateFromPackage.getDate() < 10 ? '0' + dateFromPackage.getDate() : dateFromPackage.getDate();
-                    day = dateFromPackage.getFullYear() + '/' + monthFromPackage + '/' + dayFromPackage;
+                    day = monthFromPackage + '/' + dayFromPackage + '/' + dateFromPackage.getFullYear();
                 }
 
                 if (last !== day) {

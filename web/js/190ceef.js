@@ -1013,9 +1013,6 @@ $.noty.themes.bootstrapTheme = {
 
 $(document).ready(function() {
     // Variables
-    // Error placement
-    var deliveringError = $('#deliveringError');
-
     var moreThanOnePackageModal = $("#moreThanOnePackageModal");
 
     // Get the barcode text box
@@ -1055,15 +1052,16 @@ $(document).ready(function() {
         searching: false,
         autoWidth: false,
         responsive: true,
+        order: [[4, "desc"]],
         columns: [
             {data: 'trackingNumber'},
             {data: 'vendor.name'},
             {data: 'receiver.name'},
             {data: 'numberOfPackages'},
             {
-                data: 'dateReceived.timestamp',
+                data: 'dateReceived',
                 'render': function(data) {
-                    var dateFromPackage = new Date(data * 1000);
+                    var dateFromPackage = new Date(Date.parse(data));
 
                     var month = (dateFromPackage.getMonth() + 1);
                     month = month < 10 ? '0' + month : month;
@@ -1077,7 +1075,11 @@ $(document).ready(function() {
             }
         ],
         columnDefs: [
-            { "visible": false, "targets": 4}
+            {
+                "targets": [ 4 ],
+                "visible": false,
+                "searchable": false
+            }
         ],
         drawCallback: function ( settings ) {
             var api = this.api();
@@ -1085,7 +1087,7 @@ $(document).ready(function() {
             var last=null;
 
             api.column(4, {page:'current'} ).data().each( function ( group, i ) {
-                var dateFromPackage = new Date(group * 1000);
+                var dateFromPackage = new Date(Date.parse(group));
                 var day = null;
 
                 if ((dateFromPackage.getFullYear() === dateFromToday.getFullYear()) && (dateFromPackage.getMonth() === dateFromToday.getMonth()) && (dateFromPackage.getDate() === dateFromToday.getDate())) {
@@ -1093,7 +1095,7 @@ $(document).ready(function() {
                 } else {
                     var monthFromPackage = (dateFromPackage.getMonth() + 1) < 10 ? '0' + (dateFromPackage.getMonth() + 1) : (dateFromPackage.getMonth() + 1);
                     var dayFromPackage = dateFromPackage.getDate() < 10 ? '0' + dateFromPackage.getDate() : dateFromPackage.getDate();
-                    day = dateFromPackage.getFullYear() + '/' + monthFromPackage + '/' + dayFromPackage;
+                    day = monthFromPackage + '/' + dayFromPackage + '/' + dateFromPackage.getFullYear();
                 }
 
                 if (last !== day) {
@@ -1123,9 +1125,9 @@ $(document).ready(function() {
             {data: 'vendor.name'},
             {data: 'numberOfPackages'},
             {
-                data: 'dateReceived.timestamp',
+                data: 'dateReceived',
                 'render': function(data) {
-                    var dateFromPackage = new Date(data * 1000);
+                    var dateFromPackage = new Date(Date.parse(data));
 
                     var month = (dateFromPackage.getMonth() + 1);
                     month = month < 10 ? '0' + month : month;
@@ -1186,21 +1188,6 @@ $(document).ready(function() {
     function interpretBarcode() {
         var barcode = barcodeTextBox.val();
 
-        /*
-         Barcodes that are tracking numbers are sometimes spliced base on known shipper patterns (pre 1.5 update).
-
-         Take the barcodes in the undeliveredPackage array and compare it to the scanned barcode.
-         If the scanned barcode contains (indexOf) anything in the undeliveredPackage array, push them
-         into a new array. If that array is greater than 1, then display a dialog with those packages as options
-         to submit.
-         */
-        //var similarTrackingNumbers = [];
-        //for (var i = 0; i < undeliveredPackages.length; i++) {
-        //    if (barcode.indexOf(undeliveredPackages[i].trackingNumber) !== -1) {
-        //        similarTrackingNumbers.push(undeliveredPackages[i]);
-        //    }
-        //}
-
         var indexOfPackage = $.inArray(barcode, undeliveredPackages);
 
         // If similarTrackingNumbers array is 0, then the barcode could be a receiver instead
@@ -1235,14 +1222,13 @@ $(document).ready(function() {
                             dataTableDelivering.row.add(results["object"][i]).draw();
                         }
                     } else {
-                        // Display a noty letting the user know what the error is
-                        displaySuccess("All package for " + barcode + " has been delivered");
+                        displaySuccess("No packages for " + barcode);
                     }
 
                     clearAndFocus();
                 })
                 . fail(function() {
-                    deliveringError.text("Connection error! Please try again");
+                    displayError("Connection error! Please try again");
                 });
 
 
@@ -1264,7 +1250,6 @@ $(document).ready(function() {
      */
     function validateBarcode() {
         // Remove errors
-        deliveringError.text('');
         barcodeTextBox.removeClass('error');
 
         // Get the value of the barcode textbox
@@ -1272,7 +1257,7 @@ $(document).ready(function() {
 
         // If the barcode is not empty or does not contain just spaces
         if ((barcodeTextBoxValue == null) || (barcodeTextBoxValue.replace(/\s/g, "") == "")) {
-            deliveringError.text("Please scan in a valid barcode");
+            displayError("Please scan in a valid barcode");
             barcodeTextBox.addClass('error');
         } else {
             interpretBarcode();
@@ -1369,7 +1354,6 @@ $(document).ready(function() {
         undeliveredPackages = [];
         receiverSpan.text('');
         barcodeTextBox.removeClass('error');
-        deliveringError.text('');
         dataTableDelivering.clear().draw();
     }
 

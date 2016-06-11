@@ -8,7 +8,7 @@ $(document).ready(function() {
         placeholder: "Search for a Shipper",
         width: "off",
         ajax: {
-            url: 'shipper/like',
+            url: 'shippers/like',
             delay: 250,
             data: function(params) {
                 var query = {

@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.2
+ * Select2 4.0.3
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -606,8 +606,22 @@ S2.define('select2/utils',[
 
   Observable.prototype.trigger = function (event) {
     var slice = Array.prototype.slice;
+    var params = slice.call(arguments, 1);
 
     this.listeners = this.listeners || {};
+
+    // Params should always come in as an array
+    if (params == null) {
+      params = [];
+    }
+
+    // If there are no arguments to the event, use a temporary object
+    if (params.length === 0) {
+      params.push({});
+    }
+
+    // Set the `_type` of the first object to the event
+    params[0]._type = event;
 
     if (event in this.listeners) {
       this.invoke(this.listeners[event], slice.call(arguments, 1));
@@ -842,6 +856,25 @@ S2.define('select2/results',[
     return sorter(data);
   };
 
+  Results.prototype.highlightFirstItem = function () {
+    var $options = this.$results
+      .find('.select2-results__option[aria-selected]');
+
+    var $selected = $options.filter('[aria-selected=true]');
+
+    // Check if there are any selected options
+    if ($selected.length > 0) {
+      // If there are selected options, highlight the first
+      $selected.first().trigger('mouseenter');
+    } else {
+      // If there are no selected options, highlight the first option
+      // in the dropdown
+      $options.first().trigger('mouseenter');
+    }
+
+    this.ensureHighlightVisible();
+  };
+
   Results.prototype.setClasses = function () {
     var self = this;
 
@@ -869,17 +902,6 @@ S2.define('select2/results',[
         }
       });
 
-      var $selected = $options.filter('[aria-selected=true]');
-
-      // Check if there are any selected options
-      if ($selected.length > 0) {
-        // If there are selected options, highlight the first
-        $selected.first().trigger('mouseenter');
-      } else {
-        // If there are no selected options, highlight the first option
-        // in the dropdown
-        $options.first().trigger('mouseenter');
-      }
     });
   };
 
@@ -990,6 +1012,7 @@ S2.define('select2/results',[
 
       if (container.isOpen()) {
         self.setClasses();
+        self.highlightFirstItem();
       }
     });
 
@@ -1012,6 +1035,7 @@ S2.define('select2/results',[
       }
 
       self.setClasses();
+      self.highlightFirstItem();
     });
 
     container.on('unselect', function () {
@@ -1020,6 +1044,7 @@ S2.define('select2/results',[
       }
 
       self.setClasses();
+      self.highlightFirstItem();
     });
 
     container.on('open', function () {
@@ -1490,11 +1515,17 @@ S2.define('select2/selection/single',[
     });
 
     this.$selection.on('focus', function (evt) {
-      // ShibbolethUser focuses on the container
+      // User focuses on the container
     });
 
     this.$selection.on('blur', function (evt) {
-      // ShibbolethUser exits the container
+      // User exits the container
+    });
+
+    container.on('focus', function (evt) {
+      if (!container.isOpen()) {
+        self.$selection.focus();
+      }
     });
 
     container.on('selection:update', function (params) {
@@ -3436,6 +3467,12 @@ S2.define('select2/data/ajax',[
 
         callback(results);
       }, function () {
+        // Attempt to detect if a request was aborted
+        // Only works if the transport exposes a status property
+        if ($request.status && $request.status === '0') {
+          return;
+        }
+
         self.trigger('results:message', {
           message: 'errorLoading'
         });
@@ -3444,7 +3481,7 @@ S2.define('select2/data/ajax',[
       self._request = $request;
     }
 
-    if (this.ajaxOptions.delay && params.term !== '') {
+    if (this.ajaxOptions.delay && params.term != null) {
       if (this._queryTimeout) {
         window.clearTimeout(this._queryTimeout);
       }
@@ -3607,6 +3644,29 @@ S2.define('select2/data/tokenizer',[
   Tokenizer.prototype.query = function (decorated, params, callback) {
     var self = this;
 
+    function createAndSelect (data) {
+      // Normalize the data object so we can use it for checks
+      var item = self._normalizeItem(data);
+
+      // Check if the data object already exists as a tag
+      // Select it if it doesn't
+      var $existingOptions = self.$element.find('option').filter(function () {
+        return $(this).val() === item.id;
+      });
+
+      // If an existing option wasn't found for it, create the option
+      if (!$existingOptions.length) {
+        var $option = self.option(item);
+        $option.attr('data-select2-tag', true);
+
+        self._removeOldTags();
+        self.addOptions([$option]);
+      }
+
+      // Select the item, now that we know there is an option for it
+      select(item);
+    }
+
     function select (data) {
       self.trigger('select', {
         data: data
@@ -3615,7 +3675,7 @@ S2.define('select2/data/tokenizer',[
 
     params.term = params.term || '';
 
-    var tokenData = this.tokenizer(params, this.options, select);
+    var tokenData = this.tokenizer(params, this.options, createAndSelect);
 
     if (tokenData.term !== params.term) {
       // Replace the search term if we have the search box
@@ -3878,6 +3938,12 @@ S2.define('select2/dropdown/search',[
       self.$search.attr('tabindex', -1);
 
       self.$search.val('');
+    });
+
+    container.on('focus', function () {
+      if (container.isOpen()) {
+        self.$search.focus();
+      }
     });
 
     container.on('results:all', function (params) {
@@ -4229,7 +4295,7 @@ S2.define('select2/dropdown/attachBody',[
 
     if (newDirection == 'above' ||
       (isCurrentlyAbove && newDirection !== 'below')) {
-      css.top = container.top - dropdown.height;
+      css.top = container.top - parentOffset.top - dropdown.height;
     }
 
     if (newDirection != null) {
@@ -4251,6 +4317,7 @@ S2.define('select2/dropdown/attachBody',[
 
     if (this.options.get('dropdownAutoWidth')) {
       css.minWidth = css.width;
+      css.position = 'relative';
       css.width = 'auto';
     }
 
@@ -4317,12 +4384,22 @@ S2.define('select2/dropdown/selectOnClose',[
 
     decorated.call(this, container, $container);
 
-    container.on('close', function () {
-      self._handleSelectOnClose();
+    container.on('close', function (params) {
+      self._handleSelectOnClose(params);
     });
   };
 
-  SelectOnClose.prototype._handleSelectOnClose = function () {
+  SelectOnClose.prototype._handleSelectOnClose = function (_, params) {
+    if (params && params.originalSelect2Event != null) {
+      var event = params.originalSelect2Event;
+
+      // Don't select an item if the close event was triggered from a select or
+      // unselect event
+      if (event._type === 'select' || event._type === 'unselect') {
+        return;
+      }
+    }
+
     var $highlightedResults = this.getHighlightedResults();
 
     // Only select highlighted results
@@ -4375,7 +4452,10 @@ S2.define('select2/dropdown/closeOnSelect',[
       return;
     }
 
-    this.trigger('close', {});
+    this.trigger('close', {
+      originalEvent: originalEvent,
+      originalSelect2Event: evt
+    });
   };
 
   return CloseOnSelect;
@@ -5129,10 +5209,15 @@ S2.define('select2/core',[
       });
     });
 
-    this._sync = Utils.bind(this._syncAttributes, this);
+    this.$element.on('focus.select2', function (evt) {
+      self.trigger('focus', evt);
+    });
+
+    this._syncA = Utils.bind(this._syncAttributes, this);
+    this._syncS = Utils.bind(this._syncSubtree, this);
 
     if (this.$element[0].attachEvent) {
-      this.$element[0].attachEvent('onpropertychange', this._sync);
+      this.$element[0].attachEvent('onpropertychange', this._syncA);
     }
 
     var observer = window.MutationObserver ||
@@ -5142,14 +5227,30 @@ S2.define('select2/core',[
 
     if (observer != null) {
       this._observer = new observer(function (mutations) {
-        $.each(mutations, self._sync);
+        $.each(mutations, self._syncA);
+        $.each(mutations, self._syncS);
       });
       this._observer.observe(this.$element[0], {
         attributes: true,
+        childList: true,
         subtree: false
       });
     } else if (this.$element[0].addEventListener) {
-      this.$element[0].addEventListener('DOMAttrModified', self._sync, false);
+      this.$element[0].addEventListener(
+        'DOMAttrModified',
+        self._syncA,
+        false
+      );
+      this.$element[0].addEventListener(
+        'DOMNodeInserted',
+        self._syncS,
+        false
+      );
+      this.$element[0].addEventListener(
+        'DOMNodeRemoved',
+        self._syncS,
+        false
+      );
     }
   };
 
@@ -5291,6 +5392,46 @@ S2.define('select2/core',[
       this.trigger('disable', {});
     } else {
       this.trigger('enable', {});
+    }
+  };
+
+  Select2.prototype._syncSubtree = function (evt, mutations) {
+    var changed = false;
+    var self = this;
+
+    // Ignore any mutation events raised for elements that aren't options or
+    // optgroups. This handles the case when the select element is destroyed
+    if (
+      evt && evt.target && (
+        evt.target.nodeName !== 'OPTION' && evt.target.nodeName !== 'OPTGROUP'
+      )
+    ) {
+      return;
+    }
+
+    if (!mutations) {
+      // If mutation events aren't supported, then we can only assume that the
+      // change affected the selections
+      changed = true;
+    } else if (mutations.addedNodes && mutations.addedNodes.length > 0) {
+      for (var n = 0; n < mutations.addedNodes.length; n++) {
+        var node = mutations.addedNodes[n];
+
+        if (node.selected) {
+          changed = true;
+        }
+      }
+    } else if (mutations.removedNodes && mutations.removedNodes.length > 0) {
+      changed = true;
+    }
+
+    // Only re-pull the data if we think there is a change
+    if (changed) {
+      this.dataAdapter.current(function (currentData) {
+        self.trigger('selection:update', {
+          data: currentData
+        });
+      });
     }
   };
 
@@ -5440,7 +5581,7 @@ S2.define('select2/core',[
     this.$container.remove();
 
     if (this.$element[0].detachEvent) {
-      this.$element[0].detachEvent('onpropertychange', this._sync);
+      this.$element[0].detachEvent('onpropertychange', this._syncA);
     }
 
     if (this._observer != null) {
@@ -5448,10 +5589,15 @@ S2.define('select2/core',[
       this._observer = null;
     } else if (this.$element[0].removeEventListener) {
       this.$element[0]
-        .removeEventListener('DOMAttrModified', this._sync, false);
+        .removeEventListener('DOMAttrModified', this._syncA, false);
+      this.$element[0]
+        .removeEventListener('DOMNodeInserted', this._syncS, false);
+      this.$element[0]
+        .removeEventListener('DOMNodeRemoved', this._syncS, false);
     }
 
-    this._sync = null;
+    this._syncA = null;
+    this._syncS = null;
 
     this.$element.off('.select2');
     this.$element.attr('tabindex', this.$element.data('old-tabindex'));
@@ -5524,6 +5670,7 @@ S2.define('jquery.select2',[
         return this;
       } else if (typeof options === 'string') {
         var ret;
+        var args = Array.prototype.slice.call(arguments, 1);
 
         this.each(function () {
           var instance = $(this).data('select2');
@@ -5534,8 +5681,6 @@ S2.define('jquery.select2',[
               'element that is not using Select2.'
             );
           }
-
-          var args = Array.prototype.slice.call(arguments, 1);
 
           ret = instance[options].apply(instance, args);
         });
@@ -5595,8 +5740,19 @@ $(document).ready(function() {
 
     var n = null;
 
+    var formData;
+
     // Set the dropdownParent for all select2 on this page to the package modal
     $.fn.select2.defaults.set("dropdownParent", $("#packageModal"));
+
+    // When the select2 items are selected
+    select2Shipper.on("select2:select", function() {
+        select2Vendor.select2("open");
+    });
+
+    select2Vendor.on("select2:select", function() {
+        select2Receiver.select2("open");
+    });
 
     packageModal.on("show.bs.modal", function() {
         // When the dialogForm opens, check to see if it is an existing packageObject.
@@ -5680,11 +5836,18 @@ $(document).ready(function() {
         }
     });
 
+    $("#noPackingSlipsModal").on("shown.bs.modal", function() {
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            $("#noPackingSlipsModal").css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
+    });
+
     $("#submitPackage").on("click", function() {
         // Get the elements
         var shipperSpan = $("#shipperSpan");
 
-        var formData = new FormData(document.getElementById('uploadFiles'));
+        formData = new FormData(document.getElementById('uploadFiles'));
 
         if (!window.newPackage) {
             if (select2Shipper.val() === null) {
@@ -5734,9 +5897,6 @@ $(document).ready(function() {
             }
         }
 
-        // Check for packing slips and if there are none, ask if it's okay to submit packageObject with no packing slips
-        var okayOnPackingSlips = true;
-
         var emptyPackingSlips = false;
         var packingSlips = $("#attachedPackingSlips");
         var numberOfAttachedPackingSlips = packingSlips[0]['files'].length;
@@ -5746,141 +5906,17 @@ $(document).ready(function() {
         }
 
         if (emptyPackingSlips) {
-            var confirmNoPackingSlip = confirm("There are no packing slips attached. Is that okay?");
-            if (!confirmNoPackingSlip) {
-                okayOnPackingSlips = false;
-            }
+            $("#noPackingSlipsModal").modal({
+                backdrop: "static"
+            });
+        } else {
+            sendFormData();
         }
+    });
 
-        // If okay no packing slips
-        if (okayOnPackingSlips) {
-            if (window.newPackage) {
-                // Upload form VIA AJAX POST
-                $.ajax({
-                    url: 'package/new',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false
-                })
-                    .done(function (results) {
-                        // If the result is an error, display the error and close the form as the form has already been submitted
-                        if (results['result'] == 'error') {
-                            n = noty({
-                                layout: "bottom",
-                                theme: "bootstrapTheme",
-                                type: "error",
-                                text: results['message'],
-                                maxVisible: 2,
-                                timeout: 2000,
-                                killer: true,
-                                buttons: false
-                            });
-                        } else {
-                            if ((results['result'] == 'success') && (results['object'] !== null)) {
-                                // Add a row to the current table with the last uploaded packageObject information
-                                $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
 
-                                // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
-                                n = noty({
-                                    layout: "bottom",
-                                    theme: "bootstrapTheme",
-                                    type: "success",
-                                    text: "Package information sent successfully!",
-                                    maxVisible: 2,
-                                    timeout: 2000,
-                                    killer: true,
-                                    buttons: false
-                                });
-                            }
-                        }
-                    })
-                    .fail(function () {
-                        // Display a noty telling the user that there was an issue submitting the packageObject information
-                        n = noty({
-                            layout: "bottom",
-                            theme: "bootstrapTheme",
-                            type: "error",
-                            text: "Connection error; please try again",
-                            maxVisible: 2,
-                            timeout: 2000,
-                            killer: true,
-                            buttons: false
-                        });
-                    });
-            } else { // Update package VIA PUT
-                $.ajax({
-                    url: 'package/' + window.existingPackageObject.trackingNumber + '/update',
-                    type: 'PUT',
-                    data: formData,
-                    contentType: false,
-                    processData: false
-                })
-                    .done(function (results) {
-                        // If the result is an error, display the error and close the form as the form has already been submitted
-                        if (results['result'] == 'error') {
-                            n = noty({
-                                layout: "bottom",
-                                theme: "bootstrapTheme",
-                                type: "error",
-                                text: results['message'],
-                                maxVisible: 2,
-                                timeout: 2000,
-                                killer: true,
-                                buttons: false
-                            });
-                        } else {
-                            if ((results['result'] == 'success') && (results['object'] !== null)) {
-                                // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
-                                n = noty({
-                                    layout: "bottom",
-                                    theme: "bootstrapTheme",
-                                    type: "success",
-                                    text: results['message'],
-                                    maxVisible: 2,
-                                    timeout: 2000,
-                                    killer: true,
-                                    buttons: false
-                                });
-
-                                var location = window.location.href.toString().split("/");
-
-                                if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
-                                    // Depending on the returned object, either update the dataTable or ignore
-                                    var trackingNumberUpdated = results["object"]["trackingNumber"];
-
-                                    // Get the row index the row is on if any
-                                    // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
-                                    // legacy plugins created for 1.9 and lower
-                                    var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
-
-                                    if (row.length != 0) {
-                                        $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
-                                    }
-                                }
-
-                            }
-                        }
-                    })
-                    .fail(function () {
-                        // Display a noty telling the user that there was an issue submitting the packageObject information
-                        n = noty({
-                            layout: "bottom",
-                            theme: "bootstrapTheme",
-                            type: "error",
-                            text: "Connection error; please try again",
-                            maxVisible: 2,
-                            timeout: 2000,
-                            killer: true,
-                            buttons: false
-                        });
-                    });
-            }
-
-        }
-
-        // Close the form
-        packageModal.modal("hide");
+    $("#confirmedNoPackingSlipsIsOkay").on("click", function() {
+        sendFormData();
     });
 
     // When the user clicks on the "-" next to the number of packageObjects text input box, decrease the number in the text box by one
@@ -5936,6 +5972,8 @@ $(document).ready(function() {
         select2Vendor.val(null).trigger("change");
         select2Receiver.val(null).trigger("change");
 
+        formData = null;
+        
         // Set the number of packageObjects to 1
         numberOfPackages.val(1);
 
@@ -5967,6 +6005,134 @@ $(document).ready(function() {
             }
         }
     });
+
+    function sendFormData() {
+        if (window.newPackage) {
+            // Upload form VIA AJAX POST
+            $.ajax({
+                url: 'packages/new',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            })
+                .done(function (results) {
+                    // If the result is an error, display the error and close the form as the form has already been submitted
+                    if (results['result'] == 'error') {
+                        n = noty({
+                            layout: "top",
+                            theme: "bootstrapTheme",
+                            type: "error",
+                            text: results['message'],
+                            maxVisible: 2,
+                            timeout: 2000,
+                            killer: true,
+                            buttons: false
+                        });
+                    } else {
+                        if ((results['result'] == 'success') && (results['object'] !== null)) {
+                            // Add a row to the current table with the last uploaded packageObject information
+                            $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
+
+                            // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
+                            n = noty({
+                                layout: "top",
+                                theme: "bootstrapTheme",
+                                type: "success",
+                                text: "Package information sent successfully!",
+                                maxVisible: 2,
+                                timeout: 2000,
+                                killer: true,
+                                buttons: false
+                            });
+                        }
+                    }
+                })
+                .fail(function () {
+                    // Display a noty telling the user that there was an issue submitting the packageObject information
+                    n = noty({
+                        layout: "top",
+                        theme: "bootstrapTheme",
+                        type: "error",
+                        text: "Connection error; please try again",
+                        maxVisible: 2,
+                        timeout: 2000,
+                        killer: true,
+                        buttons: false
+                    });
+                });
+        } else { // Update package VIA POST
+            $.ajax({
+                url: 'packages/' + window.existingPackageObject.trackingNumber + '/update',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            })
+                .done(function (results) {
+                    // If the result is an error, display the error and close the form as the form has already been submitted
+                    if (results['result'] == 'error') {
+                        n = noty({
+                            layout: "top",
+                            theme: "bootstrapTheme",
+                            type: "error",
+                            text: results['message'],
+                            maxVisible: 2,
+                            timeout: 2000,
+                            killer: true,
+                            buttons: false
+                        });
+                    } else {
+                        if ((results['result'] == 'success') && (results['object'] !== null)) {
+                            // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
+                            n = noty({
+                                layout: "top",
+                                theme: "bootstrapTheme",
+                                type: "success",
+                                text: results['message'],
+                                maxVisible: 2,
+                                timeout: 2000,
+                                killer: true,
+                                buttons: false
+                            });
+
+                            var location = window.location.href.toString().split("/");
+
+                            if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
+                                // Depending on the returned object, either update the dataTable or ignore
+                                var trackingNumberUpdated = results["object"]["trackingNumber"];
+
+                                // Get the row index the row is on if any
+                                // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
+                                // legacy plugins created for 1.9 and lower
+                                var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
+
+                                if (row.length != 0) {
+                                    $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
+                                }
+                            }
+
+                        }
+                    }
+                })
+                .fail(function () {
+                    // Display a noty telling the user that there was an issue submitting the packageObject information
+                    n = noty({
+                        layout: "top",
+                        theme: "bootstrapTheme",
+                        type: "error",
+                        text: "Connection error; please try again",
+                        maxVisible: 2,
+                        timeout: 2000,
+                        killer: true,
+                        buttons: false
+                    });
+                });
+        }
+
+        // Close the form
+        packageModal.modal("hide");
+    }
 
     /**
      * Remove all form errors
@@ -6014,7 +6180,7 @@ $(document).ready(function() {
         placeholder: "Search for a Vendor",
         width: "off",
         ajax: {
-            url: 'vendor/like',
+            url: 'vendors/like',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -6054,7 +6220,7 @@ $(document).ready(function() {
         placeholder: "Search for a Receiver",
         width: "off",
         ajax: {
-            url: 'receiver/like',
+            url: 'receivers/like',
             delay: 250,
             data: function(params) {
                 var query = {
@@ -6094,7 +6260,7 @@ $(document).ready(function() {
         placeholder: "Search for a Shipper",
         width: "off",
         ajax: {
-            url: 'shipper/like',
+            url: 'shippers/like',
             delay: 250,
             data: function(params) {
                 var query = {

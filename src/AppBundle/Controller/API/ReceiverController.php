@@ -414,14 +414,25 @@ class ReceiverController extends Controller
 
             $packages = $query->getResult();
 
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully retrieved ' . count($packages) . ' Package(s)' ,
-                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
-            );
+            if (empty($packages)) {
+                // Set up the response
+                $results = array(
+                    'result' => 'error',
+                    'message' => 'Unable to retrieve packages' ,
+                    'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+                );
 
-            return new JsonResponse($results);
+                return new JsonResponse($results);
+            } else {
+                // Set up the response
+                $results = array(
+                    'result' => 'success',
+                    'message' => 'Successfully retrieved ' . count($packages) . ' Package(s)' ,
+                    'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+                );
+
+                return new JsonResponse($results);
+            }
         }
     }
 

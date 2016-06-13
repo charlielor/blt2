@@ -402,6 +402,34 @@ class ReceiverController extends Controller
         } else {
             $name = $request->query->get('name');
 
+            // If receiver is disabled or does not exist, return error
+            // Get the Receiver repository
+            $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
+
+            $receiver = $receiverRepository->findBy([
+                "name" => $name
+            ]);
+
+            if (empty($receiver)) {
+                // Set up the response
+                $results = array(
+                    'result' => 'error',
+                    'message' => 'No such receiver -> ' . $name ,
+                    'object' => []
+                );
+
+                return new JsonResponse($results);
+            } else if (!($receiver[0]->getEnabled())) {
+                // Set up the response
+                $results = array(
+                    'result' => 'error',
+                    'message' => $name . ' is disabled' ,
+                    'object' => []
+                );
+
+                return new JsonResponse($results);
+            }
+
             $em = $this->get('doctrine.orm.entity_manager');
 
             $query = $em->createQuery(
@@ -417,8 +445,8 @@ class ReceiverController extends Controller
             if (empty($packages)) {
                 // Set up the response
                 $results = array(
-                    'result' => 'error',
-                    'message' => 'Unable to retrieve packages' ,
+                    'result' => 'success',
+                    'message' => 'No packages for ' . $name ,
                     'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
                 );
 

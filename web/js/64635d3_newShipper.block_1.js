@@ -52,13 +52,13 @@ $(document).ready(function() {
             newShipperName.focus();
         } else {
             // Submit new shipper information
-            $.post("shipper/new",
+            $.post("shippers/new",
                 {
                     name: newShipper
                 }
             ).fail(function() {
                 n = noty({
-                    layout: "bottom",
+                    layout: "top",
                     theme: "bootstrapTheme",
                     type: "error",
                     text: "Connection error; please try again",
@@ -74,7 +74,7 @@ $(document).ready(function() {
                 } else if (results['result'] == 'success') {
                     // Display a noty notification towards the bottom telling the user that the new vendor information was submitted successfully
                     n = noty({
-                        layout: "bottom",
+                        layout: "top",
                         theme: "bootstrapTheme",
                         type: "success",
                         text: results['message'],

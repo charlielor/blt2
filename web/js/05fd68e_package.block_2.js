@@ -14,8 +14,19 @@ $(document).ready(function() {
 
     var n = null;
 
+    var formData;
+
     // Set the dropdownParent for all select2 on this page to the package modal
     $.fn.select2.defaults.set("dropdownParent", $("#packageModal"));
+
+    // When the select2 items are selected
+    select2Shipper.on("select2:select", function() {
+        select2Vendor.select2("open");
+    });
+
+    select2Vendor.on("select2:select", function() {
+        select2Receiver.select2("open");
+    });
 
     packageModal.on("show.bs.modal", function() {
         // When the dialogForm opens, check to see if it is an existing packageObject.
@@ -99,11 +110,18 @@ $(document).ready(function() {
         }
     });
 
+    $("#noPackingSlipsModal").on("shown.bs.modal", function() {
+        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+        if ($("#packageModal").hasClass("in")) {
+            $("#noPackingSlipsModal").css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+        }
+    });
+
     $("#submitPackage").on("click", function() {
         // Get the elements
         var shipperSpan = $("#shipperSpan");
 
-        var formData = new FormData(document.getElementById('uploadFiles'));
+        formData = new FormData(document.getElementById('uploadFiles'));
 
         if (!window.newPackage) {
             if (select2Shipper.val() === null) {
@@ -153,9 +171,6 @@ $(document).ready(function() {
             }
         }
 
-        // Check for packing slips and if there are none, ask if it's okay to submit packageObject with no packing slips
-        var okayOnPackingSlips = true;
-
         var emptyPackingSlips = false;
         var packingSlips = $("#attachedPackingSlips");
         var numberOfAttachedPackingSlips = packingSlips[0]['files'].length;
@@ -165,141 +180,17 @@ $(document).ready(function() {
         }
 
         if (emptyPackingSlips) {
-            var confirmNoPackingSlip = confirm("There are no packing slips attached. Is that okay?");
-            if (!confirmNoPackingSlip) {
-                okayOnPackingSlips = false;
-            }
+            $("#noPackingSlipsModal").modal({
+                backdrop: "static"
+            });
+        } else {
+            sendFormData();
         }
+    });
 
-        // If okay no packing slips
-        if (okayOnPackingSlips) {
-            if (window.newPackage) {
-                // Upload form VIA AJAX POST
-                $.ajax({
-                    url: 'package/new',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false
-                })
-                    .done(function (results) {
-                        // If the result is an error, display the error and close the form as the form has already been submitted
-                        if (results['result'] == 'error') {
-                            n = noty({
-                                layout: "bottom",
-                                theme: "bootstrapTheme",
-                                type: "error",
-                                text: results['message'],
-                                maxVisible: 2,
-                                timeout: 2000,
-                                killer: true,
-                                buttons: false
-                            });
-                        } else {
-                            if ((results['result'] == 'success') && (results['object'] !== null)) {
-                                // Add a row to the current table with the last uploaded packageObject information
-                                $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
 
-                                // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
-                                n = noty({
-                                    layout: "bottom",
-                                    theme: "bootstrapTheme",
-                                    type: "success",
-                                    text: "Package information sent successfully!",
-                                    maxVisible: 2,
-                                    timeout: 2000,
-                                    killer: true,
-                                    buttons: false
-                                });
-                            }
-                        }
-                    })
-                    .fail(function () {
-                        // Display a noty telling the user that there was an issue submitting the packageObject information
-                        n = noty({
-                            layout: "bottom",
-                            theme: "bootstrapTheme",
-                            type: "error",
-                            text: "Connection error; please try again",
-                            maxVisible: 2,
-                            timeout: 2000,
-                            killer: true,
-                            buttons: false
-                        });
-                    });
-            } else { // Update package VIA PUT
-                $.ajax({
-                    url: 'package/' + window.existingPackageObject.trackingNumber + '/update',
-                    type: 'PUT',
-                    data: formData,
-                    contentType: false,
-                    processData: false
-                })
-                    .done(function (results) {
-                        // If the result is an error, display the error and close the form as the form has already been submitted
-                        if (results['result'] == 'error') {
-                            n = noty({
-                                layout: "bottom",
-                                theme: "bootstrapTheme",
-                                type: "error",
-                                text: results['message'],
-                                maxVisible: 2,
-                                timeout: 2000,
-                                killer: true,
-                                buttons: false
-                            });
-                        } else {
-                            if ((results['result'] == 'success') && (results['object'] !== null)) {
-                                // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
-                                n = noty({
-                                    layout: "bottom",
-                                    theme: "bootstrapTheme",
-                                    type: "success",
-                                    text: results['message'],
-                                    maxVisible: 2,
-                                    timeout: 2000,
-                                    killer: true,
-                                    buttons: false
-                                });
-
-                                var location = window.location.href.toString().split("/");
-
-                                if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
-                                    // Depending on the returned object, either update the dataTable or ignore
-                                    var trackingNumberUpdated = results["object"]["trackingNumber"];
-
-                                    // Get the row index the row is on if any
-                                    // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
-                                    // legacy plugins created for 1.9 and lower
-                                    var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
-
-                                    if (row.length != 0) {
-                                        $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
-                                    }
-                                }
-
-                            }
-                        }
-                    })
-                    .fail(function () {
-                        // Display a noty telling the user that there was an issue submitting the packageObject information
-                        n = noty({
-                            layout: "bottom",
-                            theme: "bootstrapTheme",
-                            type: "error",
-                            text: "Connection error; please try again",
-                            maxVisible: 2,
-                            timeout: 2000,
-                            killer: true,
-                            buttons: false
-                        });
-                    });
-            }
-
-        }
-
-        // Close the form
-        packageModal.modal("hide");
+    $("#confirmedNoPackingSlipsIsOkay").on("click", function() {
+        sendFormData();
     });
 
     // When the user clicks on the "-" next to the number of packageObjects text input box, decrease the number in the text box by one
@@ -355,6 +246,8 @@ $(document).ready(function() {
         select2Vendor.val(null).trigger("change");
         select2Receiver.val(null).trigger("change");
 
+        formData = null;
+        
         // Set the number of packageObjects to 1
         numberOfPackages.val(1);
 
@@ -386,6 +279,134 @@ $(document).ready(function() {
             }
         }
     });
+
+    function sendFormData() {
+        if (window.newPackage) {
+            // Upload form VIA AJAX POST
+            $.ajax({
+                url: 'packages/new',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            })
+                .done(function (results) {
+                    // If the result is an error, display the error and close the form as the form has already been submitted
+                    if (results['result'] == 'error') {
+                        n = noty({
+                            layout: "top",
+                            theme: "bootstrapTheme",
+                            type: "error",
+                            text: results['message'],
+                            maxVisible: 2,
+                            timeout: 2000,
+                            killer: true,
+                            buttons: false
+                        });
+                    } else {
+                        if ((results['result'] == 'success') && (results['object'] !== null)) {
+                            // Add a row to the current table with the last uploaded packageObject information
+                            $('#datatable-Receiving').DataTable().row.add(results['object']).draw();
+
+                            // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
+                            n = noty({
+                                layout: "top",
+                                theme: "bootstrapTheme",
+                                type: "success",
+                                text: "Package information sent successfully!",
+                                maxVisible: 2,
+                                timeout: 2000,
+                                killer: true,
+                                buttons: false
+                            });
+                        }
+                    }
+                })
+                .fail(function () {
+                    // Display a noty telling the user that there was an issue submitting the packageObject information
+                    n = noty({
+                        layout: "top",
+                        theme: "bootstrapTheme",
+                        type: "error",
+                        text: "Connection error; please try again",
+                        maxVisible: 2,
+                        timeout: 2000,
+                        killer: true,
+                        buttons: false
+                    });
+                });
+        } else { // Update package VIA POST
+            $.ajax({
+                url: 'packages/' + window.existingPackageObject.trackingNumber + '/update',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            })
+                .done(function (results) {
+                    // If the result is an error, display the error and close the form as the form has already been submitted
+                    if (results['result'] == 'error') {
+                        n = noty({
+                            layout: "top",
+                            theme: "bootstrapTheme",
+                            type: "error",
+                            text: results['message'],
+                            maxVisible: 2,
+                            timeout: 2000,
+                            killer: true,
+                            buttons: false
+                        });
+                    } else {
+                        if ((results['result'] == 'success') && (results['object'] !== null)) {
+                            // Display a noty notification towards the bottom telling the user that the packageObject information was submitted successfully
+                            n = noty({
+                                layout: "top",
+                                theme: "bootstrapTheme",
+                                type: "success",
+                                text: results['message'],
+                                maxVisible: 2,
+                                timeout: 2000,
+                                killer: true,
+                                buttons: false
+                            });
+
+                            var location = window.location.href.toString().split("/");
+
+                            if (location[location.length - 1] == "receiving" || location[location.length - 1] == "receiving#") {
+                                // Depending on the returned object, either update the dataTable or ignore
+                                var trackingNumberUpdated = results["object"]["trackingNumber"];
+
+                                // Get the row index the row is on if any
+                                // NOTICE: The DataTable constructor used here is "Hungarian" casing to use
+                                // legacy plugins created for 1.9 and lower
+                                var row = $('#datatable-Receiving').dataTable().fnFindCellRowIndexes(trackingNumberUpdated, 0);
+
+                                if (row.length != 0) {
+                                    $('#datatable-Receiving').DataTable().row(row).remove().row.add(results["object"]).draw();
+                                }
+                            }
+
+                        }
+                    }
+                })
+                .fail(function () {
+                    // Display a noty telling the user that there was an issue submitting the packageObject information
+                    n = noty({
+                        layout: "top",
+                        theme: "bootstrapTheme",
+                        type: "error",
+                        text: "Connection error; please try again",
+                        maxVisible: 2,
+                        timeout: 2000,
+                        killer: true,
+                        buttons: false
+                    });
+                });
+        }
+
+        // Close the form
+        packageModal.modal("hide");
+    }
 
     /**
      * Remove all form errors

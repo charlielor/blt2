@@ -56,7 +56,7 @@ $(document).ready(function() {
             newReceiverName.focus();
         } else {
             // Submit the newReceiver information
-            $.post("receiver/new",
+            $.post("receivers/new",
                 {
                     name: receiverName,
                     deliveryRoom: receiverRoomNumber
@@ -79,7 +79,7 @@ $(document).ready(function() {
                 } else if (results['result'] == 'success') {
                     // Display a noty notification towards the bottom telling the user that the new receiver information was submitted successfully
                     n = noty({
-                        layout: "bottom",
+                        layout: "top",
                         theme: "bootstrapTheme",
                         type: "success",
                         text: results['message'],

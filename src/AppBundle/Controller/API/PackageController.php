@@ -59,6 +59,7 @@ class PackageController extends Controller
             $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
                 ->find($request->request->get("vendorId"));
 
+            // Get the number of packages
             $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
 
             // None of the post variables can be empty

@@ -44,22 +44,34 @@ class PackageController extends Controller
             return new JsonResponse($results);
         } else { // Create a new Package
 
-            // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            // If it catches an exception while retrieving data, throw error and return
+            try {
+                // Get user | anon. is temp for testing
+                $user = $this->get('security.token_storage')->getToken()->getUser();
 
-            // Get the shipper
-            $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")
-                ->find($request->request->get("shipperId"));
+                // Get the shipper
+                $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")
+                    ->find($request->request->get("shipperId"));
 
-            // Get the receiver
-            $receiver = $this->getDoctrine()->getRepository("AppBundle:Receiver")
-                ->find($request->request->get("receiverId"));
+                // Get the receiver
+                $receiver = $this->getDoctrine()->getRepository("AppBundle:Receiver")
+                    ->find($request->request->get("receiverId"));
 
-            // Get the shipper
-            $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
-                ->find($request->request->get("vendorId"));
+                // Get the shipper
+                $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
+                    ->find($request->request->get("vendorId"));
 
-            $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
+                $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
+            } catch(\Exception $e) {
+                // Set up the response
+                $results = array(
+                    'result' => 'error',
+                    'message' => 'Error in processing submitted data',
+                    'object' => $request->request->all()
+                );
+
+                return new JsonResponse($results);
+            }
 
             // None of the post variables can be empty
             if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numberOfPackagesFromPOST)) {

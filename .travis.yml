@@ -10,4 +10,4 @@ before_script:
 - php bin/console doctrine:schema:create --env=test
 - php bin/console doctrine:fixtures:load --env=test
 
-script: phpunit -c app
+script: phpunit

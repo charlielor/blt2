@@ -1,11 +1,11 @@
 Biochemistry Logistics Tool 2 (BLT2)
 ====================================
 ## Testing
-master:
-[![Build Status](https://travis-ci.org/charlielor/blt2.svg?branch=master)](https://travis-ci.org/charlielor/blt2)
+master:  
+[![master](https://travis-ci.org/charlielor/blt2.svg?branch=master)](https://travis-ci.org/charlielor/blt2)
 
-dev:
-[![Build Status](https://travis-ci.org/charlielor/blt2.svg?branch=dev)](https://travis-ci.org/charlielor/blt2)
+dev:  
+[![dev](https://travis-ci.org/charlielor/blt2.svg?branch=dev)](https://travis-ci.org/charlielor/blt2)
 
 ## Summary
 This web application is a simple logistics tool to help employees in the receiving and shipping unit of the Department of Biochemistry at the University of Wisconsin - Madison.

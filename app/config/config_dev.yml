@@ -32,24 +32,3 @@ monolog:
 
 #swiftmailer:
 #    delivery_address: me@example.com
-
-# Doctrine Configuration for DEV
-doctrine:
-    dbal:
-        driver:   pdo_mysql
-        host:     127.0.0.1
-        port:     null
-        dbname:   testblt2
-        user:     root
-        password: sqlroot
-        charset:  UTF8
-
-    orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
-        auto_mapping: true
-        dql:
-            datetime_functions:
-                date: DoctrineExtensions\Query\Mysql\Date
-                week: DoctrineExtensions\Query\Mysql\Week
-                month: DoctrineExtensions\Query\Mysql\Month
-                year: DoctrineExtensions\Query\Mysql\Year

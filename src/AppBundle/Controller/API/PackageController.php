@@ -96,6 +96,9 @@ class PackageController extends Controller
             if (!empty($_FILES["attachedPackingSlips"])) {
                 // Get an array of what the uploaded file object is
                 $uploadedFiles = $_FILES["attachedPackingSlips"];
+
+                var_dump($_FILES);
+                return;
             }
 
             if (!(empty($uploadedFiles))) {
@@ -839,6 +842,18 @@ class PackageController extends Controller
                     $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
                     $this->logger->error('The file that got uploaded does not exist at location ...' . $folderWithoutRootDirectory);
                     return FALSE;
+                }
+
+                // Image compression
+                if ($uploadedFileResults["extension"] == "png" && $this->getParameter('image_compression')) {
+                    $image = new \Imagick();
+                    $image->readImage(($moveToDir));
+                    $image->setImageFormat("jpg");
+                    $image->setImageCompressionQuality(100);
+                    $image->setImageDepth(8);
+                    $image->stripImage();
+                    $image->writeImage($moveToDir . 'compressed');
+                    $uploadedFileResults["extension"] = "jpeg";
                 }
 
                 $uploadedFileResults["md5"] = md5_file($moveToDir);

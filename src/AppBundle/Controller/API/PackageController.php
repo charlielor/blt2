@@ -96,9 +96,6 @@ class PackageController extends Controller
             if (!empty($_FILES["attachedPackingSlips"])) {
                 // Get an array of what the uploaded file object is
                 $uploadedFiles = $_FILES["attachedPackingSlips"];
-
-                var_dump($_FILES);
-                return;
             }
 
             if (!(empty($uploadedFiles))) {
@@ -720,6 +717,7 @@ class PackageController extends Controller
          * 3) Rename the file to include .png
          * 4) Add to the uploaded file array with information
          *
+         * 5) If image_compression is on, compress/convert it to a JPEG
          */
 
         for ($i = 0; $i < count($uploadedPicturesArray); $i++) {
@@ -730,14 +728,35 @@ class PackageController extends Controller
             if (!file_exists($tmpFile)) {
                 break;
             } else {
-                $tmpFileName = explode("/", $tmpFile);
-                $tmpFileToAddToArray = array(
-                    "name" => $tmpFileName[count($tmpFileName) - 1] . ".png",
-                    "type" => "image/png",
-                    "tmp_name" => $tmpFile,
-                    "error" => 0,
-                    "size" => filesize($tmpFile)
-                );
+                // Image compression
+                if (extension_loaded('imagick') && $this->getParameter('image_compression')) {
+                    $image = new \Imagick();
+
+                    $image->readImage($tmpFile);
+                    $image->setImageFormat("jpeg");
+                    $image->setImageCompressionQuality(100);
+                    $image->setImageDepth(8);
+                    $image->stripImage();
+                    $image->writeImage($tmpFile . "_compressed");
+
+                    $tmpFileName = explode("/", $tmpFile . "_compressed");
+                    $tmpFileToAddToArray = array(
+                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".jpeg",
+                        "type" => "image/jpeg",
+                        "tmp_name" => $tmpFile . "_compressed",
+                        "error" => 0,
+                        "size" => filesize($tmpFile . "_compressed")
+                    );
+                } else {
+                    $tmpFileName = explode("/", $tmpFile);
+                    $tmpFileToAddToArray = array(
+                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".png",
+                        "type" => "image/png",
+                        "tmp_name" => $tmpFile,
+                        "error" => 0,
+                        "size" => filesize($tmpFile)
+                    );
+                }
 
                 array_push($uploadedFilesArray, $tmpFileToAddToArray);
             }
@@ -842,18 +861,6 @@ class PackageController extends Controller
                     $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
                     $this->logger->error('The file that got uploaded does not exist at location ...' . $folderWithoutRootDirectory);
                     return FALSE;
-                }
-
-                // Image compression
-                if ($uploadedFileResults["extension"] == "png" && $this->getParameter('image_compression')) {
-                    $image = new \Imagick();
-                    $image->readImage(($moveToDir));
-                    $image->setImageFormat("jpg");
-                    $image->setImageCompressionQuality(100);
-                    $image->setImageDepth(8);
-                    $image->stripImage();
-                    $image->writeImage($moveToDir . 'compressed');
-                    $uploadedFileResults["extension"] = "jpeg";
                 }
 
                 $uploadedFileResults["md5"] = md5_file($moveToDir);

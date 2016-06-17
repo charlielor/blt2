@@ -44,23 +44,33 @@ class PackageController extends Controller
             return new JsonResponse($results);
         } else { // Create a new Package
 
-            // Get user | anon. is temp for testing
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            // If it catches an exception while retrieving data, throw error and return
+            try {
+                // Get user | anon. is temp for testing
+                $user = $this->get('security.token_storage')->getToken()->getUser();
 
-            // Get the shipper
-            $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")
-                ->find($request->request->get("shipperId"));
+                // Get the shipper
+                $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")
+                    ->find($request->request->get("shipperId"));
 
-            // Get the receiver
-            $receiver = $this->getDoctrine()->getRepository("AppBundle:Receiver")
-                ->find($request->request->get("receiverId"));
+                // Get the receiver
+                $receiver = $this->getDoctrine()->getRepository("AppBundle:Receiver")
+                    ->find($request->request->get("receiverId"));
 
-            // Get the shipper
-            $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
-                ->find($request->request->get("vendorId"));
+                // Get the shipper
+                $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
+                    ->find($request->request->get("vendorId"));
 
-            // Get the number of packages
-            $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
+                $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
+            } catch(\Exception $e) {
+                // Set up the response
+                $results = array(
+                    'result' => 'error',
+                    'message' => 'Error in processing submitted data',
+                    'object' => $request->request->all()
+                );
+
+            }
 
             // None of the post variables can be empty
             if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numberOfPackagesFromPOST)) {
@@ -706,6 +716,7 @@ class PackageController extends Controller
          * 3) Rename the file to include .png
          * 4) Add to the uploaded file array with information
          *
+         * 5) If image_compression is on, compress/convert it to a JPEG
          */
 
         for ($i = 0; $i < count($uploadedPicturesArray); $i++) {
@@ -716,14 +727,35 @@ class PackageController extends Controller
             if (!file_exists($tmpFile)) {
                 break;
             } else {
-                $tmpFileName = explode("/", $tmpFile);
-                $tmpFileToAddToArray = array(
-                    "name" => $tmpFileName[count($tmpFileName) - 1] . ".png",
-                    "type" => "image/png",
-                    "tmp_name" => $tmpFile,
-                    "error" => 0,
-                    "size" => filesize($tmpFile)
-                );
+                // Image compression
+                if (extension_loaded('imagick') && $this->getParameter('image_compression')) {
+                    $image = new \Imagick();
+
+                    $image->readImage($tmpFile);
+                    $image->setImageFormat("jpeg");
+                    $image->setImageCompressionQuality(100);
+                    $image->setImageDepth(8);
+                    $image->stripImage();
+                    $image->writeImage($tmpFile . "_compressed");
+
+                    $tmpFileName = explode("/", $tmpFile . "_compressed");
+                    $tmpFileToAddToArray = array(
+                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".jpeg",
+                        "type" => "image/jpeg",
+                        "tmp_name" => $tmpFile . "_compressed",
+                        "error" => 0,
+                        "size" => filesize($tmpFile . "_compressed")
+                    );
+                } else {
+                    $tmpFileName = explode("/", $tmpFile);
+                    $tmpFileToAddToArray = array(
+                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".png",
+                        "type" => "image/png",
+                        "tmp_name" => $tmpFile,
+                        "error" => 0,
+                        "size" => filesize($tmpFile)
+                    );
+                }
 
                 array_push($uploadedFilesArray, $tmpFileToAddToArray);
             }

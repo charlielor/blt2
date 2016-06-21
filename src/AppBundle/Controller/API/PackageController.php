@@ -47,7 +47,7 @@ class PackageController extends Controller
             // If it catches an exception while retrieving data, throw error and return
             try {
                 // Get user | anon. is temp for testing
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+                $user = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
 
                 // Get the shipper
                 $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")

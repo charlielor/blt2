@@ -8,7 +8,7 @@ imports:
 parameters:
     locale: en
     # Use image compression if the file uploaded is a png (png --> jpeg)
-    image_compression: true
+    img_compression: "%image_compression%"
 
 framework:
     #esi:             ~

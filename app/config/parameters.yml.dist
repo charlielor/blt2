@@ -20,3 +20,5 @@ parameters:
 
     # Department Name
     department:         UW
+    # Image Compression
+    image_compression: false

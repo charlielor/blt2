@@ -728,8 +728,22 @@ class PackageController extends Controller
             if (!file_exists($tmpFile)) {
                 break;
             } else {
-                // Image compression
-                if (extension_loaded('imagick') && $this->getParameter('image_compression')) {
+                // Image compression with gd
+                if (extension_loaded('gd') && $this->getParameter('image_compression')) {
+                    $image = imagecreatefrompng($tmpFile);
+
+                    imagejpeg($image, $tmpFile . "_compressed", 100);
+
+                    $tmpFileName = explode("/", $tmpFile . "_compressed");
+
+                    $tmpFileToAddToArray = array(
+                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".jpeg",
+                        "type" => "image/jpeg",
+                        "tmp_name" => $tmpFile . "_compressed",
+                        "error" => 0,
+                        "size" => filesize($tmpFile . "_compressed")
+                    );
+                } else if (extension_loaded('imagick') && $this->getParameter('image_compression')) { // Image compression with imagick
                     $image = new \Imagick();
 
                     $image->readImage($tmpFile);
@@ -848,7 +862,7 @@ class PackageController extends Controller
                 if (($uploadedFile["type"] == "image/png")) {
                     $uploadedFileResults["extension"] = "png";
                 } else if ($uploadedFile["type"] == "image/jpeg") {
-                    $uploadedFileResults["extension"] = "jpeg";
+                    $uploadedFileResults["extension"] = "jpg";
                 } else if (($uploadedFile["type"] == "application/pdf")) {
                     $uploadedFileResults["extension"] = "pdf";
                 } else {
@@ -1007,7 +1021,7 @@ class PackageController extends Controller
                 $filename .= ".png";
                 break;
             case "image/jpeg":
-                $filename .= ".jpeg";
+                $filename .= ".jpg";
                 break;
             default:
                 return FALSE;

@@ -10,6 +10,7 @@ class ReceiverControllerTest extends WebTestCase
 {
     // 1 - fixtureReceiver  -- enabled
     // 2 - fixtureReceiver2 -- disabled
+    // 3 - fixtureReceiver3 -- no packages
     public function setUp() {
         $em = $this->getContainer()->get('doctrine')->getManager();
 

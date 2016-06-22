@@ -25,12 +25,16 @@ class LoadReceiver extends AbstractFixture implements OrderedFixtureInterface, C
     public function load(ObjectManager $manager) {
         $fixtureReceiver = new Receiver("fixtureReceiver", 111, "anon.");
         $fixtureReceiver2 = new Receiver("fixtureReceiver2", 111, "anon.");
+        $fixtureReceiver3 = new Receiver("fixtureReceiver3", 111, "anon.");
+
+        $fixtureReceiver2->setEnabled(false, "anon.");
 
         $this->addReference("fixtureReceiver", $fixtureReceiver);
         $this->addReference("fixtureReceiver2", $fixtureReceiver2);
 
         $manager->persist($fixtureReceiver);
         $manager->persist($fixtureReceiver2);
+        $manager->persist($fixtureReceiver3);
 
         $manager->flush();
     }

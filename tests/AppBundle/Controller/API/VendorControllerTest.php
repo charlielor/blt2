@@ -340,7 +340,7 @@ class VendorControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Assert that entity was successfully created
-        $client->request('POST', '/vendors/new', array(
+        $client->request('GET', '/vendors/like', array(
             "name" => "fixture"
         ));
 

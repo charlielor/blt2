@@ -25,6 +25,8 @@ class LoadShipper extends AbstractFixture implements OrderedFixtureInterface, Co
         $fixtureShipper = new Shipper("fixtureShipper", "anon.");
         $fixtureShipper2 = new Shipper("fixtureShipper2", "anon.");
 
+        $fixtureShipper2->setEnabled(false, "anon.");
+
         $this->addReference("fixtureShipper", $fixtureShipper);
         $this->addReference("fixtureShipper2", $fixtureShipper2);
 

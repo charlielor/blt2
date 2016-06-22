@@ -10,15 +10,21 @@ class PackageControllerTest extends WebTestCase
 {
     // Set up database with fixtures
     public function setUp() {
+
         $em = $this->getContainer()->get('doctrine')->getManager();
+
         if (!isset($metadatas)) {
             $metadatas = $em->getMetadataFactory()->getAllMetadata();
         }
+
         $schemaTool = new SchemaTool($em);
+
         $schemaTool->dropDatabase();
+
         if (!empty($metadatas)) {
             $schemaTool->createSchema($metadatas);
         }
+
         $this->postFixtureSetup();
 
         $this->loadFixtures(array(
@@ -30,268 +36,16 @@ class PackageControllerTest extends WebTestCase
     }
     
     public function testNewPackageRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
-        // Search for Receiver, Vendor and
-
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
-
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
         $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        # Testing response code for /packages/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $newPackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $newPackage);
-        $this->assertEquals('success', $newPackage['result']);
-
-        $this->assertArrayHasKey('message', $newPackage);
-
-        $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotEmpty($newPackage['object']);
-        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
-
-        # Testing against duplicates
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $duplicatePackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $duplicatePackage);
-        $this->assertArrayHasKey('message', $duplicatePackage);
-        $this->assertArrayHasKey('object', $duplicatePackage);
-        $this->assertEmpty($duplicatePackage['object']);
-        $this->assertEquals('error', $duplicatePackage['result']);
-
-        # Testing with errors
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $errorParamsResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $errorParamsResponse);
-        $this->assertArrayHasKey('message', $errorParamsResponse);
-        $this->assertArrayHasKey('object', $errorParamsResponse);
-        $this->assertEmpty($errorParamsResponse['object']);
-        $this->assertEquals('error', $errorParamsResponse['result']);
-
-        $package = $newPackage['object'];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-    }
-
-    public function testUpdatePackageRoute() {
-        $client = static::createClient();
-
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
-
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
+            "shipperId" => 1,
+            "receiverId" => 1,
+            "vendorId" => 1
         ));
 
         // Testing response code for /packages/new
@@ -315,12 +69,68 @@ class PackageControllerTest extends WebTestCase
         $this->assertNotEmpty($newPackage['object']);
         $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
         $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
+        $this->assertEquals('fixtureShipper', $newPackage['object']['shipper']['name']);
+        $this->assertEquals('fixtureReceiver', $newPackage['object']['receiver']['name']);
+        $this->assertEquals('fixtureVendor', $newPackage['object']['vendor']['name']);
+
+        // Testing against duplicates
+        $client->request('POST', '/packages/new', array(
+            "trackingNumber" => "testPackage",
+            "numberOfPackages" => 4,
+            "shipperId" => 1,
+            "receiverId" => 1,
+            "vendorId" => 1
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $duplicatePackage = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $duplicatePackage);
+        $this->assertArrayHasKey('message', $duplicatePackage);
+        $this->assertArrayHasKey('object', $duplicatePackage);
+        $this->assertEmpty($duplicatePackage['object']);
+        $this->assertEquals('error', $duplicatePackage['result']);
+
+        // Testing with errors
+        $client->request('POST', '/packages/new', array(
+            "trackingNumber" => "testPackage",
+            "receiverId" => 1,
+            "vendorId" => 1
+        ));
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        $errorParamsResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('result', $errorParamsResponse);
+        $this->assertArrayHasKey('message', $errorParamsResponse);
+        $this->assertArrayHasKey('object', $errorParamsResponse);
+        $this->assertEmpty($errorParamsResponse['object']);
+        $this->assertEquals('error', $errorParamsResponse['result']);
+    }
+
+    public function testUpdatePackageRoute() {
+        echo __METHOD__ . "\n";
+
+        $client = static::createClient();
 
         // Test for update
-        $client->request('POST', '/packages/testPackage/update', array(
+        $client->request('POST', '/packages/fixturePackage/update', array(
             "numberOfPackages" => 1,
             "deletePackingSlipIds" => array(
                 "removePackingSlipOne", "removePackingSlipTwo"
@@ -369,160 +179,16 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('error', $errorResponse['result']);
-
-        $package = $newPackage['object'];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
     public function testLikePackageRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
-
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
-
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        # Testing response code for /packages/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $newPackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $newPackage);
-        $this->assertEquals('success', $newPackage['result']);
-
-        $this->assertArrayHasKey('message', $newPackage);
-
-        $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotEmpty($newPackage['object']);
-        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
         // Test search like term
         $client->request('GET', '/packages/like', array(
-            "term" => "test"
+            "term" => "fixture"
         ));
 
         $this->assertTrue($client->getResponse()->isSuccessful());
@@ -541,7 +207,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $searchPackage);
         $this->assertNotEmpty($searchPackage['object']);
         $this->assertEquals('success', $searchPackage['result']);
-        $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
+        $this->assertCount(2, $searchPackage['object']);
 
         // Test for errors
         $client->request('GET', '/packages/search', array(
@@ -564,167 +230,15 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('success', $errorResponse['result']);
-
-        $client->request('GET', '/packages/search', array(
-            "term" => "testPackage"
-        ));
-
-        $packageResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($packageResponse['object']);
-
-        $package = $packageResponse['object'][0];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
     }
     
     public function testDeliverPackageRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
-
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        # Testing response code for /packages/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $newPackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $newPackage);
-        $this->assertEquals('success', $newPackage['result']);
-
-        $this->assertArrayHasKey('message', $newPackage);
-
-        $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotEmpty($newPackage['object']);
-        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
-
         // Assert that package is delivered
-        $client->request('PUT', '/packages/' . $newPackage['object']['trackingNumber'] . '/deliver');
+        $client->request('PUT', '/packages/fixturePackage/deliver');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -744,164 +258,19 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $deliveredPackage);
         $this->assertNotEmpty($deliveredPackage['object']);
-        $this->assertEquals(4, $deliveredPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $deliveredPackage['object']['trackingNumber']);
+        $this->assertEquals(7, $deliveredPackage['object']['numberOfPackages']);
+        $this->assertEquals('fixturePackage', $deliveredPackage['object']['trackingNumber']);
         $this->assertEquals(1, $deliveredPackage['object']['delivered']);
-
-
-        $package = $newPackage['object'];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
     public function testPickUpPackageRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
-
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
-
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        # Testing response code for /packages/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $newPackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $newPackage);
-        $this->assertEquals('success', $newPackage['result']);
-
-        $this->assertArrayHasKey('message', $newPackage);
-
-        $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotEmpty($newPackage['object']);
-        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
 
 
         // Assert that package is picked up
-        $client->request('PUT', '/packages/' . $newPackage['object']['trackingNumber'] . '/pickup', array(
+        $client->request('PUT', '/packages/fixturePackage/pickup', array(
             "userWhoPickedUp"=> "stuffedchickenwings"
         ));
 
@@ -923,166 +292,21 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $pickedUpPackage);
         $this->assertNotEmpty($pickedUpPackage['object']);
-        $this->assertEquals('testPackage', $pickedUpPackage['object']['trackingNumber']);
+        $this->assertEquals('fixturePackage', $pickedUpPackage['object']['trackingNumber']);
         $this->assertEquals(1, $pickedUpPackage['object']['pickedUp']);
         $this->assertEquals('stuffedchickenwings', $pickedUpPackage['object']['userWhoPickedUp']);
-
-
-        $package = $newPackage['object'];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
     public function testSearchPackageRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
-
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        # Testing response code for /packages/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $newPackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $newPackage);
-        $this->assertEquals('success', $newPackage['result']);
-
-        $this->assertArrayHasKey('message', $newPackage);
-
-        $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotEmpty($newPackage['object']);
-        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
-
         $client->request('GET', '/packages/search', array(
-            "term" => "testPackage"
+            "term" => "fixturePackage"
         ));
 
-        # Testing response code for /packages/search
+        // Testing response code for /packages/search
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertTrue(
@@ -1099,7 +323,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $searchPackage);
         $this->assertNotEmpty($searchPackage['object']);
         $this->assertEquals('success', $searchPackage['result']);
-        $this->assertEquals('testPackage', $searchPackage['object'][0]['trackingNumber']);
+        $this->assertEquals('fixturePackage', $searchPackage['object'][0]['trackingNumber']);
 
         // Test for errors
         $client->request('GET', '/packages/search', array(
@@ -1122,161 +346,15 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('success', $errorResponse['result']);
-
-        $package = $newPackage['object'];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
     public function testDeletePackageRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
-
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        # Testing response code for /packages/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $newPackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $newPackage);
-        $this->assertEquals('success', $newPackage['result']);
-
-        $this->assertArrayHasKey('message', $newPackage);
-
-        $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotEmpty($newPackage['object']);
-        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
-
-        $package = $newPackage['object'];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
+        // Testing response code for /packages/{id}/delete
+        $client->request('DELETE', '/packages/fixturePackage/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -1296,7 +374,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $packageDeleted['result']);
 
         // Test for errors
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
+        $client->request('DELETE', '/packages/fixturePackage/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -1314,199 +392,15 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
         $this->assertEquals('error', $errorResponse['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
     public function testGetPackagesRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
-        // Setting up the database with fake entities
-        $client->request('POST', '/receivers/new', array(
-            "name" => "testPackageReceiver",
-            "deliveryRoom" => 112
-        ));
+        $client->request('GET', '/packages/fixturePackage');
 
-        // Assert that receiver was successfully created
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $receiverResponse);
-        $this->assertEquals('success', $receiverResponse['result']);
-
-        $this->assertArrayHasKey('message', $receiverResponse);
-
-        $this->assertArrayHasKey('object', $receiverResponse);
-        $this->assertNotEmpty($receiverResponse['object']);
-        $this->assertCount(1, $receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('POST', '/shippers/new', array(
-            "name" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $shipperResponse);
-        $this->assertEquals('success', $shipperResponse['result']);
-
-        $this->assertArrayHasKey('message', $shipperResponse);
-
-        $this->assertArrayHasKey('object', $shipperResponse);
-        $this->assertNotEmpty($shipperResponse['object']);
-        $this->assertCount(1, $shipperResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('POST', '/vendors/new', array(
-            "name" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('result', $vendorResponse);
-        $this->assertEquals('success', $vendorResponse['result']);
-
-        $this->assertArrayHasKey('message', $vendorResponse);
-
-        $this->assertArrayHasKey('object', $vendorResponse);
-        $this->assertNotEmpty($vendorResponse['object']);
-        $this->assertCount(1, $vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('POST', '/packages/new', array(
-            "trackingNumber" => "testPackage",
-            "numberOfPackages" => 4,
-            "shipperId" => $shipper[0]['id'],
-            "receiverId" => $receiver[0]['id'],
-            "vendorId" => $vendor[0]['id']
-        ));
-
-        # Testing response code for /packages/new
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $newPackage = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $newPackage);
-        $this->assertEquals('success', $newPackage['result']);
-
-        $this->assertArrayHasKey('message', $newPackage);
-
-        $this->assertArrayHasKey('object', $newPackage);
-        $this->assertNotEmpty($newPackage['object']);
-        $this->assertEquals(4, $newPackage['object']['numberOfPackages']);
-        $this->assertEquals('testPackage', $newPackage['object']['trackingNumber']);
-        $this->assertEquals('testPackageShipper', $newPackage['object']['shipper']['name']);
-        $this->assertEquals('testPackageReceiver', $newPackage['object']['receiver']['name']);
-        $this->assertEquals('testPackageVendor', $newPackage['object']['vendor']['name']);
-
-        $client->request('GET', '/packages/' . $newPackage['object']['trackingNumber']);
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $package = $newPackage['object'];
-
-        # Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/' . $package['trackingNumber'] . '/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Search database for existing entities and delete them
-        $client->request('GET', '/receivers/search', array(
-            "term" => "testPackageReceiver"
-        ));
-
-        $receiverResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $receiver = $receiverResponse['object'];
-
-        $client->request('GET', '/shippers/search', array(
-            "term" => "testPackageShipper"
-        ));
-
-        $shipperResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($receiverResponse['object']);
-
-        $shipper = $shipperResponse['object'];
-
-        $client->request('GET', '/vendors/search', array(
-            "term" => "testPackageVendor"
-        ));
-
-        $vendorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($vendorResponse['object']);
-
-        $vendor = $vendorResponse['object'];
-
-        $client->request('DELETE', '/receivers/' . $receiver[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/shippers/' . $shipper[0]['id'] . '/delete');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $client->request('DELETE', '/vendors/' . $vendor[0]['id'] . '/delete');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 

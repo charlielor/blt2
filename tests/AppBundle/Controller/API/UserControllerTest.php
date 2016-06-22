@@ -35,6 +35,8 @@ class UserControllerTest extends WebTestCase
     }
 
     public function testGetAllUsersRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
         $client->request('GET', '/users');
@@ -51,6 +53,8 @@ class UserControllerTest extends WebTestCase
     }
 
     public function testSearchUserRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
         $client->request('GET', '/users/search', array(
@@ -95,6 +99,8 @@ class UserControllerTest extends WebTestCase
     }
 
     public function testLikeUserRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
         $client->request('GET', '/users/like', array(

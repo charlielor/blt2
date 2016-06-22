@@ -8,6 +8,11 @@ use AppBundle\Entity\PackingSlip;
 
 class PackageControllerTest extends WebTestCase
 {
+    // Set up database with fixtures
+    public function setUp() {
+        
+    }
+    
     public function testNewPackageRoute() {
         $client = static::createClient();
 

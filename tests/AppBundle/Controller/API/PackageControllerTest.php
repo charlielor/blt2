@@ -3,18 +3,36 @@
 
 namespace Tests\AppBundle\Controller\API;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\PackingSlip;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Doctrine\ORM\Tools\SchemaTool;
 
 class PackageControllerTest extends WebTestCase
 {
     // Set up database with fixtures
     public function setUp() {
-        
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        if (!isset($metadatas)) {
+            $metadatas = $em->getMetadataFactory()->getAllMetadata();
+        }
+        $schemaTool = new SchemaTool($em);
+        $schemaTool->dropDatabase();
+        if (!empty($metadatas)) {
+            $schemaTool->createSchema($metadatas);
+        }
+        $this->postFixtureSetup();
+
+        $this->loadFixtures(array(
+            'AppBundle\DataFixtures\ORM\LoadVendor',
+            'AppBundle\DataFixtures\ORM\LoadShipper',
+            'AppBundle\DataFixtures\ORM\LoadReceiver',
+            'AppBundle\DataFixtures\ORM\LoadPackage',
+        ));
     }
     
     public function testNewPackageRoute() {
         $client = static::createClient();
+
+        // Search for Receiver, Vendor and
 
         // Setting up the database with fake entities
         $client->request('POST', '/receivers/new', array(

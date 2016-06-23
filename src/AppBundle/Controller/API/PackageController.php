@@ -20,6 +20,26 @@ class PackageController extends Controller
      * @Method({"POST"})
      */
     public function newPackageAction(Request $request) {
+        $shipperId = $request->request->get("shipperId");
+        $receiverId = $request->request->get("receiverId");
+        $vendorId = $request->request->get("vendorId");
+        $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
+
+        // Get user | anon. is temp for testing
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // None of the post variables can be empty
+        if (empty($user) || empty($shipperId) || empty($receiverId) || empty($vendorId) || empty($numberOfPackagesFromPOST)) {
+            // Set up the response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Error in processing POST data',
+                'object' => $request->request->all()
+            );
+
+            return new JsonResponse($results);
+        }
+
         // Tracking number for new Package
         $trackingNumberOfNewPackage = $request->request->get("trackingNumber");
 
@@ -33,7 +53,6 @@ class PackageController extends Controller
 
         // If the query is not empty, a Package with the given name already exists
         if (!empty($existingPackageGivenTrackingNumber)) {
-            // Package already exists
             // Set up the response
             $results = array(
                 'result' => 'error',
@@ -43,122 +62,108 @@ class PackageController extends Controller
 
             return new JsonResponse($results);
         } else { // Create a new Package
-
-            // If it catches an exception while retrieving data, throw error and return
-            try {
-                // Get user | anon. is temp for testing
-                $user = $this->get('security.token_storage')->getToken()->getUser();
-
+            try { // Catch any exceptions thrown within this entire process and return error if there is one thrown
                 // Get the shipper
                 $shipper = $this->getDoctrine()->getRepository("AppBundle:Shipper")
-                    ->find($request->request->get("shipperId"));
+                    ->find($shipperId);
 
                 // Get the receiver
                 $receiver = $this->getDoctrine()->getRepository("AppBundle:Receiver")
-                    ->find($request->request->get("receiverId"));
+                    ->find($receiverId);
 
-                // Get the shipper
+                // Get the vendor
                 $vendor = $this->getDoctrine()->getRepository("AppBundle:Vendor")
-                    ->find($request->request->get("vendorId"));
+                    ->find($vendorId);
 
-                $numberOfPackagesFromPOST = $request->request->get("numberOfPackages");
-            } catch(\Exception $e) {
-                // Set up the response
-                $results = array(
-                    'result' => 'error',
-                    'message' => 'Error in processing submitted data',
-                    'object' => $request->request->all()
-                );
+                // Create a new Package entity and set its properties
+                $newPackage = new Package($trackingNumberOfNewPackage, $numberOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
-                return new JsonResponse($results);
-            }
+                // Define uploadedFiles variable
+                $uploadedFiles = [];
 
-            // None of the post variables can be empty
-            if (empty($user) || empty($shipper) || empty($receiver) || empty($vendor) || empty($numberOfPackagesFromPOST)) {
-                // Set up the response
-                $results = array(
-                    'result' => 'error',
-                    'message' => 'Error in processing submitted data',
-                    'object' => $request->request->all()
-                );
-
-                return new JsonResponse($results);
-            }
-
-            // Create a new Package entity and set its properties
-            $newPackage = new Package($trackingNumberOfNewPackage, $numberOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
-
-            // If there are pictures that were uploaded, put them in an array
-            if (!empty($request->request->get("packingSlipPictures"))) {
-                $uploadedPictures = $request->request->get("packingSlipPictures");
-            }
-
-            if (!empty($_FILES["attachedPackingSlips"])) {
-                // Get an array of what the uploaded file object is
-                $uploadedFiles = $_FILES["attachedPackingSlips"];
-            }
-
-            if (!(empty($uploadedFiles))) {
-                // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
-                $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
-
-                // Remove any duplicates
-                $uploadedFiles = $this->removeDuplicates($uploadedFiles);
-            }
-
-            // If there are any pictures taken, move them to the uploadedFiles array
-            if (!(empty($uploadedPictures))) {
-                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
-            }
-
-            // Get the current date
-            $currentDate = new \DateTime("NOW");
-
-            // Get the entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
-            if (!(empty($uploadedFiles))) {
-
-                $numberOfUploadedFiles = count($uploadedFiles);
-
-                for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
-                    $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $trackingNumberOfNewPackage, $i, $currentDate->format('Ymd'));
-
-                    if ($moveUploadedFileLocation != NULL) {
-                        $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
-
-                        $em->persist($packingSlip);
-
-                        $newPackage->addPackingSlip($packingSlip, $user);
-
-                    } else {
-                        $results = array(
-                            'result' => 'error',
-                            'message' => 'Error in moving uploaded file',
-                            'object' => []
-                        );
-
-                        return new JsonResponse($results);
-                    }
+                // If there are pictures that were uploaded, put them in an array
+                if (!empty($request->request->get("packingSlipPictures"))) {
+                    $uploadedPictures = $request->request->get("packingSlipPictures");
                 }
 
-                // Flush packing slips to database
+                var_dump($_FILES);
+
+                if (!empty($_FILES["attachedPackingSlips"])) {
+                    // Get an array of what the uploaded file object is
+                    $uploadedFiles = $_FILES["attachedPackingSlips"];
+                }
+
+                if (!(empty($uploadedFiles))) {
+                    // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
+                    $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
+
+                    // Remove any duplicates
+                    $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+                }
+
+                // If there are any pictures taken, move them to the uploadedFiles array
+                if (!(empty($uploadedPictures))) {
+                    $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+                }
+
+                // Get the current date
+                $currentDate = new \DateTime("NOW");
+
+                // Get the entity manager
+                $em = $this->get('doctrine.orm.entity_manager');
+
+                // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
+                if (!(empty($uploadedFiles))) {
+
+                    $numberOfUploadedFiles = count($uploadedFiles);
+
+                    for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
+                        $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $trackingNumberOfNewPackage, $i, $currentDate->format('Ymd'));
+
+                        if ($moveUploadedFileLocation != NULL) {
+                            $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
+
+                            $em->persist($packingSlip);
+
+                            $newPackage->addPackingSlip($packingSlip, $user);
+
+                        } else {
+                            $results = array(
+                                'result' => 'error',
+                                'message' => 'Error in moving uploaded file',
+                                'object' => []
+                            );
+
+                            return new JsonResponse($results);
+                        }
+                    }
+
+                    // Flush packing slips to database
+                    $em->flush();
+                }
+
+                // Push the new Package to database
+                $em->persist($newPackage);
                 $em->flush();
+
+                // Set up the response
+                $results = array(
+                    'result' => 'success',
+                    'message' => 'Successfully created \'' . $trackingNumberOfNewPackage . '\'',
+                    'object' => json_decode($this->get('serializer')->serialize($newPackage, 'json'))
+                );
+
+                return new JsonResponse($results);
+            } catch (\Exception $e) {
+                $results = array(
+                    'result' => 'error',
+                    'message' => $e->getMessage(),
+                    'object' => []
+                );
+
+                return new JsonResponse($results);
             }
 
-            // Push the new Package to database
-            $em->persist($newPackage);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully created \'' . $trackingNumberOfNewPackage . '\'',
-                'object' => json_decode($this->get('serializer')->serialize($newPackage, 'json'))
-            );
-
-            return new JsonResponse($results);
 
 
         }
@@ -810,8 +815,6 @@ class PackageController extends Controller
                 // If that folder doesn't exist, create it
                 if (!file_exists($moveDir)) {
                     if (!(mkdir($moveDir, 0755, true))) {
-                        $folderWithoutRootDirectory = strstr($moveDir, '/upload');
-                        $this->logger->error('Unable to create ...' . $folderWithoutRootDirectory . ' on the server');
                         return FALSE;
                     }
                 }
@@ -840,20 +843,14 @@ class PackageController extends Controller
                  */
                 if (is_uploaded_file($uploadedFile["tmp_name"])) {
                     if (!(move_uploaded_file($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
                 } else if (($uploadedFile["type"] == "image/png") || ($uploadedFile["type"] == "image/jpeg")) {
                     if (!(rename($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
 
                     if (!chmod($moveToDir, 0644)) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
                         return FALSE;
                     }
                 }
@@ -872,8 +869,6 @@ class PackageController extends Controller
 
                 // Existence of file
                 if (!file_exists($moveToDir)) {
-                    $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                    $this->logger->error('The file that got uploaded does not exist at location ...' . $folderWithoutRootDirectory);
                     return FALSE;
                 }
 
@@ -897,42 +892,6 @@ class PackageController extends Controller
     private function checkUploadedFileForErrors($uploadedFile) {
         // Check to see if there are any errors with the uploaded file
         if ($uploadedFile["error"] > 0 ) {
-            // If there's an error, return the error to the page and log the error
-            switch ($uploadedFile["error"]) {
-                case UPLOAD_ERR_INI_SIZE:
-                    $this->logger->error('Error: The file is too big: (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_FORM_SIZE:
-                    $this->logger->error('Error: The form submitted is too big: (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_PARTIAL:
-                    $this->logger->error('Error: The file was partially uploaded. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_NO_FILE:
-                    $this->logger->error('Error:  No file was uploaded. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    $this->logger->error('Error: Missing temporary folder for upload. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_CANT_WRITE:
-                    $this->logger->error('Error: Can not save file onto server. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_EXTENSION:
-                    $this->logger->error('Error: Invalid extension. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                default:
-                    $this->logger->error('Error: Invalid document. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-            }
-
             return TRUE;
         }
 

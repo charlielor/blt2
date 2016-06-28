@@ -7,6 +7,7 @@ namespace AppBundle\Controller\API;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Package;
@@ -34,7 +35,6 @@ class PackageController extends Controller
         // If the query is not empty, a Package with the given name already exists
         if (!empty($existingPackageGivenTrackingNumber)) {
             // Package already exists
-            // Set up the response
             $results = array(
                 'result' => 'error',
                 'message' => '\'' . $trackingNumberOfNewPackage . '\' already exists',
@@ -88,22 +88,32 @@ class PackageController extends Controller
             // Create a new Package entity and set its properties
             $newPackage = new Package($trackingNumberOfNewPackage, $numberOfPackagesFromPOST, $shipper, $receiver, $vendor, $user);
 
-            // If there are pictures that were uploaded, put them in an array
-            if (!empty($request->request->get("packingSlipPictures"))) {
-                $uploadedPictures = $request->request->get("packingSlipPictures");
-            }
+            // Move and manage any uploaded files
+            $uploadedFiles = [];
 
             if (!empty($_FILES["attachedPackingSlips"])) {
                 // Get an array of what the uploaded file object is
                 $uploadedFiles = $_FILES["attachedPackingSlips"];
             }
 
+            var_dump($uploadedFiles);
+
+//            if (!empty($request->files->all())) {
+//                // Get the array of files uploaded through $_FILES
+//                $uploadedFiles = $request->files->all();
+//            }
+
             if (!(empty($uploadedFiles))) {
                 // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
                 $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
 
-                // Remove any duplicates
+                // Remove any duplicate uploads
                 $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+            }
+
+            // If there are pictures that were uploaded, put them in an array
+            if (!empty($request->request->get("packingSlipPictures"))) {
+                $uploadedPictures = $request->request->get("packingSlipPictures");
             }
 
             // If there are any pictures taken, move them to the uploadedFiles array
@@ -657,7 +667,7 @@ class PackageController extends Controller
      * @return array - A reorganized array
      */
     private function reorganizeUploadedFiles($uploadedFilesArray) {
-        $organizedUploadedFilesArray[] = array();
+        $organizedUploadedFilesArray = [];
 
         for ($i = 0; $i < count($uploadedFilesArray["name"]); $i++) {
             if ($uploadedFilesArray["error"][$i] == 0) {
@@ -670,6 +680,20 @@ class PackageController extends Controller
                 }
             }
         }
+
+//        for ($i = 0; $i < count($uploadedFilesArray); $i++) {
+//            if ($uploadedFilesArray[$i] instanceof UploadedFile) {
+//                if ($uploadedFilesArray[$i]->isValid()) {
+//                    $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray->getName();
+//                    $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
+//                    $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
+//                    $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
+//                    $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
+//                }
+//            }
+//        }
+
+
         return array_values(array_filter($organizedUploadedFilesArray));
     }
 

@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Package;
@@ -91,34 +92,15 @@ class PackageController extends Controller
             // Move and manage any uploaded files
             $uploadedFiles = [];
 
-            if (!empty($_FILES["attachedPackingSlips"])) {
-                // Get an array of what the uploaded file object is
-                $uploadedFiles = $_FILES["attachedPackingSlips"];
-            }
-
-            var_dump($uploadedFiles);
-
-//            if (!empty($request->files->all())) {
-//                // Get the array of files uploaded through $_FILES
-//                $uploadedFiles = $request->files->all();
-//            }
-
-            if (!(empty($uploadedFiles))) {
-                // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
-                $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
-
-                // Remove any duplicate uploads
-                $uploadedFiles = $this->removeDuplicates($uploadedFiles);
+            // Check to see if there are any uploaded files VIA POST ($_FILES)
+            if (!empty($request->files->get('attachedPackingSlips')[0])) {
+                // Get the array of files uploaded through $_FILES
+                $uploadedFiles = $request->files->get('attachedPackingSlips');
             }
 
             // If there are pictures that were uploaded, put them in an array
             if (!empty($request->request->get("packingSlipPictures"))) {
-                $uploadedPictures = $request->request->get("packingSlipPictures");
-            }
-
-            // If there are any pictures taken, move them to the uploadedFiles array
-            if (!(empty($uploadedPictures))) {
-                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $request->request->get("packingSlipPictures"));
             }
 
             // Get the current date
@@ -130,10 +112,8 @@ class PackageController extends Controller
             // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
             if (!(empty($uploadedFiles))) {
 
-                $numberOfUploadedFiles = count($uploadedFiles);
-
-                for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
-                    $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $trackingNumberOfNewPackage, $i, $currentDate->format('Ymd'));
+                foreach ($uploadedFiles as $uploadedFile) {
+                    $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFile, $trackingNumberOfNewPackage, $currentDate->format('Ymd'));
 
                     if ($moveUploadedFileLocation != NULL) {
                         $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
@@ -152,6 +132,7 @@ class PackageController extends Controller
                         return new JsonResponse($results);
                     }
                 }
+
 
                 // Flush packing slips to database
                 $em->flush();
@@ -243,36 +224,24 @@ class PackageController extends Controller
 
             }
 
+            $uploadedFiles = [];
+
+            // Check to see if there are any uploaded files VIA POST ($_FILES)
+            if (!empty($request->files->get('attachedPackingSlips')[0])) {
+                // Get the array of files uploaded through $_FILES
+                $uploadedFiles = $request->files->get('attachedPackingSlips');
+            }
+
             // If there are pictures that were uploaded, put them in an array
             if (!empty($updatePackage["packingSlipPictures"])) {
-                $uploadedPictures = $updatePackage["packingSlipPictures"];
-            }
-
-            if (!empty($_FILES["attachedPackingSlips"])) {
-                // Get an array of what the uploaded file object is
-                $uploadedFiles = $_FILES["attachedPackingSlips"];
-
-                // Moving some values around from $_FILES() so that they are aligned with the files that got uploaded
-                $uploadedFiles = $this->reorganizeUploadedFiles($uploadedFiles);
-
-                // Remove any duplicates
-                $uploadedFiles = $this->removeDuplicates($uploadedFiles);
-            } else {
-                $uploadedFiles = [];
-            }
-
-            // If there are any pictures taken, move them to the uploadedFiles array
-            if (!(empty($uploadedPictures))) {
-                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $uploadedPictures);
+                $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $updatePackage["packingSlipPictures"]);
             }
 
             // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
             if (!(empty($uploadedFiles))) {
 
-                $numberOfUploadedFiles = count($uploadedFiles);
-
-                for ($i = 0; $i < $numberOfUploadedFiles; $i++) {
-                    $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFiles[$i], $id, $i, $currentDate->format('Ymd'));
+                foreach ($uploadedFiles as $uploadedFile) {
+                    $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFile, $id, $currentDate->format('Ymd'));
 
                     if ($moveUploadedFileLocation != NULL) {
                         $packingSlip = new PackingSlip($moveUploadedFileLocation['filename'], $moveUploadedFileLocation['extension'], $moveUploadedFileLocation['path'], $moveUploadedFileLocation['md5'], $user);
@@ -327,7 +296,7 @@ class PackageController extends Controller
             if (!empty($updatePackage["numberOfPackages"])) {
                 $package->setNumberOfPackages($updatePackage["numberOfPackages"], $user);
             }
-            
+
             // Make sure the entity manager sees the entity as a new entity
             $em->persist($package);
 
@@ -582,6 +551,23 @@ class PackageController extends Controller
     }
 
     /**
+     * @Route("/packages/{id}", name="package")
+     * @Method({"GET"})
+     */
+    public function packageAction(Request $request, $id) {
+        // Get the Package repository
+        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+
+        // Get the package by id
+        $package = $packageRepository->find($id);
+
+        return $this->render('entity.html.twig', [
+            "type" => "package",
+            "entity" => $package
+        ]);
+    }
+
+    /**
      * @Route("/packages", name="packages")
      * @Method({"GET"})
      */
@@ -644,92 +630,11 @@ class PackageController extends Controller
     }
 
     /**
-     * @Route("/packages/{id}", name="package")
-     * @Method({"GET"})
-     */
-    public function packageAction(Request $request, $id) {
-        // Get the Package repository
-        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
-
-        // Get the package by id
-        $package = $packageRepository->find($id);
-
-        return $this->render('entity.html.twig', [
-            "type" => "package",
-            "entity" => $package
-        ]);
-    }
-
-    /**
-     * Resort $_FILES array so that each element has its own information
-     *
-     * @param $uploadedFilesArray - An array with information about files uploaded
-     * @return array - A reorganized array
-     */
-    private function reorganizeUploadedFiles($uploadedFilesArray) {
-        $organizedUploadedFilesArray = [];
-
-        for ($i = 0; $i < count($uploadedFilesArray["name"]); $i++) {
-            if ($uploadedFilesArray["error"][$i] == 0) {
-                if ($uploadedFilesArray["name"][$i] != "") {
-                    $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray["name"][$i];
-                    $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
-                    $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
-                    $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
-                    $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
-                }
-            }
-        }
-
-//        for ($i = 0; $i < count($uploadedFilesArray); $i++) {
-//            if ($uploadedFilesArray[$i] instanceof UploadedFile) {
-//                if ($uploadedFilesArray[$i]->isValid()) {
-//                    $organizedUploadedFilesArray[$i]["name"] = $uploadedFilesArray->getName();
-//                    $organizedUploadedFilesArray[$i]["type"] = $uploadedFilesArray["type"][$i];
-//                    $organizedUploadedFilesArray[$i]["tmp_name"] = $uploadedFilesArray["tmp_name"][$i];
-//                    $organizedUploadedFilesArray[$i]["error"] = $uploadedFilesArray["error"][$i];
-//                    $organizedUploadedFilesArray[$i]["size"] = $uploadedFilesArray["size"][$i];
-//                }
-//            }
-//        }
-
-
-        return array_values(array_filter($organizedUploadedFilesArray));
-    }
-
-    /**
-     * Find duplicate uploaded files
-     *
-     * @param $uploadedFilesArray - An array with information about files uploaded
-     * @return array - An array without any duplicates
-     */
-    private function removeDuplicates($uploadedFilesArray) {
-        $uniqueArray = array();
-
-        foreach ($uploadedFilesArray as $uploadedFile) {
-            $unique = TRUE;
-            $numberOfUniqueFiles = count($uniqueArray);
-
-            for ($i = 0; $i < $numberOfUniqueFiles; $i++) {
-                if (md5_file($uniqueArray[$i]["tmp_name"]) === md5_file($uploadedFile["tmp_name"])) {
-                    $unique = FALSE;
-                    break;
-                }
-            }
-
-            if ($unique) {
-                array_push($uniqueArray, $uploadedFile);
-            }
-        }
-
-        return $uniqueArray;
-    }
-
-    /**
      * Add pictures into the uploadedFiles array
      *
      * @param $uploadedFilesArray - An array with information about files uploaded
      * @param $uploadedPicturesArray - An array with information about pictures uploaded
+     *
      * @return array - An array with both files and pictures uploaded
      */
     private function addPicturesToUploadedFilesArray($uploadedFilesArray, $uploadedPicturesArray) {
@@ -756,51 +661,38 @@ class PackageController extends Controller
                 if (extension_loaded('gd') && $this->getParameter('image_compression')) {
                     $image = imagecreatefrompng($tmpFile);
 
-                    imagejpeg($image, $tmpFile . "_compressed", 100);
+                    if (imagejpeg($image, $tmpFile . "_compressed", 100)) {
+                        $uploadedImage = new File($tmpFile . "_compressed");
+                    } else {
+                        throw new \Exception("Unable to compress image with gd");
+                    }
 
-                    $tmpFileName = explode("/", $tmpFile . "_compressed");
 
-                    $tmpFileToAddToArray = array(
-                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".jpeg",
-                        "type" => "image/jpeg",
-                        "tmp_name" => $tmpFile . "_compressed",
-                        "error" => 0,
-                        "size" => filesize($tmpFile . "_compressed")
-                    );
                 } else if (extension_loaded('imagick') && $this->getParameter('image_compression')) { // Image compression with imagick
-                    $image = new \Imagick();
+                    try {
+                        $image = new \Imagick();
 
-                    $image->readImage($tmpFile);
-                    $image->setImageFormat("jpeg");
-                    $image->setImageCompressionQuality(100);
-                    $image->setImageDepth(8);
-                    $image->stripImage();
-                    $image->writeImage($tmpFile . "_compressed");
+                        $image->readImage($tmpFile);
+                        $image->setImageFormat("jpeg");
+                        $image->setImageCompressionQuality(100);
+                        $image->setImageDepth(8);
+                        $image->stripImage();
+                        $image->writeImage($tmpFile . "_compressed");
 
-                    $tmpFileName = explode("/", $tmpFile . "_compressed");
-                    $tmpFileToAddToArray = array(
-                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".jpeg",
-                        "type" => "image/jpeg",
-                        "tmp_name" => $tmpFile . "_compressed",
-                        "error" => 0,
-                        "size" => filesize($tmpFile . "_compressed")
-                    );
+                        $uploadedImage = new File($tmpFile . "_compressed");
+                    } catch (\Exception $e) {
+                        throw new \Exception("Unable to compress image with imagick");
+                    }
+
                 } else {
-                    $tmpFileName = explode("/", $tmpFile);
-                    $tmpFileToAddToArray = array(
-                        "name" => $tmpFileName[count($tmpFileName) - 1] . ".png",
-                        "type" => "image/png",
-                        "tmp_name" => $tmpFile,
-                        "error" => 0,
-                        "size" => filesize($tmpFile)
-                    );
+                    $uploadedImage = new File($tmpFile);
                 }
 
-                array_push($uploadedFilesArray, $tmpFileToAddToArray);
+                array_push($uploadedFilesArray, $uploadedImage);
             }
         }
 
-        return array_values(array_filter($uploadedFilesArray));
+        return $uploadedFilesArray;
     }
 
     /**
@@ -808,12 +700,11 @@ class PackageController extends Controller
      *
      * @param $uploadedFile
      * @param $trackingNumber
-     * @param $count
      * @param $date
      *
      * @return Array = $results
      */
-    private function moveUploadedFile($uploadedFile, $trackingNumber, $count, $date) {
+    private function moveUploadedFile($uploadedFile, $trackingNumber, $date) {
         // Get the location of where the file should be uploaded to
         $dirRoot = $this->get('kernel')->getRootDir() . '/../';
 
@@ -827,15 +718,14 @@ class PackageController extends Controller
             "path" => ""
         );
 
-        if (!(empty($uploadedFile) && empty($trackingNumber) && ($count < 0) && empty($dirRoot))) {
-            if (!($this->checkUploadedFileForErrors($uploadedFile)) && ($this->checkUploadedFileForValidFileType($uploadedFile))) {
+        if (!(empty($uploadedFile) && empty($trackingNumber) && empty($dirRoot)) && (($uploadedFile instanceof UploadedFile) || $uploadedFile instanceof File)) {
+
+            if (in_array($uploadedFile->guessExtension(), ['png', 'pdf', 'jpeg', 'jpg'])) {
                 // If the number of uploaded files are higher than one, then edit the destination directory
                 $moveDir = $dirRoot . $path;
                 // If that folder doesn't exist, create it
                 if (!file_exists($moveDir)) {
                     if (!(mkdir($moveDir, 0755, true))) {
-                        $folderWithoutRootDirectory = strstr($moveDir, '/upload');
-                        $this->logger->error('Unable to create ...' . $folderWithoutRootDirectory . ' on the server');
                         return FALSE;
                     }
                 }
@@ -853,53 +743,25 @@ class PackageController extends Controller
 
                 // Add filename to results
                 $uploadedFileResults["filename"] = $filename;
+                // Add extension to results
+                if ($uploadedFile->guessExtension() === "jpeg") {
+                    $uploadedFileResults["extension"] = "jpg";
+                } else {
+                    $uploadedFileResults["extension"] = $uploadedFile->guessExtension();
+                }
+
+                
+                /*
+                 * Move the uploaded file to the correct directory.
+                 */
+                try {
+                    $uploadedFile->move($moveDir, $filename);
+                } catch (\Exception $e) {
+                    return FALSE;
+                }
 
                 // Attach the folder directory to the file name
                 $moveToDir = $moveDir . $filename;
-
-                /*
-                 * Move the uploaded file to the correct directory.
-                 * If the file is an uploaded file (VIA POST), then move it.
-                 * Else if it's an image, then manually move it and change permissions on the image to read-write, read, read.
-                 */
-                if (is_uploaded_file($uploadedFile["tmp_name"])) {
-                    if (!(move_uploaded_file($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
-                        return FALSE;
-                    }
-                } else if (($uploadedFile["type"] == "image/png") || ($uploadedFile["type"] == "image/jpeg")) {
-                    if (!(rename($uploadedFile["tmp_name"], $moveToDir))) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
-                        return FALSE;
-                    }
-
-                    if (!chmod($moveToDir, 0644)) {
-                        $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                        $this->logger->error('Unable to move uploaded file(s) from temporary folder to ...' . $folderWithoutRootDirectory);
-                        return FALSE;
-                    }
-                }
-
-                // Add extension to results
-                if (($uploadedFile["type"] == "image/png")) {
-                    $uploadedFileResults["extension"] = "png";
-                } else if ($uploadedFile["type"] == "image/jpeg") {
-                    $uploadedFileResults["extension"] = "jpg";
-                } else if (($uploadedFile["type"] == "application/pdf")) {
-                    $uploadedFileResults["extension"] = "pdf";
-                } else {
-                    return FALSE;
-                }
-
-
-                // Existence of file
-                if (!file_exists($moveToDir)) {
-                    $folderWithoutRootDirectory = strstr($moveToDir, '/upload');
-                    $this->logger->error('The file that got uploaded does not exist at location ...' . $folderWithoutRootDirectory);
-                    return FALSE;
-                }
 
                 $uploadedFileResults["md5"] = md5_file($moveToDir);
 
@@ -912,151 +774,47 @@ class PackageController extends Controller
         return FALSE;
     }
 
-    /**
-     * Check uploaded file from form for errors
-     *
-     * @param $uploadedFile
-     * @return Boolean
-     */
-    private function checkUploadedFileForErrors($uploadedFile) {
-        // Check to see if there are any errors with the uploaded file
-        if ($uploadedFile["error"] > 0 ) {
-            // If there's an error, return the error to the page and log the error
-            switch ($uploadedFile["error"]) {
-                case UPLOAD_ERR_INI_SIZE:
-                    $this->logger->error('Error: The file is too big: (ERR_CODE: ' . $uploadedFile["error"] . ')');
+    private function generateFileName($moveDir, $trackingNumber, $uploadedFile, $count) {
+        if ($uploadedFile instanceof UploadedFile || $uploadedFile instanceof File) {
+            $filename = $trackingNumber;
 
-                    break;
-                case UPLOAD_ERR_FORM_SIZE:
-                    $this->logger->error('Error: The form submitted is too big: (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_PARTIAL:
-                    $this->logger->error('Error: The file was partially uploaded. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_NO_FILE:
-                    $this->logger->error('Error:  No file was uploaded. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    $this->logger->error('Error: Missing temporary folder for upload. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_CANT_WRITE:
-                    $this->logger->error('Error: Can not save file onto server. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                case UPLOAD_ERR_EXTENSION:
-                    $this->logger->error('Error: Invalid extension. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
-                default:
-                    $this->logger->error('Error: Invalid document. (ERR_CODE: ' . $uploadedFile["error"] . ')');
-
-                    break;
+            if ($count > 0) {
+                $filename .= '_' . $count;
             }
 
-            return TRUE;
-        }
+            /*
+             * Set up the directory to where the file is going to move to and
+             * change the filename of the uploaded file to the type of file it is
+             * PDF = "trackingnumber".pdf
+             * PNG = "trackingnumber".png
+             * JPEG = "trackingnumber".jpeg
+             *
+             * Will need to be edited for other files, such as .tiff or .gif
+             */
+            switch ($uploadedFile->getMimeType()){
+                case "application/pdf":
+                    $filename .= ".pdf";
+                    break;
+                case "image/png":
+                    $filename .= ".png";
+                    break;
+                case "image/jpeg":
+                    $filename .= ".jpg";
+                    break;
+                default:
+                    return FALSE;
+            }
 
-        return FALSE;
-    }
+            if (file_exists($moveDir . $filename)) {
+                $count++;
+                return $this->generateFileName($moveDir, $trackingNumber, $uploadedFile, $count);
+            }
 
-    /**
-     * Check the uploaded file to see if its a valid file type
-     *
-     * @param $uploadedFile
-     * @return Boolean
-     */
-    private function checkUploadedFileForValidFileType($uploadedFile) {
-        // Files MIME types that are allowed
-        $allowedFiles = array(
-            "application/pdf",
-            "image/png",
-            "image/jpeg"
-        );
-
-        // Validate files base on MIME types on server side
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-
-        // Check to see if the file type is allowed to be uploaded
-        if (!(in_array(finfo_file($finfo, $uploadedFile["tmp_name"]), $allowedFiles))) {
+            return $filename;
+        } else {
             return FALSE;
         }
 
-        return TRUE;
-    }
-
-    public function removeDuplicatesFromServer($packingSlipString) {
-        // Get the location of where the files are
-        $dirRoot = $this->get('kernel')->getRootDir() . '/../';
-
-        $packingSlipsArray = explode(',', $packingSlipString);
-
-        $numberOfPackingSlips = count($packingSlipsArray);
-
-        for ($i = 0; $i < $numberOfPackingSlips; $i++) {
-            $packingSlip1 = $dirRoot . $packingSlipsArray[$i];
-
-            for ($j = $i + 1; $j < $numberOfPackingSlips; $j++) {
-                $packingSlip2 = $dirRoot . $packingSlipsArray[$j];
-
-                if (file_exists($packingSlip1) && file_exists($packingSlip2)) {
-                    if (md5_file($packingSlip1) === md5_file($packingSlip2)) {
-                        unlink($packingSlip2);
-                    }
-                }
-            }
-        }
-
-        for ($i = 0; $i < $numberOfPackingSlips; $i++) {
-            $packingSlip1 = $dirRoot . $packingSlipsArray[$i];
-
-            if (!file_exists($packingSlip1)) {
-                unset($packingSlipsArray[$i]);
-            }
-        }
-
-        return array_values($packingSlipsArray);
-    }
-
-    private function generateFileName($moveDir, $trackingNumber, $uploadedFile, $count) {
-        $filename = $trackingNumber;
-
-        if ($count > 0) {
-            $filename .= '_' . $count;
-        }
-
-        /*
-         * Set up the directory to where the file is going to move to and
-         * change the filename of the uploaded file to the type of file it is
-         * PDF = "trackingnumber".pdf
-         * PNG = "trackingnumber".png
-         * JPEG = "trackingnumber".jpeg
-         *
-         * Will need to be edited for other files, such as .tiff or .gif
-         */
-        switch ($uploadedFile["type"]){
-            case "application/pdf":
-                $filename .= ".pdf";
-                break;
-            case "image/png":
-                $filename .= ".png";
-                break;
-            case "image/jpeg":
-                $filename .= ".jpg";
-                break;
-            default:
-                return FALSE;
-        }
-
-        if (file_exists($moveDir . $filename)) {
-            $count++;
-            return $this->generateFileName($moveDir, $trackingNumber, $uploadedFile, $count);
-        }
-
-        return $filename;
     }
 
     public function generateDeletedFileName($path, $file, $count) {

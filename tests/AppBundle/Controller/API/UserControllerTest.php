@@ -126,7 +126,7 @@ class UserControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotEmpty($successResponse['object']);
-        $this->assertCount(2, $successResponse['object']);
+        $this->assertCount(4, $successResponse['object']);
         $this->assertEquals("anon.", $successResponse['object'][0]['username']);
 
         // Assert error

@@ -439,7 +439,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('object', $searchPackage);
         $this->assertNotEmpty($searchPackage['object']);
         $this->assertEquals('success', $searchPackage['result']);
-        $this->assertCount(2, $searchPackage['object']);
+        $this->assertCount(4, $searchPackage['object']);
 
         // Test for errors
         $client->request('GET', '/packages/search', array(
@@ -739,7 +739,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('result', $packagesResponse);
         $this->assertArrayHasKey('message', $packagesResponse);
         $this->assertArrayHasKey('object', $packagesResponse);
-        $this->assertCount(2, $packagesResponse['object']);
+        $this->assertCount(4, $packagesResponse['object']);
         $this->assertEquals('success', $packagesResponse['result']);
 
         // Assert that getting packages for any other same day yields 0 packages

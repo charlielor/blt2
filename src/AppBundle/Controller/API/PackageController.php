@@ -635,6 +635,8 @@ class PackageController extends Controller
      * @param $uploadedFilesArray - An array with information about files uploaded
      * @param $uploadedPicturesArray - An array with information about pictures uploaded
      *
+     * @throws $e - Either can't compress with gd or imagick
+     *
      * @return array - An array with both files and pictures uploaded
      */
     private function addPicturesToUploadedFilesArray($uploadedFilesArray, $uploadedPicturesArray) {
@@ -666,7 +668,6 @@ class PackageController extends Controller
                     } else {
                         throw new \Exception("Unable to compress image with gd");
                     }
-
 
                 } else if (extension_loaded('imagick') && $this->getParameter('image_compression')) { // Image compression with imagick
                     try {

@@ -39,6 +39,8 @@ class PackingSlipControllerTest extends WebTestCase {
     }
 
     public function testDownloadRoute() {
+        echo __METHOD__ . "\n";
+        
         $client = static::createClient();
 
         $client->request("GET", '/download/' . $this->dateFolder . '/test/test1_copy.pdf');
@@ -63,6 +65,8 @@ class PackingSlipControllerTest extends WebTestCase {
     }
 
     public function testPreviewRoute() {
+        echo __METHOD__ . "\n";
+
         $client = static::createClient();
 
         $client->request("GET", '/preview/' . $this->dateFolder . '/test/test1_copy.pdf');

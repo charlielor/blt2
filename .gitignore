@@ -164,7 +164,6 @@ upload/*
 web/css/*
 web/js/*
 web/images/*
-!web/fonts/
 !upload/.gitkeep
 !web/css/blocks/
 !web/css/blt2/
@@ -180,4 +179,5 @@ web/images/*
 !web/js/DataTables/
 !web/js/select2Blocks/
 !web/js/bootstrap.min.js
+!web/images/spinner.gif
 

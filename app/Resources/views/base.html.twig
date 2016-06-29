@@ -6,7 +6,7 @@
         <title>{% block title %}{{ department|first|upper }}LT{% endblock %}</title>
         {% block stylesheets %}
             {% stylesheets
-            'css/bootstrap.css'
+            'css/bootstrap.min.css'
             'css/jquery-ui/jquery-ui.min.css'
             output="css/compiled/blt.css" filter="cssrewrite"%}
             <link rel="stylesheet" href="{{ asset_url }}" />
@@ -45,7 +45,7 @@
             {% javascripts
             'components/jquery/jquery.min.js'
             'components/jquery-ui/jquery-ui.min.js'
-            'js/bootstrap.js'
+            'js/bootstrap.min.js'
             output="js/compiled/blt.js" %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}

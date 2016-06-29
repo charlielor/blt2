@@ -26,6 +26,8 @@ class LoadVendor extends AbstractFixture implements OrderedFixtureInterface, Con
         $fixtureVendor = new Vendor("fixtureVendor", "anon.");
         $fixtureVendor2 = new Vendor("fixtureVendor2", "anon.");
 
+        $fixtureVendor2->setEnabled(false, "anon.");
+
         $this->addReference("fixtureVendor", $fixtureVendor);
         $this->addReference("fixtureVendor2", $fixtureVendor2);
 

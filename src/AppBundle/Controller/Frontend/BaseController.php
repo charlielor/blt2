@@ -10,6 +10,7 @@ class BaseController extends Controller {
      * @Route("/logout", name="logout")
      */
     public function logoutAction() {
-        return $this->redirect("https://biochem.wisc.edu");
+        // Put a redirection here for logout
+        return $this->redirect("/");
     }
 }

@@ -349,7 +349,7 @@ class ReportingController extends Controller
                             'object' => []
                         );
 
-                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                        return new JsonResponse($results);
 
                 }
 
@@ -507,6 +507,14 @@ class ReportingController extends Controller
                         }
 
                         break;
+                    default:
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Unable to determine request type',
+                            'object' => []
+                        );
+
+                        return new JsonResponse($results);
                 }
                 break;
             case 'p':
@@ -565,7 +573,13 @@ class ReportingController extends Controller
                         }
                         break;
                     default:
-                        break;
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Unable to determine request type',
+                            'object' => []
+                        );
+
+                        return new JsonResponse($results);
                 }
 
                 break;
@@ -628,7 +642,13 @@ class ReportingController extends Controller
                         }
                         break;
                     default;
-                        break;
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Unable to determine request type',
+                            'object' => []
+                        );
+
+                        return new JsonResponse($results);
                 }
 
                 break;
@@ -639,7 +659,7 @@ class ReportingController extends Controller
                     'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
         }
 
         // Get the results and filter them

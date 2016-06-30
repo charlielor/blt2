@@ -26,31 +26,32 @@ The same instructions for setting up BLT2 are located in the README.md
     ```
     $ cd blt2
     ```
-4. Add parameters to database when asked
-5. Create database using Doctrine
+4. Set the Symfony environment to prod
 
     ```
-    $ php bin/console doctrine:database:create
-    $ php bin/console doctrine:schema:update --force
+    export SYMFONY_ENV=prod
     ```
-6. Allow _www|www to [write](http://symfony.com/doc/current/book/installation.html#checking-symfony-application-configuration-and-setup) to upload and var folders
-7. Set the Symfony environment to prod
-
-    ```
-    SYMFONY_ENV=prod
-    ```
-8. Download and install [composer](https://getcomposer.org/download/)
-9. Run composer
+5. Download and install [composer](https://getcomposer.org/download/)
+6. Run composer
 
     ```
     $ php composer.phar install --no-dev --optimize-autoloader
     ```
+7. Add parameters for database when asked
+8. Update database using Doctrine
+
+    ```
+    $ php bin/console doctrine:schema:update --force
+    ```
+9. Allow _www|www to [write](http://symfony.com/doc/current/book/installation.html#checking-symfony-application-configuration-and-setup) to upload and var folders
 
 ## Tips before/after installation
 ### Before
 * Make sure that the web server has met all requirements needed by Symfony
+* Make sure to have git installed
 * Have php-xml module installed
-* Ensure that the MySQL user that BLT2 is using to insert/select/update is granted the following: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, LOCK TABLES, INDEX 
+* Ensure that the MySQL user that BLT2 is using to insert/select/update is granted the following: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, LOCK TABLES, INDEX
+* Have the database already created in MySQL (tables will be updated with schema update)
 
 ### After
 * Make sure the DocumentRoot in your apache config file points to ```/var/www/html/blt2/web```

@@ -13,9 +13,9 @@ There are two updates that can be done for BLT2: BLT2 specific updates or Symfon
 2. Clear caches and install/dump assets
 
     ```
-    $ php bin/console cache:clear --env=prod --no-debug
-    $ php bin/console assets:install --env=prod --no-debug
-    $ php bin/console assetic:dump --env=prod  --no-debug
+    $ php bin/console cache:clear --env=prod
+    $ php bin/console assets:install --env=prod
+    $ php bin/console assetic:dump --env=prod
     ```
 
 ## Symfony (and related vendors) Update

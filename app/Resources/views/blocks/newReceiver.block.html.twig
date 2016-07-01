@@ -6,26 +6,22 @@
                     <h4 class="modal-title" id="newReceiverTitle">Add a new Receiver</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <label for="newReceiverName" class="control-label col-md-4">Receiver Name:</label>
-                                <div id="newReceiverNameDiv" class="col-md-6">
-                                    <input type="text" id="newReceiverName" class="form-control" placeholder="Ex. Office" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="newReceiverRoomNumber" class="control-label col-md-4">Receiver Room Number:</label>
-                                <div id="newReceiverRoomNumberDiv" class="col-md-6">
-                                    <input type="text" id="newReceiverRoomNumber" class="form-control" placeholder="Ex. 111" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label id="newReceiverLabel" class="col-md-10 col-md-offset-1 label label-primary">
-                                    New Receiver name must be less than 50 characters and room number less than 6
-                                </label>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="newReceiverName" class="control-label col-md-4">Receiver Name:</label>
+                            <div id="newReceiverNameDiv" class="col-md-6">
+                                <input type="text" id="newReceiverName" class="form-control" placeholder="Ex. Office" />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="newReceiverRoomNumber" class="control-label col-md-4">Receiver Room Number:</label>
+                            <div id="newReceiverRoomNumberDiv" class="col-md-6">
+                                <input type="text" id="newReceiverRoomNumber" class="form-control" placeholder="Ex. 111" />
+                            </div>
+                        </div>
+                        <label id="newReceiverLabel" class="label label-primary center-block">
+                            New Receiver name must be unique
+                        </label>
                     </div>
                 </div>
                 <div class="modal-footer">

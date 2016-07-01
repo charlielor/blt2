@@ -125,7 +125,7 @@ $(document).ready(function() {
         // Clear all errors
         newReceiverLabel.removeClass("label-danger");
         newReceiverLabel.addClass("label-primary");
-        newReceiverLabel.text("New Receiver name must be less than 50 characters and room number less than 6");
+        newReceiverLabel.text("New Receiver name must be unique");
 
         newReceiverNameDiv.removeClass("has-error");
         newReceiverRoomNumberDiv.removeClass("has-error");

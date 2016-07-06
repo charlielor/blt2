@@ -100,7 +100,7 @@ $(document).ready(function() {
         // Clear all errors
         newVendorLabel.removeClass("label-danger");
         newVendorLabel.addClass("label-primary");
-        newVendorLabel.text("New Vendor Name must be less than 50 characters");
+        newVendorLabel.text("New Vendor Name must be unique");
 
         newVendorNameDiv.removeClass("has-error");
     }

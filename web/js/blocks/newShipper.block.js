@@ -113,7 +113,7 @@ $(document).ready(function() {
         // Clear all errors
         newShipperLabel.removeClass("label-danger");
         newShipperLabel.addClass("label-primary");
-        newShipperLabel.text("New Shipper Name must be less than 50 characters");
+        newShipperLabel.text("New Shipper Name must be unique");
 
         newShipperNameDiv.removeClass("has-error");
     }

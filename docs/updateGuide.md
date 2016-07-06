@@ -35,3 +35,16 @@ There are two updates that can be done for BLT2: BLT2 specific updates or Symfon
     ```
     $ php composer.phar update
     ``` 
+
+## composer.json
+In the root of blt2, there is a file named composer.json that holds all vendors, their requirements and what versions they can update to.
+
+    "require": {
+            "php": ">=5.5.9",
+            "symfony/symfony": "3.*,<3.4.*",
+            ... 
+     },
+
+In this example, PHP 5.5.9 and beyond is required and Symfony 3.* to 3.4.* are required. As of this writing, Symfony is at 3.1.1 and will be updated until it reaches 3.4.*. Symfony 3.4 is a long-term release and [will have support for until 2021](http://symfony.com/doc/current/contributing/community/releases.html#long-term-support-versions).
+
+By running ```$ php composer.phar update```, you are invoking each vendor to update itself to its latest version specified in the composer.json file. Every vendor under "require" and "require-dev" (if under dev environment) except php will be updated until it has reached its maximum version.

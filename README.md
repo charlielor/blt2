@@ -28,15 +28,15 @@ BLT2 is not tied to the Department of Biochemistry at the University of Wisconsi
 * Using LESS with Bootstrap breakpoints to help with templates for desktop/mobile devices
 
 ## Docs
-[Setup](setupGuide.md)
+[Setup](docs/setupGuide.md)
 
-[Update](updateGuide.md)
+[Update](docs/updateGuide.md)
 
-[Example Implementation](uwMadisonBiochemistryImplementation.md)
+[Example Implementation](docs/uwMadisonBiochemistryImplementation.md)
 
-[Developer](developersGuide.md)
+[Developer](docs/developersGuide.md)
 
-[User](usersGuide.md)
+[User](docs/usersGuide.md)
 
 ## For anyone who wants to use some sort of authentication/authorization system
 1. Fork project

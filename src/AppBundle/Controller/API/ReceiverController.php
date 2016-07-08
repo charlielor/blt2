@@ -303,7 +303,7 @@ class ReceiverController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for receivers that is like terms
+        // Set up the query for the database for receivers that is the term
         $query = $em->createQuery(
             'SELECT r FROM AppBundle:Receiver r
             WHERE r.name = :term
@@ -350,12 +350,8 @@ class ReceiverController extends Controller
         // Set up query the database for receivers that is like terms
         $query = $em->createQuery(
             'SELECT r FROM AppBundle:Receiver r
-            WHERE r.name LIKE :term
-            AND r.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE r.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $receiver = $query->getResult();

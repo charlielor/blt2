@@ -341,12 +341,8 @@ class ShipperController extends Controller
         // Set up query the database for shippers that is like term
         $query = $em->createQuery(
             'SELECT s FROM AppBundle:Shipper s
-            WHERE s.name LIKE :term
-            AND s.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE s.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $shipper = $query->getResult();

@@ -360,7 +360,7 @@ class VendorControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotEmpty($successResponse['object']);
-        $this->assertCount(1, $successResponse['object']);
+        $this->assertCount(2, $successResponse['object']);
 
         // Assert that given entity wasn't found
         $client->request('GET', '/vendors/like', array(

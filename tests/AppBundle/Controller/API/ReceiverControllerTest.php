@@ -358,7 +358,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotEmpty($successResponse['object']);
-        $this->assertCount(2, $successResponse['object']);
+        $this->assertCount(3, $successResponse['object']);
 
         // Assert that given entity wasn't found
         $client->request('GET', '/receivers/like', array(

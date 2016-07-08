@@ -343,12 +343,8 @@ class VendorController extends Controller
         // Set up query the database for vendors that is like term
         $query = $em->createQuery(
             'SELECT v FROM AppBundle:Vendor v
-            WHERE v.name LIKE :term
-            AND v.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE v.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $vendor = $query->getResult();

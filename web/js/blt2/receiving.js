@@ -169,20 +169,18 @@ $(document).ready(function() {
             $.get('packages/search', {'term': trackingNumber})
                 .done(function(data) {
                     if (data['result'] == 'success') {
-                        if (data['object'].length !== 0) {
-                            window.existingPackageObject = data['object'][0];
-                            window.newPackage = false;
+                        window.existingPackageObject = data['object'][0];
+                        window.newPackage = false;
 
-                            $("#existingPackage").text(window.existingPackageObject['trackingNumber'] + " already exists");
+                        $("#existingPackage").text(window.existingPackageObject['trackingNumber'] + " already exists");
 
-                            packageAlreadyExistsModal.modal("show");
-                        } else { // If searching for package with tracking number doesn't return anything
-                            window.newPackage = true;
+                        packageAlreadyExistsModal.modal("show");
+                    } else {
+                        window.newPackage = true;
 
-                            $("#packageModal").modal({
-                                backdrop: "static"
-                            });
-                        }
+                        $("#packageModal").modal({
+                            backdrop: "static"
+                        });
                     }
                 });
         }

@@ -155,20 +155,20 @@ $(document).ready(function() {
                             // Close the pickup results dialog
                             pickupPackageResultsModal.modal('hide');
 
-                            n = noty({
-                                layout: "top",
-                                theme: "bootstrapTheme",
-                                type: "success",
-                                text: results['message'],
-                                maxVisible: 2,
-                                timeout: 2000,
-                                killer: true,
-                                buttons: false
-                            });
+                            var pickedUpPackage = results['object'];
 
-                            // If there are more than one package for this tracking number, then alert the user
-                            if (numberOfPackages > 1) {
-                                alert("There are " + numberOfPackages + " packages for this tracking number");
+                            // If there are more than one package, alert the user that there are more more than one package
+                            if (pickedUpPackage.numberOfPackages > 1) {
+                                $("#moreThanOnePackages").text('There are ' + pickedUpPackage.numberOfPackages + ' packages for ' + pickedUpPackage.trackingNumber);
+
+                                $("#moreThanOnePackagesModal").modal("show");
+
+                                $("#moreThanOnePackagesModal").on("hide.bs.modal", function() {
+                                    displaySuccess(results['message']);
+                                });
+
+                            } else {
+                                displaySuccess(results['message']);
                             }
 
                         } else {
@@ -198,6 +198,19 @@ $(document).ready(function() {
             $("#userWhoPickedUpDiv").addClass("has-error");
         }
 
+    }
+
+    function displaySuccess(message) {
+        n = noty({
+            layout: "top",
+            theme: "bootstrapTheme",
+            type: "success",
+            text: message,
+            maxVisible: 2,
+            timeout: 2000,
+            killer: true,
+            buttons: false
+        });
     }
 
     function clearErrors() {

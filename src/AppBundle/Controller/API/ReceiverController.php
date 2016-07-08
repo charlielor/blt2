@@ -316,12 +316,21 @@ class ReceiverController extends Controller
         // Run query and save it
         $receiver = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($receiver) . ' Receiver',
-            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-        );
+        if (empty($receiver)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Receiver with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -351,12 +360,21 @@ class ReceiverController extends Controller
         // Run query and save it
         $receiver = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-        );
+        if (empty($receiver)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Receiver(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -371,14 +389,12 @@ class ReceiverController extends Controller
         $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
 
         // Get the enabled Receivers
-        $receivers = $receiverRepository->findBy([
-            "enabled" => 1
-        ]);
+        $receivers = $receiverRepository->findAll();
 
         // Set up the response
         $results = array(
             'result' => 'success',
-            'message' => 'Successfully retrieved all enabled Receivers',
+            'message' => 'Successfully retrieved all Receivers',
             'object' => json_decode($this->get('serializer')->serialize($receivers, 'json'))
         );
 

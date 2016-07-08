@@ -91,23 +91,18 @@ $(document).ready(function() {
                         addError("input", results['message']);
                         pickupTrackingNumber.focus();
                     }  else {
-                        if (results['object'].length < 1) {
-                            addError("input", "No package given " + ptn);
-                            pickupTrackingNumber.focus();
-                        } else {
-                            // Add the results to a datatable
-                            for (var i = 0; i < results['object'].length; i++) {
-                                dataTablePickUp.row.add(results['object'][i]).draw();
-                            }
-
-                            // Close the dialog box
-                            pickupPackageModal.modal('hide');
-
-                            // Open the pickup results dialog box
-                            pickupPackageResultsModal.modal({
-                                backdrop: "static"
-                            });
+                        // Add the results to a datatable
+                        for (var i = 0; i < results['object'].length; i++) {
+                            dataTablePickUp.row.add(results['object'][i]).draw();
                         }
+
+                        // Close the dialog box
+                        pickupPackageModal.modal('hide');
+
+                        // Open the pickup results dialog box
+                        pickupPackageResultsModal.modal({
+                            backdrop: "static"
+                        });
                     }
                 })
                 .fail(function() {

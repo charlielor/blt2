@@ -52,12 +52,21 @@ class UserController extends Controller {
         // Run query and save it
         $users = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($users) . ' User',
-            'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
-        );
+        if (empty($users)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Retrieved User with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        }
 
         return new JsonResponse($results);
     }
@@ -82,12 +91,21 @@ class UserController extends Controller {
         // Run query and save it
         $users = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
-        );
+        if (empty($users)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No User(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        }
 
         return new JsonResponse($results);
     }

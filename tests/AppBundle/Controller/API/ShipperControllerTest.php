@@ -70,9 +70,7 @@ class ShipperControllerTest extends WebTestCase
         $duplicateResponse = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('result', $duplicateResponse);
         $this->assertEquals('error', $duplicateResponse['result']);
-
         $this->assertArrayHasKey('message', $duplicateResponse);
-
         $this->assertArrayHasKey('object', $duplicateResponse);
         $this->assertEmpty($duplicateResponse['object']);
 
@@ -94,9 +92,7 @@ class ShipperControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $dupDisabledResponse);
         $this->assertEquals('error', $dupDisabledResponse['result']);
-
         $this->assertArrayHasKey('message', $dupDisabledResponse);
-
         $this->assertArrayHasKey('object', $dupDisabledResponse);
         $this->assertEmpty($dupDisabledResponse['object']);
     }
@@ -149,10 +145,8 @@ class ShipperControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
-
+        $this->assertEquals('error', $errorResponse['result']);
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }
@@ -225,9 +219,7 @@ class ShipperControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertEquals('error', $errorResponse['result']);
-
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }
@@ -275,9 +267,7 @@ class ShipperControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $noIdErrorResponse);
         $this->assertEquals('error', $noIdErrorResponse['result']);
-
         $this->assertArrayHasKey('message', $noIdErrorResponse);
-
         $this->assertArrayHasKey('object', $noIdErrorResponse);
         $this->assertEmpty($noIdErrorResponse['object']);
     }
@@ -304,9 +294,7 @@ class ShipperControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $enabledResponse);
         $this->assertEquals('success', $enabledResponse['result']);
-
         $this->assertArrayHasKey('message', $enabledResponse);
-
         $this->assertArrayHasKey('object', $enabledResponse);
         $this->assertNotEmpty($enabledResponse['object']);
 
@@ -327,9 +315,7 @@ class ShipperControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $noIdErrorResponse);
         $this->assertEquals('error', $noIdErrorResponse['result']);
-
         $this->assertArrayHasKey('message', $noIdErrorResponse);
-
         $this->assertArrayHasKey('object', $noIdErrorResponse);
         $this->assertEmpty($noIdErrorResponse['object']);
     }
@@ -379,10 +365,8 @@ class ShipperControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
-
+        $this->assertEquals('error', $errorResponse['result']);
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }
@@ -408,9 +392,7 @@ class ShipperControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $deletedResponse);
         $this->assertEquals('success', $deletedResponse['result']);
-
         $this->assertArrayHasKey('message', $deletedResponse);
-
         $this->assertArrayHasKey('object', $deletedResponse);
         $this->assertNotEmpty($deletedResponse['object']);
 
@@ -430,9 +412,7 @@ class ShipperControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertEquals('error', $errorResponse['result']);
-
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }

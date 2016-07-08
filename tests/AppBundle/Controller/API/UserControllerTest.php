@@ -90,7 +90,7 @@ class UserControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
+        $this->assertEquals('error', $errorResponse['result']);
 
         $this->assertArrayHasKey('message', $errorResponse);
 
@@ -121,9 +121,7 @@ class UserControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $successResponse);
         $this->assertEquals('success', $successResponse['result']);
-
         $this->assertArrayHasKey('message', $successResponse);
-
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotEmpty($successResponse['object']);
         $this->assertCount(4, $successResponse['object']);
@@ -137,10 +135,8 @@ class UserControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
-
+        $this->assertEquals('error', $errorResponse['result']);
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }

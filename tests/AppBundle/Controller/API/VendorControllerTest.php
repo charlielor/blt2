@@ -149,7 +149,7 @@ class VendorControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
+        $this->assertEquals('error', $errorResponse['result']);
 
         $this->assertArrayHasKey('message', $errorResponse);
 
@@ -379,7 +379,7 @@ class VendorControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
+        $this->assertEquals('error', $errorResponse['result']);
 
         $this->assertArrayHasKey('message', $errorResponse);
 

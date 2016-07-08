@@ -134,14 +134,13 @@ $(document).ready(function() {
                     for (var i = 0; i < response['object'].length; i++) {
                         dataTable.row.add(response['object'][i]).draw();
                     }
-
-                    // Change the button to the date to the selected date
-                    selectDateButton.text(selectedDate);
                 }
             });
 
             // Close the modal enclosing the datepicker
             datepickerModal.modal('hide');
+
+            selectDateButton.text(selectedDate);
 
             hideOrShowGoToTodayButton();
         }
@@ -157,29 +156,29 @@ $(document).ready(function() {
     // Will only appear if the date on the current page is different from the actual current date
     goToTodayButton.on("click", function() {
         var date = {
-            date: "now"
+            dateBegin: "now",
+            dateEnd: "now"
         };
 
         dataTable.clear().draw();
 
-        $.get('/getPackagesForDate', date, function(response) {
+        $.get('/packages', date, function(response) {
             if (response['result'] == 'success') {
                 for (var i = 0; i < response['object'].length; i++) {
                     dataTable.row.add(response['object'][i]).draw();
                 }
-
-                var month = (currentDate.getMonth() + 1);
-                month = month < 10 ? '0' + month : month;
-
-                var date = currentDate.getDate();
-                date = date < 10 ? '0' + date : date;
-
-                selectDateButton.text(month + '/' + date + '/' + currentDate.getFullYear());
-
-                hideOrShowGoToTodayButton();
             }
-
         });
+
+        var month = (currentDate.getMonth() + 1);
+        month = month < 10 ? '0' + month : month;
+
+        var day = currentDate.getDate();
+        day = day < 10 ? '0' + day : day;
+
+        selectDateButton.text(month + '/' + day + '/' + currentDate.getFullYear());
+
+        hideOrShowGoToTodayButton();
     });
 
     /**
@@ -188,6 +187,8 @@ $(document).ready(function() {
     function hideOrShowGoToTodayButton() {
         // Get the date from the date picker button
         var dateOnDatePickerButton = new Date(selectDateButton.text());
+        console.log(selectDateButton.text());
+        console.log(currentDate);
 
         // If it's not the current date, show the 'Go to Today' button, else hide the button
         if (!((currentDate.getFullYear() === dateOnDatePickerButton.getFullYear()) &&

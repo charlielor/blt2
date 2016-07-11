@@ -294,7 +294,7 @@ class VendorController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for vendors that is like term
+        // Set up query the database for vendors that is the term
         $query = $em->createQuery(
             'SELECT v FROM AppBundle:Vendor v
             WHERE v.name = :term
@@ -307,12 +307,23 @@ class VendorController extends Controller
         // Run query and save it
         $vendor = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($vendor) . ' Vendor',
-            'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-        );
+        if (empty($vendor)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Vendor with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -332,22 +343,27 @@ class VendorController extends Controller
         // Set up query the database for vendors that is like term
         $query = $em->createQuery(
             'SELECT v FROM AppBundle:Vendor v
-            WHERE v.name LIKE :term
-            AND v.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE v.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $vendor = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($vendor) . ' Vendor(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-        );
+        if (empty($vendor)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Vendor(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($vendor) . ' Vendor(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -362,14 +378,12 @@ class VendorController extends Controller
         $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
 
         // Get all enabled Vendors
-        $vendors = $vendorRepository->findBy([
-            "enabled" => true
-        ]);
+        $vendors = $vendorRepository->findAll();
 
         // Set up the response
         $results = array(
             'result' => 'success',
-            'message' => 'Successfully retrieved all enabled Vendors',
+            'message' => 'Successfully retrieved all Vendors',
             'object' => json_decode($this->get('serializer')->serialize($vendors, 'json'))
         );
 

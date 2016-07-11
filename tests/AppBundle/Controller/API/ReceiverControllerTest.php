@@ -153,10 +153,8 @@ class ReceiverControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
-
+        $this->assertEquals('error', $errorResponse['result']);
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }
@@ -231,9 +229,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertEquals('error', $errorResponse['result']);
-
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }
@@ -281,9 +277,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $noIdErrorResponse);
         $this->assertEquals('error', $noIdErrorResponse['result']);
-
         $this->assertArrayHasKey('message', $noIdErrorResponse);
-
         $this->assertArrayHasKey('object', $noIdErrorResponse);
         $this->assertEmpty($noIdErrorResponse['object']);
     }
@@ -310,9 +304,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $enabledResponse);
         $this->assertEquals('success', $enabledResponse['result']);
-
         $this->assertArrayHasKey('message', $enabledResponse);
-
         $this->assertArrayHasKey('object', $enabledResponse);
         $this->assertNotEmpty($enabledResponse['object']);
 
@@ -366,7 +358,7 @@ class ReceiverControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $successResponse);
         $this->assertArrayHasKey('object', $successResponse);
         $this->assertNotEmpty($successResponse['object']);
-        $this->assertCount(2, $successResponse['object']);
+        $this->assertCount(3, $successResponse['object']);
 
         // Assert that given entity wasn't found
         $client->request('GET', '/receivers/like', array(
@@ -385,10 +377,8 @@ class ReceiverControllerTest extends WebTestCase
         $errorResponse = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('success', $errorResponse['result']);
-
+        $this->assertEquals('error', $errorResponse['result']);
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }
@@ -436,9 +426,7 @@ class ReceiverControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $errorResponse);
         $this->assertEquals('error', $errorResponse['result']);
-
         $this->assertArrayHasKey('message', $errorResponse);
-
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
     }

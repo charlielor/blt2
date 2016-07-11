@@ -303,7 +303,7 @@ class ReceiverController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for receivers that is like terms
+        // Set up the query for the database for receivers that is the term
         $query = $em->createQuery(
             'SELECT r FROM AppBundle:Receiver r
             WHERE r.name = :term
@@ -316,12 +316,21 @@ class ReceiverController extends Controller
         // Run query and save it
         $receiver = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($receiver) . ' Receiver',
-            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-        );
+        if (empty($receiver)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Receiver with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -341,22 +350,27 @@ class ReceiverController extends Controller
         // Set up query the database for receivers that is like terms
         $query = $em->createQuery(
             'SELECT r FROM AppBundle:Receiver r
-            WHERE r.name LIKE :term
-            AND r.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE r.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $receiver = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-        );
+        if (empty($receiver)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Receiver(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -371,14 +385,12 @@ class ReceiverController extends Controller
         $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
 
         // Get the enabled Receivers
-        $receivers = $receiverRepository->findBy([
-            "enabled" => 1
-        ]);
+        $receivers = $receiverRepository->findAll();
 
         // Set up the response
         $results = array(
             'result' => 'success',
-            'message' => 'Successfully retrieved all enabled Receivers',
+            'message' => 'Successfully retrieved all Receivers',
             'object' => json_decode($this->get('serializer')->serialize($receivers, 'json'))
         );
 

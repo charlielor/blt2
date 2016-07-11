@@ -159,6 +159,10 @@ sftp-config.json
 # Notepad++ backups #
 *.bak
 
+
+### phpDocumentor.phar
+/phpDocumentor.phar
+
 ### BLT2 ###
 upload/*
 web/css/*

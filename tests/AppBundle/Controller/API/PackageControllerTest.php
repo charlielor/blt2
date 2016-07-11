@@ -227,7 +227,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertNotEmpty($errorParamsResponse['object']);
         $this->assertEquals('error', $errorParamsResponse['result']);
 
-        // Assert that a new package with incorect tokens return error
+        // Assert that a new package with incorrect tokens return error
         $client->request('POST', '/packages/new', array(
             "trackingNumber" => "testPackage",
             "numberOfPackages" => "",
@@ -301,7 +301,7 @@ class PackageControllerTest extends WebTestCase
         copy($this->getContainer()->get("kernel")->getRootDir() . "/../tests/UploadedFiles/test1.pdf", $this->getContainer()->get("kernel")->getRootDir() . "/../tests/UploadedFiles/test1_copy2.pdf");
 
         $uploadedFile3 = new UploadedFile($this->getContainer()->get("kernel")->getRootDir() . "/../tests/UploadedFiles/test1_copy.pdf", "test1_copy.pdf");
-        $uploadedFile4 = new UploadedFile($this->getContainer()->get("kernel")->getRootDir() . "/../tests/UploadedFiles/test1_copy2.pdf", "test2_copy.pdf");
+        $uploadedFile4 = new UploadedFile($this->getContainer()->get("kernel")->getRootDir() . "/../tests/UploadedFiles/test1_copy2.pdf", "test1_copy2.pdf");
 
         // Test for update (removing some files and adding some with duplicate)
         $client->request('POST', '/packages/fixturePackage/update', array(
@@ -441,7 +441,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $searchPackage['result']);
         $this->assertCount(4, $searchPackage['object']);
 
-        // Test for errors
+        // Test for non-existing packages
         $client->request('GET', '/packages/search', array(
             "term" => "stuffedchickenwings"
         ));
@@ -461,7 +461,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
-        $this->assertEquals('success', $errorResponse['result']);
+        $this->assertEquals('error', $errorResponse['result']);
     }
 
     public function testDeliverPackageRoute() {
@@ -510,9 +510,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $alreadyDeliveredPackage);
         $this->assertEquals('error', $alreadyDeliveredPackage['result']);
-
         $this->assertArrayHasKey('message', $alreadyDeliveredPackage);
-
         $this->assertArrayHasKey('object', $alreadyDeliveredPackage);
         $this->assertEmpty($alreadyDeliveredPackage['object']);
 
@@ -532,9 +530,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $nonExistingPackage);
         $this->assertEquals('error', $nonExistingPackage['result']);
-
         $this->assertArrayHasKey('message', $nonExistingPackage);
-
         $this->assertArrayHasKey('object', $nonExistingPackage);
         $this->assertEmpty($nonExistingPackage['object']);
     }
@@ -563,9 +559,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $pickedUpPackage);
         $this->assertEquals('success', $pickedUpPackage['result']);
-
         $this->assertArrayHasKey('message', $pickedUpPackage);
-
         $this->assertArrayHasKey('object', $pickedUpPackage);
         $this->assertNotEmpty($pickedUpPackage['object']);
         $this->assertEquals('fixturePackage', $pickedUpPackage['object']['trackingNumber']);
@@ -588,9 +582,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $alreadyPickedUpPackage);
         $this->assertEquals('error', $alreadyPickedUpPackage['result']);
-
         $this->assertArrayHasKey('message', $alreadyPickedUpPackage);
-
         $this->assertArrayHasKey('object', $alreadyPickedUpPackage);
         $this->assertEmpty($alreadyPickedUpPackage['object']);
 
@@ -610,9 +602,7 @@ class PackageControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('result', $nonExistingPackage);
         $this->assertEquals('error', $nonExistingPackage['result']);
-
         $this->assertArrayHasKey('message', $nonExistingPackage);
-
         $this->assertArrayHasKey('object', $nonExistingPackage);
         $this->assertEmpty($nonExistingPackage['object']);
     }
@@ -645,7 +635,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('success', $searchPackage['result']);
         $this->assertEquals('fixturePackage', $searchPackage['object'][0]['trackingNumber']);
 
-        // Test for errors
+        // Test for non-existing packages
         $client->request('GET', '/packages/search', array(
             "term" => "stuffedchickenwings"
         ));
@@ -665,7 +655,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorResponse);
         $this->assertArrayHasKey('object', $errorResponse);
         $this->assertEmpty($errorResponse['object']);
-        $this->assertEquals('success', $errorResponse['result']);
+        $this->assertEquals('error', $errorResponse['result']);
     }
 
     public function testDeletePackageRoute() {

@@ -307,12 +307,21 @@ class ShipperController extends Controller
         // Run query and save it
         $shipper = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($shipper) . ' Shipper',
-            'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-        );
+        if (empty($shipper)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Shipper with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -332,22 +341,28 @@ class ShipperController extends Controller
         // Set up query the database for shippers that is like term
         $query = $em->createQuery(
             'SELECT s FROM AppBundle:Shipper s
-            WHERE s.name LIKE :term
-            AND s.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE s.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $shipper = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-        );
+        if (empty($shipper)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Shipper(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        }
+
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -362,14 +377,12 @@ class ShipperController extends Controller
         $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
 
         // Get the enabled Shippers
-        $shippers = $shipperRepository->findBy([
-            "enabled" => true
-        ]);
+        $shippers = $shipperRepository->findAll();
 
         // Set up the response
         $results = array(
             'result' => 'success',
-            'message' => 'Successfully retrieved all enabled Shippers',
+            'message' => 'Successfully retrieved all Shippers',
             'object' => json_decode($this->get('serializer')->serialize($shippers, 'json'))
         );
 

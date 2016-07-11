@@ -84,7 +84,9 @@ $(document).ready(function() {
                 var listOfShippers = [];
 
                 $.each(retrievedShippers, function(index) {
-                    listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="' + retrievedShippers[index]['id'] + '" class="btn btn-default btn-lg btn-block text-center shipperSelected">' + retrievedShippers[index]['name'] + '</button></div></div>');
+                    if (retrievedShippers[index]['enabled'] === true) {
+                        listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="' + retrievedShippers[index]['id'] + '" class="btn btn-default btn-lg btn-block text-center shipperSelected">' + retrievedShippers[index]['name'] + '</button></div></div>');
+                    }
                 });
 
                 listOfShippers.push('<div class="row shipperRow"><div class="col-md-12"><button type="button" id="addANewShipper" class="btn btn-default btn-lg btn-block text-center" data-toggle="modal" data-target="#addNewShipperModal" data-referer="selectAShipper" data-select2=false>Add New Shipper</button></div></div>');
@@ -167,20 +169,18 @@ $(document).ready(function() {
             $.get('packages/search', {'term': trackingNumber})
                 .done(function(data) {
                     if (data['result'] == 'success') {
-                        if (data['object'].length !== 0) {
-                            window.existingPackageObject = data['object'][0];
-                            window.newPackage = false;
+                        window.existingPackageObject = data['object'][0];
+                        window.newPackage = false;
 
-                            $("#existingPackage").text(window.existingPackageObject['trackingNumber'] + " already exists");
+                        $("#existingPackage").text(window.existingPackageObject['trackingNumber'] + " already exists");
 
-                            packageAlreadyExistsModal.modal("show");
-                        } else { // If searching for package with tracking number doesn't return anything
-                            window.newPackage = true;
+                        packageAlreadyExistsModal.modal("show");
+                    } else {
+                        window.newPackage = true;
 
-                            $("#packageModal").modal({
-                                backdrop: "static"
-                            });
-                        }
+                        $("#packageModal").modal({
+                            backdrop: "static"
+                        });
                     }
                 });
         }

@@ -24,10 +24,12 @@ $(document).ready(function() {
                     var shipper = data['object'];
 
                     $.each(shipper, function(index) {
-                        results.push({
-                            id: shipper[index]['id'],
-                            text: shipper[index]['name']
-                        })
+                        if (shipper[index]['enabled'] === true) {
+                            results.push({
+                                id: shipper[index]['id'],
+                                text: shipper[index]['name']
+                            })
+                        }
                     });
                 }
 

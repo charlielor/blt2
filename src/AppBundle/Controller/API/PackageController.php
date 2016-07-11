@@ -466,12 +466,21 @@ class PackageController extends Controller
         // Run query and save it
         $packages = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($packages) . ' Package',
-            'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
-        );
+        if (empty($packages)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Package with tracking number: \'' . $term . '\'',
+                'object' => []
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
@@ -498,12 +507,23 @@ class PackageController extends Controller
         $packages = $query->getResult();
 
         // If $package is not null, then set up $results to reflect successful query
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($packages) . ' Package(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
-        );
+        if (empty($packages)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Package(s) like \'' . $term . '\'',
+                'object' => []
+            );
+
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($packages) . ' Package(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($packages, 'json'))
+            );
+        }
+
 
         // Return response as JSON
         return new JsonResponse($results);

@@ -4,7 +4,7 @@ $(document).ready(function() {
      */
     $("#select2-Vendor").select2({
         theme: "bootstrap",
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         placeholder: "Search for a Vendor",
         width: "off",
         ajax: {

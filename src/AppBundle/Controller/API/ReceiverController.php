@@ -426,7 +426,7 @@ class ReceiverController extends Controller
                 // Set up the response
                 $results = array(
                     'result' => 'error',
-                    'message' => 'No such receiver -> ' . $name ,
+                    'message' => 'No Receiver with the name: ' . $name ,
                     'object' => []
                 );
 

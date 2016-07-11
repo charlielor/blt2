@@ -44,11 +44,8 @@ $(document).ready(function() {
         var newShipper = newShipperName.val();
 
         // If newShipperName value is empty, null or more than 15 characters, display error
-        if (newShipper.replace(/\s/g, "") == "") {
+        if (newShipper === null || newShipper.replace(/\s/g, "") == "") {
             addError("New Shipper name can not be empty");
-            newShipperName.focus();
-        } else if (newShipper.length > 15) {
-            addError("New Shipper name has to be less than 15 characters");
             newShipperName.focus();
         } else {
             // Submit new shipper information
@@ -113,7 +110,7 @@ $(document).ready(function() {
         // Clear all errors
         newShipperLabel.removeClass("label-danger");
         newShipperLabel.addClass("label-primary");
-        newShipperLabel.text("New Shipper Name must be unique");
+        newShipperLabel.text("New Shipper name must be unique");
 
         newShipperNameDiv.removeClass("has-error");
     }

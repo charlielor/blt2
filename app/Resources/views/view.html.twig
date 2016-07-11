@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block userActions %}
-    <li><a id="goToToday" role="button" tabindex="-1">Go to Today</a></li>
-    <li><a href="/" tabindex="-1">Back to Menu</a></li>
+    <li><a id="goToToday" role="button" tabindex="-1">Go to today</a></li>
+    <li><a href="/" tabindex="-1">Back to menu</a></li>
 {% endblock %}
 
 {% block stylesheets %}
@@ -21,7 +21,7 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="datepickerTitle">Select a Date</h4>
+                    <h4 class="modal-title" id="datepickerTitle">Select a date</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -54,16 +54,16 @@
                     <table id="dataTable" class="table table-bordered">
                         <thead>
                         <tr>
-                            <th data-priority="1">Tracking Number</th>
+                            <th data-priority="1">Tracking number</th>
                             <th>Vendor</th>
                             <th>Shipper</th>
                             <th data-priority="2">Receiver</th>
-                            <th data-priority="3">Number of Packages</th>
+                            <th data-priority="3">Number of packages</th>
                             <th>User (who received)</th>
-                            <th>Packing Slip</th>
-                            <th>Date Received</th>
-                            <th>Date Delivered</th>
-                            <th>Date Picked Up</th>
+                            <th>Packing slip(s)</th>
+                            <th>Date received</th>
+                            <th>Date delivered</th>
+                            <th>Date picked up</th>
                         </tr>
                         </thead>
                         <tbody class="table-striped table-hover text-center">

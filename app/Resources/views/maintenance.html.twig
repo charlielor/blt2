@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block userActions %}
-    <li><a href="/" tabindex="-1">Back to Menu</a></li>
+    <li><a href="/" tabindex="-1">Back to menu</a></li>
 {% endblock %}
 
 {% block stylesheets %}
@@ -71,13 +71,13 @@
         <div class="packageBlock">
             <div class="row">
                 <div class="col-md-12">
-                    <p class="control-label"><strong>Package</strong> - Searchable textbox of Packages</p>
+                    <h4 class="control-label"><strong>Package</strong> - Search for Package(s)</h4>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-8">
-                    <input type="text" id="searchPackageText" class="form-control" placeholder="Tracking Number" />
+                    <input type="text" id="searchPackageText" class="form-control" placeholder="Tracking number" />
                 </div>
                 <div class="col-xs-4">
                     <button type="button" id="searchPackageButton" class="btn btn-default">Search</button>
@@ -96,18 +96,18 @@
                     <table id="searchPackageTable" class="table table-striped table-hover table-condensed">
                         <thead>
                         <tr>
-                            <th>Tracking Number</th>
+                            <th>Tracking number</th>
                             <th>Vendor</th>
                             <th>Shipper</th>
                             <th>Receiver</th>
-                            <th>Number of Packages</th>
+                            <th>Number of packages</th>
                             <th>User (who received)</th>
-                            <th>Packing Slip</th>
-                            <th>Date Received</th>
-                            <th>Date Delivered</th>
+                            <th>Packing slip</th>
+                            <th>Date received</th>
+                            <th>Date delivered</th>
                             <th>User (who delivered)</th>
-                            <th>Date Picked Up</th>
-                            <th>User of Who Picked Up</th>
+                            <th>Date picked up</th>
+                            <th>User (who picked up)</th>
                         </tr>
                         </thead>
                         <tbody id="searchPackageTableBody">
@@ -123,7 +123,7 @@
         <div class="shipperBlock">
             <div class="row">
                 <div class="col-md-12">
-                    <p class="control-label"><strong>Shipper</strong> - List of Shippers</p>
+                    <h4 class="control-label"><strong>Shipper</strong> - List of Shippers</h4>
                 </div>
             </div>
             <div class="row">
@@ -132,8 +132,8 @@
                         <thead>
                         <tr>
                             <th>Shipper ID</th>
-                            <th>Shipper's Name</th>
-                            <th colspan="2">Available Actions</th>
+                            <th>Shipper's name</th>
+                            <th colspan="2">Available actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -165,13 +165,13 @@
         <div class="vendorBlock">
             <div class="row">
                 <div class="col-md-12">
-                    <p class="control-label"><strong>Vendor</strong> - Searchable textbox of Vendors</p>
+                    <h4 class="control-label"><strong>Vendor</strong> - Search for Vendor(s)</h4>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-8">
-                    <input type="text" id="searchVendorText" class="form-control" placeholder="Vendor Name" />
+                    <input type="text" id="searchVendorText" class="form-control" placeholder="Vendor's name" />
                 </div>
 
                 <div class="col-xs-4">
@@ -193,8 +193,8 @@
                         <thead>
                         <tr>
                             <th>Vendor ID</th>
-                            <th>Vendor's Name</th>
-                            <th colspan="2">Available Actions</th>
+                            <th>Vendor's name</th>
+                            <th colspan="2">Available actions</th>
                         </tr>
                         </thead>
                         <tbody id="searchVendorTableBody">
@@ -210,7 +210,7 @@
         <div class="receiverBlock">
             <div class="row">
                 <div class="col-md-12">
-                    <p class="control-label"><strong>Receiver</strong> - List of Receivers</p>
+                    <h4 class="control-label"><strong>Receiver</strong> - List of Receivers</h4>
                 </div>
             </div>
 
@@ -220,9 +220,9 @@
                         <thead>
                         <tr>
                             <th>Receiver ID</th>
-                            <th>Receiver's Name</th>
-                            <th>Receiver's Room Number</th>
-                            <th colspan="2">Available Actions</th>
+                            <th>Receiver's name</th>
+                            <th>Receiver's room number</th>
+                            <th colspan="2">Available actions</th>
                         </tr>
                         </thead>
                         <tbody>

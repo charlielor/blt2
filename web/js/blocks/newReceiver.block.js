@@ -45,7 +45,7 @@ $(document).ready(function() {
         var receiverRoomNumber = newReceiverRoomNumber.val();
 
         // If the new receiver name and/or new receiver room number are null or empty, display error
-        if ((receiverName == null) || ((receiverName.replace(/\s/g, "")) == '')) {
+        if ((receiverName === null) || ((receiverName.replace(/\s/g, "")) == '')) {
             addError("name", "Enter a name for the new Receiver");
             newReceiverName.focus();
         } else if ((receiverRoomNumber == null) || ((receiverRoomNumber.replace(/\s/g, '')) == '')) {

@@ -21,10 +21,10 @@
     {{ block('camera') }}
 
     <div id="noPackingSlipsModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="noPackingSlips">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="noPackingSlipsTitle">No Packing Slip Attached</h4>
+                    <h4 class="modal-title" id="noPackingSlipsTitle">No packing slip attached</h4>
                 </div>
                 <div class="modal-body">
                     <p id="noPackingSlipsAttached" class="text-default center-block text-center">There are no packing slips attached. Is that okay?</p>
@@ -42,7 +42,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex="-1"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="packageModalTitle">Enter in Details</h4>
+                    <h4 class="modal-title" id="packageModalTitle">Enter in details</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-horizontal">
@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="packageTrackingNumber" class="control-label col-md-4">Tracking Number:</label>
+                            <label for="packageTrackingNumber" class="control-label col-md-4">Tracking number:</label>
                             <div id="packageTrackingNumberDiv" class="col-md-6">
                                 <p id="packageTrackingNumber" class="form-control-static"></p>
                             </div>
@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="packageNumOfPackages" class="control-label col-md-4">Number of Packages:</label>
+                            <label for="packageNumOfPackages" class="control-label col-md-4">Number of packages:</label>
                             <div id="packageNumOfPackagesDiv" class="col-md-3">
                                 <div class="input-group">
                                     <div class="input-group-btn">
@@ -113,14 +113,14 @@
                         </div>
 
                         <div id="existingPackingSlips" class="form-group existingPackage">
-                            <label for="listOfExistingPackingSlips" class="control-label col-md-4">Existing Packing Slips:</label>
+                            <label for="listOfExistingPackingSlips" class="control-label col-md-4">Existing packing slips:</label>
                             <div id="listOfExistingPackingSlips" class="col-md-6">
 
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="attachedPackingSlips" class="control-label col-md-4">Packing Slips:</label>
+                            <label for="attachedPackingSlips" class="control-label col-md-4">Packing slips:</label>
                             <div class="col-md-5">
                                 <form id="uploadFiles" enctype="multipart/form-data" name="uploadFiles" class="divInForm">
                                     <input id="attachedPackingSlips" class="form-control-static" type="file" name="attachedPackingSlips[]" multiple tabindex="-1" />
@@ -133,7 +133,7 @@
 
                         <div id="takePicture" class="form-group">
                             <div class="col-md-2 col-md-offset-4">
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cameraModal" tabindex="5">Take a Picture</button>
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cameraModal" tabindex="5">Take a picture</button>
                             </div>
                         </div>
 

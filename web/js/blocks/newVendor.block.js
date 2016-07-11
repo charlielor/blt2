@@ -40,7 +40,7 @@ $(document).ready(function() {
         var vendorName = newVendorName.val();
 
         // If the vendor name is null or empty spaces or empty, display error
-        if ((vendorName == null) || ((vendorName.replace(/\s/g, "")) == "")) {
+        if ((vendorName === null) || ((vendorName.replace(/\s/g, "")) == "")) {
             addError("Enter in name for the new Vendor");
             newVendorName.focus();
         } else {
@@ -100,7 +100,7 @@ $(document).ready(function() {
         // Clear all errors
         newVendorLabel.removeClass("label-danger");
         newVendorLabel.addClass("label-primary");
-        newVendorLabel.text("New Vendor Name must be unique");
+        newVendorLabel.text("New Vendor name must be unique");
 
         newVendorNameDiv.removeClass("has-error");
     }

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block userActions %}
-    <li><a href="/" tabindex="-1">Back to Menu</a></li>
+    <li><a href="/" tabindex="-1">Back to menu</a></li>
 {% endblock %}
 
 {% block stylesheets %}
@@ -72,7 +72,7 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="dateBeginTitle">Select a Date</h4>
+                    <h4 class="modal-title" id="dateBeginTitle">Select a begin date</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -95,7 +95,7 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="dateEndTitle">Select a Date</h4>
+                    <h4 class="modal-title" id="dateEndTitle">Select an end date</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -150,10 +150,10 @@
                         <option value="-----" disabled>-----</option>
                         <option value="d-0-receiver">Packages delivered to Receiver</option>
                         <option value="-----" disabled>-----</option>
-                        <option value="r-3-none">Get all packages received</option>
-                        <option value="d-1-none">Get all packages delivered</option>
+                        <option value="r-3-none">Get all Packages received</option>
+                        <option value="d-1-none">Get all Packages delivered</option>
                         <option value="-----" disabled>-----</option>
-                        <option value="p-0-none">Get all picked up packages</option>
+                        <option value="p-0-none">Get all picked up Packages</option>
                         <option value="-----" disabled>-----</option>
                         <option value="o-0-none">Packages NOT delivered or picked up</option>
                     </select>
@@ -182,14 +182,14 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <label for="dateBeginButton" class="control-label">Date Begin:</label>
+                    <label for="dateBeginButton" class="control-label">Date begin:</label>
                     <button type="button" id="dateBeginButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
                 </div>
             </div>
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <label for="dateEndButton" class="control-label">Date End:</label>
+                    <label for="dateEndButton" class="control-label">Date end:</label>
                     <button type="button" id="dateEndButton" class="btn btn-default">{{ "now"|date("m/d/Y") }}</button>
                 </div>
             </div>
@@ -210,7 +210,7 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 id="queryResultsText" class="text-center">Query Results</h4>
+                    <h4 id="queryResultsText" class="text-center">Query results</h4>
                 </div>
             </div>
             <div class="row">
@@ -226,7 +226,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <button type="button" id="graphToTable" class="btn btn-primary center-block">Graph to Table</button>
+                    <button type="button" id="graphToTable" class="btn btn-primary center-block">Graph to table</button>
                 </div>
             </div>
         </div>
@@ -244,20 +244,20 @@
                         <table id="reportResultsTable" class="table table-condensed table-hover table-striped">
                             <thead id="reportResultsTableHead">
                             <tr>
-                                <th>Tracking Number</th>
+                                <th>Tracking number</th>
                                 <th>Vendor</th>
                                 <th>Shipper</th>
                                 <th>Receiver</th>
-                                <th>Number of Packages</th>
+                                <th>Number of packages</th>
                                 <th>User (who received)</th>
-                                <th>Date Received</th>
+                                <th>Date received</th>
                                 <th>Delivered</th>
-                                <th>Date Delivered</th>
+                                <th>Date delivered</th>
                                 <th>User (who delivered)</th>
-                                <th>Picked Up</th>
-                                <th>Date Picked Up</th>
-                                <th>Name of Who Picked Up</th>
-                                <th>User of Who Authorized Pick Up</th>
+                                <th>Picked up</th>
+                                <th>Date picked up</th>
+                                <th>User (who picked up)</th>
+                                <th>User (who authorized pick up)</th>
                             </tr>
                             </thead>
                             <tbody id="reportResultsTableBody">

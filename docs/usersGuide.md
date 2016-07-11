@@ -35,7 +35,7 @@ After getting BLT2 up and running on your server, you'll have to add Receivers, 
 Once you have some entities created, submitting Packages with details should be a pretty straight-forward process. 
  
 ### Creation of entities
-The creation of entities are through the receiving page (/receiving).
+The creation of entities are through the receiving page (/receiving). A notification bar at the top of the browser will let you know if the creation of an entity is successful or not.  
 
 #### Creating a new Shipper
 Going to the receiving page (/receiving) will automatically prompt you to select a Shipper. From here, you can click on "Add new Shipper" to create a new Shipper.
@@ -80,7 +80,9 @@ Once the new Receiver has been created, the Receiver input text field will autom
 #### Creating/Submitting a new Package
 By scanning in a tracking number (or entering in text) into the tracking number input field and opening up the form by clicking on "Enter in details", you'll have the chance to add details about the Package before submitting. This includes adding packing slips from the hard disk and/or using a camera to capture the packing slip.
 
-When opening the form, the Vendor search input box should be opened, ready for you to start typing the name of the Vendor.
+When opening the form, the Vendor search input box should be opened, ready for you to start typing the name of the Vendor. Once selected, the Receiver search input box should open, ready for you to start typing the name of the Receiver.
+
+If a Package has no attached packing slips (either through the file upload or with a camera), BLT2 will ask if it's okay to submit it without one. 
 
 ##### Requirements for creating a new Package
 - Tracking number must be unique
@@ -89,4 +91,4 @@ When opening the form, the Vendor search input box should be opened, ready for y
 
 ![Receiving - Form](usersGuide/entityCreation/form.png)
 
-![Receiving - New Package](usersGuide/entityCreation/receiver.png)
+![Receiving - New Package](usersGuide/entityCreation/package.png)

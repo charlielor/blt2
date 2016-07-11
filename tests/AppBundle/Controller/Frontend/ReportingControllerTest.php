@@ -50,13 +50,13 @@ class ReportingControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/reporting');
 
         # Back to Menu link
-        $client->click($crawler->selectLink("Back to Menu")->link());
+        $client->click($crawler->selectLink("Back to menu")->link());
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
         $client->back();
 
         # Run a Report h3 header
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Run a Report")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Run a report")')->count());
     }
 
     public function testEntitySearchRoute() {

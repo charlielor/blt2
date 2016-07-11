@@ -22,7 +22,7 @@ class DeliveringControllerTest extends WebTestCase {
         $crawler = $client->request('GET', '/delivering');
 
         # Back to Menu link
-        $client->click($crawler->selectLink("Back to Menu")->link());
+        $client->click($crawler->selectLink("Back to menu")->link());
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
         $client->back();

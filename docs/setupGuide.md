@@ -2,13 +2,13 @@ Setup Guide
 ===========
 
 ## Introduction
-BLT2 was built on [Symfony's PHP Framework](http://symfony.com/) and has the [same requirements](http://symfony.com/doc/current/reference/requirements.html) for hosting Symfony. Please make sure the server that you'll be hosting BLT2 meets or exceeds Symfony minimum requirements. 
+BLT2 was built using a (L|M)AMP stack.  
 
 ## *AMP
 ### Before installing
-* Make sure that the web server has met all requirements needed by Symfony
+* Make sure that the web server has met all [requirements](http://symfony.com/doc/current/reference/requirements.html) needed by [Symfony's PHP Framework](http://symfony.com/)
 * Enable apache2 mod_rewrite
-* Have git and related dependencies installed
+* Have git installed
 * Have php-xml module installed
 * Ensure that the MySQL user that BLT2 will be using to insert/select/update is granted the following: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, LOCK TABLES, INDEX
 * Have the database already created in MySQL (tables will be added during installation)

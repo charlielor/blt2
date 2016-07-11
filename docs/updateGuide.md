@@ -4,7 +4,7 @@ Update Guide
 ## Introduction
 There are two updates that can be done for BLT2: BLT2 specific updates or Symfony (and related vendors) updates. You can either do one or the other but updates are typically aligned so you update them at the same time.
 
-## BLT2 Specific Update
+## BLT2 specific update
 1. Navigate to blt2 directory and pull from repository
 
     ```
@@ -18,7 +18,7 @@ There are two updates that can be done for BLT2: BLT2 specific updates or Symfon
     $ php bin/console assetic:dump --env=prod
     ```
 
-## Symfony (and related vendors) Update
+## Symfony (and related vendors) update
 1. Set the Symfony environment to prod
 
     ```

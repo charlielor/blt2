@@ -30,7 +30,7 @@ The Biochemistry department spans across four different buildings and is in the 
     * Because Symfony is using User objects, all calls that retrieved the User object now also call the getUsername() function
         * In master, the User object is "anon." so getting the User object is just the plain text
 
-## Daily Process
+## Daily process
 In conjunction with the Biochemistry department's purchasing system (BPS), BLT2 needs to keep a copy of the package's packing slip in order to validate orders.
 
 ### Receiving

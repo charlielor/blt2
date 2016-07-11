@@ -26,6 +26,8 @@ User's guide
 #### Maintenance
 ![Maintenance](usersGuide/maintenance.png)
 
+![Maintenance 2](usersGuide/maintenance2.png)
+
 ## Getting started
 ### Introduction
 After getting BLT2 up and running on your server, you'll have to add Receivers, Shippers, and Vendors to the database. You can either do this as Packages arrive or create a MySQL/MariaDB .sql file and import it into the database.

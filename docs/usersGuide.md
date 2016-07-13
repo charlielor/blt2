@@ -1,17 +1,19 @@
 User's guide
 ============
 ## Table of contents
-- Introduction
-    - Creating a new Shipper
-    - Creating a new Receiver/Vendor
-    - Creating/Submitting a new Package
-- Receiving
-- Delivering
+- [Introduction](#introduction)
+- [Entity creation](#entityCreation)
+    - [Creating a new Shipper](#newShipper)
+    - [Creating a new Receiver/Vendor](#newReceiverVendor)
+    - [Creating/Submitting a new Package](#newPackage)
+- [Delivering a Package](#delivering)
+- [Marking a Package for pickup](#pickup)
+- Editing a Package
+- View a list of packages for a given date
+- Enabling/disabling entities
 - Reporting
-- View
-- Maintenance
 
-## Introduction
+## <a name="introduction"></a>Introduction
 After getting BLT2 up and running on your server, you should see this when you go to the website (after any authentication methods).
 
 ![Main menu](usersGuide/main.png)
@@ -20,10 +22,12 @@ To get started, you'll have to add Receivers, Shippers, and Vendors to the datab
 
 This guide will lead you through creating your first Receiver, Shipper and Vendor. From there, the guide will lead you through submitting a new Package and delivering a Package to a Receiver. Finally, the guide will go into detail about some of the options you have within each page.
  
-## Creation of entities
+## <a name="entityCreation"></a>Creation of entities
 The creation of entities are through the receiving page (/receiving). A notification bar at the top of the browser will let you know if the creation of an entity is successful or not.  
 
-### Creating a new Shipper
+![Receiving](usersGuide/receiving.png)
+
+### <a name="newShipper"></a>Creating a new Shipper
 Going to the receiving page (/receiving) will automatically prompt you to select a Shipper. From here, you can click on "Add new Shipper" to create a new Shipper.
 
 Once the new Shipper has been created, the list will automatically update to include the newly created Shipper.
@@ -33,16 +37,16 @@ Once the new Shipper has been created, the list will automatically update to inc
 
 #### Steps:
 
-##### Go to /receiving and when the "Select a Shipper" dialog comes up, click on "Add new Shipper"
+##### 1) Click on "Receiving" and when the "Select a Shipper" dialog comes up, click on "Add new Shipper"
 ![Shipper creation 1](usersGuide/shipperCreation1.png) 
 
-##### Enter in the name of the new Shipper and click on "Submit"
+##### 2) Enter in the name of the new Shipper and click on "Submit"
 ![Shipper creation 2](usersGuide/shipperCreation2.png)
 
-##### If the creation is successful, you'll see the new Shipper along with a green bar notifying that it was successfully created
+##### 3) If the creation is successful, you'll see the new Shipper along with a green bar notifying that it was successfully created
 ![Shipper creation 3](usersGuide/shipperCreation3.png)
 
-### Creating a new Receiver/Vendor
+### <a name="newReceiverVendor"></a>Creating a new Receiver/Vendor
 The creation of a new Receiver/Vendor requires that you have the form up either by scanning in a tracking number or entering in text and clicking on "Enter in details". From there, you can click on "New" next to the respective entity that you want to create.
 
 Once the new Receiver/Vendor has been created, the new Receiver/Vendor input text field will automatically populate the field.
@@ -52,29 +56,31 @@ Once the new Receiver/Vendor has been created, the new Receiver/Vendor input tex
 
 #### Steps:
 
-##### Either scan in a tracking number or type it in and click on "Enter in details"
+##### 1) Either scan in or type in a tracking number and click on "Enter in details"
 ![Receiver/Shipper creation 1](usersGuide/receiverVendorCreation1.png)   
 
-##### (Vendor) Click on "New" next to the Vendor input text field
-![Receiver/Shipper creation 2](usersGuide/receiverVendorCreation2.png) 
+#### Vendor creation
+##### 2) (Vendor) Click on "New" next to the Vendor input text field
+![Receiver/Vendor creation 2](usersGuide/receiverVendorCreation2.png) 
 
-##### (Vendor) Enter in the name of the new Vendor and click on "Submit"
-![Receiver/Shipper creation 3](usersGuide/receiverVendorCreation3.png)
+##### 3) (Vendor) Enter in the name of the new Vendor and click on "Submit"
+![Receiver/Vendor creation 3](usersGuide/receiverVendorCreation3.png)
  
-##### (Vendor) If the creation is successful, you'll see the new Vendor populate the Vendor input text field along with a green bar notifying that it was successfully created 
-![Receiver/Shipper creation 4](usersGuide/receiverVendorCreation4.png)
+##### 4) (Vendor) If the creation is successful, you'll see the new Vendor populate the Vendor input text field along with a green bar notifying that it was successfully created 
+![Receiver/Vendor creation 4](usersGuide/receiverVendorCreation4.png)
 
-##### (Receiver) Click on "New" next to the Receiver input text field
-![Receiver/Shipper creation 2](usersGuide/receiverVendorCreation2.png) 
+#### Receiver creation
+##### 2) (Receiver) Click on "New" next to the Receiver input text field
+![Receiver/Vendor creation 5](usersGuide/receiverVendorCreation5.png) 
 
-##### (Receiver) Enter in the name and room number of the new Receiver and click on "Submit"
-![Receiver/Shipper creation 3](usersGuide/receiverVendorCreation5.png)
+##### 3) (Receiver) Enter in the name and room number of the new Receiver and click on "Submit"
+![Receiver/Vendor creation 6](usersGuide/receiverVendorCreation6.png)
  
-##### (Receiver) If the creation is successful, you'll see the new Receiver populate the Receiver input text field along with a green bar notifying that it was successfully created 
-![Receiver/Shipper creation 4](usersGuide/receiverVendorCreation6.png)
+##### 4) (Receiver) If the creation is successful, you'll see the new Receiver populate the Receiver input text field along with a green bar notifying that it was successfully created 
+![Receiver/Vendor creation 7](usersGuide/receiverVendorCreation7.png)
 
-### Creating/Submitting a new Package
-To create and submit a new Package, first scan in (or enter in) the tracking number into the tracking number text field and click on "Enter in details". From there, you can enter in information about the Package such as its Vendor, Receiver, the number of packages with that tracking number and attach its packing slip. The Shipper was already selected when you loaded /receiving and each Package will use the same Shipper until a new Shipper is selected (by clicking on "Select Shipper"). 
+### <a name="newPackage"></a>Creating/Submitting a new Package
+To create and submit a new Package, first scan in (or enter in) the tracking number into the tracking number text field then click on "Enter in details". From there, you can enter in information about the Package such as its Vendor, Receiver, the number of packages for that Package and attach its packing slip(s). The Shipper is already selected when you loaded /receiving and each Package will use the same Shipper until a new Shipper is selected (by clicking on "Select Shipper"). 
 
 When the form opens, the Vendor search input box should be opened, ready for you to start typing the name of the Vendor. Once the Vendor is selected, the Receiver search input box should open, ready for you to start typing the name of the Receiver.
 
@@ -85,26 +91,66 @@ If a Package has no attached packing slips (either through the file upload or wi
 
 #### Steps:
 
-##### Either scan in a tracking number or type it in and click on "Enter in details"
+##### 1) Either scan in or type in a tracking number and click on "Enter in details"
 ![Package creation/submission 1](usersGuide/packageCreation1.png)
 
-##### Search for the Vendor that shipped the Package
+##### 2) Search for the Vendor that shipped the Package
 ![Package creation/submission 2](usersGuide/packageCreation2.png)
 
-##### Search for the Receiver that will receive the Package
+##### 3) Search for the Receiver that will receive the Package
 ![Package creation/submission 3](usersGuide/packageCreation3.png)
 
-##### Browse for scanned packing slip(s) and attach them (can attach multiple files) AND/OR using an attached camera, take a picture of the packing slip(s)
+##### 4) Browse for scanned packing slip(s) and attach them (can attach multiple files) AND/OR using an attached camera, take a picture of the packing slip(s)
 ![Package creation/submission 4](usersGuide/packageCreation4.png) 
 
-##### (Using an attached camera) Click on "Take a picture" and when the video feed loads and once the camera is focused on the packing slip, click on the video to take a picture
+##### 5) (Using an attached camera) Click on "Take a picture" and when the video feed loads and once the camera is focused on the packing slip, click on the video to take a picture
 ![Package creation/submission 5](usersGuide/packageCreation5.png) 
 
-##### (Using an attached camera) An image confirmation dialog will come up asking for confirmation of picture
+##### 6) (Using an attached camera) An image confirmation dialog will come up asking for confirmation of picture
 ![Package creation/submission 6](usersGuide/packageCreation6.png)
  
-##### Once you're done attaching packing slips and are ready to submit the new Package, click on "Submit"
+##### 7) Once you're done attaching packing slips and are ready to submit the new Package, click on "Submit"
 ![Package creation/submission 7](usersGuide/packageCreation7.png)
 
-##### If the creation is successful, you'll see the new Package along with its information in the "Items received for today" table underneath the "Enter in details" button along with a green bar notifying that it was successfully created
+##### 8) If the creation is successful, you'll see the new Package along with its information in the "Items received for today" table underneath the "Enter in details" button along with a green bar notifying that it was successfully created
 ![Package creation/submission 8](usersGuide/packageCreation8.png)
+
+## <a name="delivering"></a>Delivering a Package
+The delivery of a Package is done under the delivering page (/delivering).
+
+#### Steps:
+
+##### 1) Click on "Delivering"
+![Delivering 1](usersGuide/delivering1.png)
+
+##### 2) Either scan in or type in the Receiver's name
+![Delivering 2](usersGuide/delivering2.png)
+
+##### 3) Either scan in or type in the tracking number and press enter/carriage return
+###### Note: If there are more than one package for that tracking number, there'll be an alert telling you so
+###### Note: Use a barcode scanner configured to add an enter key/carriage return at the end of each scan for maximum efficiency
+![Delivering 3](usersGuide/delivering3.png)
+
+##### 4) If the delivery is successful, the Package will be gone from the table underneath the input text field along with a green bar notifying that the delivery was successful
+###### Note: If the Package that got delivered is the last package in the table, the page will cleared of its current Receiver
+![Delivering 4](usersGuide/delivering4.png)
+
+## <a name="pickup"></a>Marking a Package for pickup
+When someone picks up a Package, the Package can be marked up as picked up instead of delivered. Marking a Package up for pickup is done under the receiving page (/receiving).
+
+#### Steps:
+
+##### 1) Click on "Receiving" and select a Shipper (Shipper doesn't matter in this case)
+
+##### 2) Click on "Pickup" towards the upper right hand corner
+![Pickup 1](usersGuide/pickup1.png)
+
+##### 3) Either scan in or type in the tracking number for the Package being picked up and click "Submit"
+![Pickup 2](usersGuide/pickup2.png)
+
+##### 4) Validate the Package information for the Package being picked up and enter in the name of the person who is picking up the Package and click "Submit"
+###### Note: If there are more than one package for that tracking number, there'll be an alert telling you so
+![Pickup 3](usersGuide/pickup3.png)
+
+##### 5) If marking the Package for pickup is successful, there'll be a green bar notifying that marking the Package for pickup 
+![Pickup 4](usersGuide/pickup4.png)

@@ -9,8 +9,8 @@ User's guide
 - [Delivering a Package](#delivering)
 - [Marking a Package for pickup](#pickup)
 - [Editing a Package](#editingPackage)
-- View a list of packages for a given date
-- Enabling/disabling entities
+- [View a list of packages for a given date](#view)
+- [Enabling/disabling entities](#maintenance)
 - Reporting
 
 ## <a name="introduction"></a>Introduction
@@ -170,9 +170,38 @@ Sometimes you'll have to update an existing Package given additional information
 ![Editing a Package 2](usersGuide/editingPackage2.png)
 
 ##### 4) Make changes to the Package and click "Submit"
-###### Note: Even if there are existing packing slips, if there are no **new** packing slips, there'll be a prompt asking if it is okay to submit the Package with no packing slips
+###### Note: Even if there are existing packing slips, if there are no attached, new packing slips, there'll be a prompt asking if it is okay to submit the Package with no packing slips
+###### Note: In this example, two packing slips that were attached to this Package got deleted
+###### Note: When editing a Package requires removal of packing slips, they are not deleted from the server but instead renamed to reflect the status of the file
 ![Editing a Package 3](usersGuide/editingPackage3.png)
 
 ##### 5) If editing the Package is successful, there'll be a green bar notifying that the Package has been successfully updated
 ###### Note: If the Package is currently listed under the "Items received for today", the Package in that table will also update
 ![Editing a Package 4](usersGuide/editingPackage4.png)
+
+## <a name="view"></a>View a list of packages for a given date
+To view all Packages received for any selected date, go to the view page (/view). By default, the view page will load today's received Packages first. The table will automatically populate itself as Packages are entered in to the system through the receiving page (/receiving).
+  
+#### Steps:
+
+##### 1) Click on "View Packages"
+![View Packages 1](usersGuide/view1.png)
+
+##### 2) Today's received Packages will show by default
+![View Packages 2](usersGuide/view2.png)
+
+##### 3) Click on the blue button with today's date on it to select a new date
+![View Packages 3](usersGuide/view3.png)
+
+## <a name="maintenance"></a>Enabling/disabling entities
+Entities cannot be deleted but Receivers, Shippers and Vendors can be disabled to have it not display in other parts of the web application. For example, if a Receiver is no longer a part of the department, it can be disabled so that you wouldn't be able to search for it when adding a new Package entity.
+    
+#### Steps:
+
+##### 1) Click on "Maintenance"
+
+##### 2) From here, you can click on "Disable" next to the entity to disable it or "Enable" to enable it
+
+###### Note: If you know the tracking number of a Package and want information about it but don't know when it was received, you can search for it here
+###### Note: The reason why Packages and Vendors have a searchable textbox instead of a list is because there tends to be more of it than Shippers or Receivers
+ 

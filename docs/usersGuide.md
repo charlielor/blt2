@@ -199,9 +199,14 @@ Entities cannot be deleted but Receivers, Shippers and Vendors can be disabled t
 #### Steps:
 
 ##### 1) Click on "Maintenance"
+![Maintenance 1](usersGuide/maintenance1.png)
 
 ##### 2) From here, you can click on "Disable" next to the entity to disable it or "Enable" to enable it
 
 ###### Note: If you know the tracking number of a Package and want information about it but don't know when it was received, you can search for it here
 ###### Note: The reason why Packages and Vendors have a searchable textbox instead of a list is because there tends to be more of it than Shippers or Receivers
- 
+![Maintenance 2](usersGuide/maintenance2.png)
+
+![Maintenance 3](usersGuide/maintenance3.png)
+
+![Maintenance 4](usersGuide/maintenance4.png)

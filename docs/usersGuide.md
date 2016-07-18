@@ -11,7 +11,7 @@ User's guide
 - [Editing a Package](#editingPackage)
 - [View a list of packages for a given date](#view)
 - [Enabling/disabling entities](#maintenance)
-- Reporting
+- [Reporting](#reporting)
 
 ## <a name="introduction"></a>Introduction
 After getting BLT2 up and running on your server, you should see this when you go to the website (after any authentication methods).
@@ -210,3 +210,30 @@ Entities cannot be deleted but Receivers, Shippers and Vendors can be disabled t
 ![Maintenance 3](usersGuide/maintenance3.png)
 
 ![Maintenance 4](usersGuide/maintenance4.png)
+
+## <a name="reporting"></a>Reporting
+A simple reporting system has been implemented to help users of BLT2 gather data about Packages received and delivered to their department. It has the ability to call pre-made queries and have the data exported to a CSV file for further processing using a more advance application.
+
+##### Note: Depending on how many days are in between date begin and date end, the graph will show either individual dates, weeks or months
+
+#### Steps:
+
+##### 1) Click on "Reporting"
+![Reporting 1](usersGuide/reporting1.png)
+
+##### 2) Select a query from the list of pre-made queries
+![Reporting 2](usersGuide/reporting2.png)
+
+##### 3) Search for a token
+![Reporting 3](usersGuide/reporting3.png)
+
+##### 4) Select a begin and end date and click "Go"
+![Reporting 4](usersGuide/reporting4.png)
+
+##### 5) Either click on a bar for a specific day, week or month to get a list of Packages for that selection or click "Graph to table" to list the entire graph 
+![Reporting 5](usersGuide/reporting5.png)
+
+![Reporting 6](usersGuide/reporting6.png)
+
+##### 6) Click "Table to CSV" to download a CSV file of the table listed above
+![Reporting 7](usersGuide/reporting7.png)

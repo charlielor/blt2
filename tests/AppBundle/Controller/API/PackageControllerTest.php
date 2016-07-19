@@ -658,51 +658,51 @@ class PackageControllerTest extends WebTestCase
         $this->assertEquals('error', $errorResponse['result']);
     }
 
-    public function testDeletePackageRoute() {
-        echo __METHOD__ . "\n";
-
-        $client = static::createClient();
-
-        // Testing response code for /packages/{id}/delete
-        $client->request('DELETE', '/packages/fixturePackage/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $packageDeleted);
-        $this->assertArrayHasKey('message', $packageDeleted);
-        $this->assertArrayHasKey('object', $packageDeleted);
-        $this->assertNotEmpty($packageDeleted['object']);
-        $this->assertEquals('success', $packageDeleted['result']);
-
-        // Test for errors
-        $client->request('DELETE', '/packages/fixturePackage/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $errorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertArrayHasKey('message', $errorResponse);
-        $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertEmpty($errorResponse['object']);
-        $this->assertEquals('error', $errorResponse['result']);
-    }
+//    public function testDeletePackageRoute() {
+//        echo __METHOD__ . "\n";
+//
+//        $client = static::createClient();
+//
+//        // Testing response code for /packages/{id}/delete
+//        $client->request('DELETE', '/packages/fixturePackage/delete');
+//
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertTrue(
+//            $client->getResponse()->headers->contains(
+//                'Content-Type',
+//                'application/json'
+//            )
+//        );
+//
+//        $packageDeleted = json_decode($client->getResponse()->getContent(), true);
+//
+//        $this->assertArrayHasKey('result', $packageDeleted);
+//        $this->assertArrayHasKey('message', $packageDeleted);
+//        $this->assertArrayHasKey('object', $packageDeleted);
+//        $this->assertNotEmpty($packageDeleted['object']);
+//        $this->assertEquals('success', $packageDeleted['result']);
+//
+//        // Test for errors
+//        $client->request('DELETE', '/packages/fixturePackage/delete');
+//
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertTrue(
+//            $client->getResponse()->headers->contains(
+//                'Content-Type',
+//                'application/json'
+//            )
+//        );
+//
+//        $errorResponse = json_decode($client->getResponse()->getContent(), true);
+//
+//        $this->assertArrayHasKey('result', $errorResponse);
+//        $this->assertArrayHasKey('message', $errorResponse);
+//        $this->assertArrayHasKey('object', $errorResponse);
+//        $this->assertEmpty($errorResponse['object']);
+//        $this->assertEquals('error', $errorResponse['result']);
+//    }
 
     public function testGetPackagesRoute() {
         echo __METHOD__ . "\n";

@@ -163,7 +163,7 @@ class PackageController extends Controller
      * Route for creating editing/updating a Package
      *
      * @param Request $request Symfony global request variable
-     * @param String $id Tracking number for the Package
+     * @param string $id Tracking number for the Package
      *
      * @throws \Exception if Receiver/Shipper/Vendor given is not found in the database through Doctrine
      *
@@ -353,7 +353,7 @@ class PackageController extends Controller
     /**
      * Route for marking a Package as delivered
      *
-     * @param String $id Tracking number for Package
+     * @param string $id Tracking number for Package
      *
      * @return JsonResponse Results of the call
      *
@@ -425,7 +425,7 @@ class PackageController extends Controller
      * Route for marking a Package as picked up
      *
      * @param Request $request Symfony global request variable
-     * @param String $id Tracking number for Package
+     * @param string $id Tracking number for Package
      *
      * @return JsonResponse Results of the call
      *
@@ -594,7 +594,7 @@ class PackageController extends Controller
     /**
      * Route for deleting a Package
      *
-     * @param String $id Tracking number for Package
+     * @param string $id Tracking number for Package
      *
      * @return JsonResponse Results of the call
      *
@@ -638,7 +638,13 @@ class PackageController extends Controller
 //    }
 
     /**
-     * Route to display package information
+     * Route to display Package information
+     *
+     * @param string $id Tracking number for Package
+     *
+     * @return Response Render twig template with Package information
+     *
+     * @todo Need to finish implementing template
      *
      * @Route("/packages/{id}", name="package")
      * @Method({"GET"})
@@ -650,25 +656,19 @@ class PackageController extends Controller
         // Get the package by id
         $package = $packageRepository->find($id);
 
-        if (!empty($package)) {
-            return $this->render('entity.html.twig', [
-                "type" => "package",
-                "entity" => $package
-            ]);
-        } else {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'No such package' ,
-                'object' => []
-            );
-
-            return new JsonResponse($results);
-        }
-
+        return $this->render('entity.html.twig', [
+            "type" => "package",
+            "entity" => $package
+        ]);
     }
 
     /**
+     * Route to get a list of Packages based off dates
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/packages", name="packages")
      * @Method({"GET"})
      */
@@ -733,12 +733,12 @@ class PackageController extends Controller
     /**
      * Add pictures into the uploadedFiles array
      *
-     * @param $uploadedFilesArray - An array with information about files uploaded
-     * @param $uploadedPicturesArray - An array with information about pictures uploaded
+     * @param array $uploadedFilesArray An array with information about files uploaded
+     * @param array $uploadedPicturesArray An array with information about pictures uploaded
      *
-     * @throws $e - Either can't compress with gd or imagick
+     * @throws \Exception $e when it either can't compress with gd or imagick when image compression is true
      *
-     * @return array - An array with both files and pictures uploaded
+     * @return array An array with both files and pictures uploaded
      */
     private function addPicturesToUploadedFilesArray($uploadedFilesArray, $uploadedPicturesArray) {
         /*
@@ -786,7 +786,7 @@ class PackageController extends Controller
                         throw new \Exception("Unable to compress image with imagick");
                     }
 
-                } else {
+                } else { // No image compression (saved as a .png)
                     $uploadedImage = new File($tmpFile);
                 }
 
@@ -800,11 +800,11 @@ class PackageController extends Controller
     /**
      * Check uploaded file for errors and file type validation then move it to the upload folder
      *
-     * @param $uploadedFile
-     * @param $trackingNumber
-     * @param $date
+     * @param UploadedFile|File $uploadedFile The file that was uploaded
+     * @param string $trackingNumber Tracking number of Package
+     * @param string $date Today's date as a string
      *
-     * @return Array = $results
+     * @return null|array Null if there is an error or an array with the File's info after it is successfully moved
      */
     private function moveUploadedFile($uploadedFile, $trackingNumber, $date) {
         // Get the location of where the file should be uploaded to
@@ -828,7 +828,7 @@ class PackageController extends Controller
                 // If that folder doesn't exist, create it
                 if (!file_exists($moveDir)) {
                     if (!(mkdir($moveDir, 0755, true))) {
-                        return FALSE;
+                        return null;
                     }
                 }
 
@@ -840,7 +840,7 @@ class PackageController extends Controller
 
                 // If generating the filename results in false, return false
                 if ($filename === FALSE) {
-                    return FALSE;
+                    return null;
                 }
 
                 // Add filename to results
@@ -853,13 +853,11 @@ class PackageController extends Controller
                 }
 
                 
-                /*
-                 * Move the uploaded file to the correct directory.
-                 */
+                // Move the uploaded file to the correct directory.
                 try {
                     $uploadedFile->move($moveDir, $filename);
                 } catch (\Exception $e) {
-                    return FALSE;
+                    return null;
                 }
 
                 // Attach the folder directory to the file name
@@ -870,12 +868,22 @@ class PackageController extends Controller
                 return $uploadedFileResults;
             }
         } else {
-            return FALSE;
+            return null;
         }
 
-        return FALSE;
+        return null;
     }
 
+    /**
+     * Recursively generate a name for packing slip after moving it
+     *
+     * @param string $moveDir Absolute path to folder that the packing slip will be moved to
+     * @param string $trackingNumber Tracking number of Package
+     * @param UploadedFile|File $uploadedFile Uploaded file
+     * @param int $count The number of times this function has been called
+     * 
+     * @return null|string Null if error or a string of the file name to be used
+     */
     private function generateFileName($moveDir, $trackingNumber, $uploadedFile, $count) {
         if ($uploadedFile instanceof UploadedFile || $uploadedFile instanceof File) {
             $filename = $trackingNumber;
@@ -904,7 +912,7 @@ class PackageController extends Controller
                     $filename .= ".jpg";
                     break;
                 default:
-                    return FALSE;
+                    return null;
             }
 
             if (file_exists($moveDir . $filename)) {
@@ -914,12 +922,21 @@ class PackageController extends Controller
 
             return $filename;
         } else {
-            return FALSE;
+            return null;
         }
 
     }
 
-    public function generateDeletedFileName($path, $file, $count) {
+    /**
+     * Recursively generate a "delete" name for packing slip
+     *
+     * @param string $path Absolute path to folder where the file is
+     * @param string $file The filename that will be changed to be "deleted"
+     * @param int $count The number of times this function has been called for
+     * 
+     * @return string
+     */
+    private function generateDeletedFileName($path, $file, $count) {
         $fileNameArray = explode('.', $file);
 
         $filename = $fileNameArray[0] . '_DELETED';

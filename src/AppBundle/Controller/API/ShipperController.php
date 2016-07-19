@@ -13,6 +13,12 @@ use AppBundle\Entity\Shipper;
 class ShipperController extends Controller
 {
     /**
+     * Route to creating a new Shipper
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/new", name="newShipper")
      * @Method({"POST"})
      */
@@ -81,6 +87,13 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for updating a Shipper
+     *
+     * @param Request $request Symfony global request variable
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/update", name="updateShipper")
      * @Method({"PUT"})
      */
@@ -152,6 +165,12 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for enabling a Shipper
+     *
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/enable", name="enableShipper")
      * @Method({"PUT"})
      */
@@ -198,6 +217,12 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for disabling a Shipper
+     *
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/disable", name="disableShipper")
      * @Method({"PUT"})
      */
@@ -243,47 +268,58 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for deleting a Shipper
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/delete", name="deleteShipper")
      * @Method({"DELETE"})
      *
-     * TODO: Can not delete Shipper: will not cascade into Package table
+     * @todo Can not delete Shipper: will not cascade into Package table
      */
-    public function deleteShipperAction(Request $request, $id) {
-        // Get the Shipper repository
-        $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
-
-        // Get the shipper by id
-        $shipper = $shipperRepository->find($id);
-
-        if (empty($shipper)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not find shipper given id: ' . $id,
-                'object' => []
-            );
-
-            return new JsonResponse($results);
-        } else {
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // Push the updated Shipper to database
-            $em->remove($shipper);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Shipper: ' . $shipper->getName(),
-                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-            );
-
-            return new JsonResponse($results);
-        }
-    }
+//    public function deleteShipperAction(Request $request, $id) {
+//        // Get the Shipper repository
+//        $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
+//
+//        // Get the shipper by id
+//        $shipper = $shipperRepository->find($id);
+//
+//        if (empty($shipper)) {
+//            // Set up the response
+//            $results = array(
+//                'result' => 'error',
+//                'message' => 'Can not find shipper given id: ' . $id,
+//                'object' => []
+//            );
+//
+//            return new JsonResponse($results);
+//        } else {
+//            // Get entity manager
+//            $em = $this->get('doctrine.orm.entity_manager');
+//
+//            // Push the updated Shipper to database
+//            $em->remove($shipper);
+//            $em->flush();
+//
+//            // Set up the response
+//            $results = array(
+//                'result' => 'success',
+//                'message' => 'Successfully deleted Shipper: ' . $shipper->getName(),
+//                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+//            );
+//
+//            return new JsonResponse($results);
+//        }
+//    }
 
     /**
+     * Route for searching for a Shipper base on term
+     *
+     * @param Request $request Shipper's name being searched
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/shippers/search", name="searchShipper")
      * @Method({"GET"})
      */
@@ -328,6 +364,12 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for searching for a Shipper like term
+     *
+     * @param Request $request Term to use for search
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/like", name="likeShipper")
      * @Method({"GET"})
      */
@@ -390,6 +432,12 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route to display Shipper's information
+     *
+     * @param string $id Shipper's ID
+     *
+     * @return Response Render twig template with Shipper Information
+     * 
      * @Route("/shippers/{id}", name="shipper")
      * @Method({"GET"})
      */

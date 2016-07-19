@@ -13,6 +13,12 @@ use AppBundle\Entity\Vendor;
 class VendorController extends Controller
 {
     /**
+     * Route to creating a new Vendor
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/new", name="newVendor")
      * @Method({"POST"})
      */
@@ -81,6 +87,13 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for updating a Vendor
+     *
+     * @param Request $request Symfony global request variable
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/update", name="updateVendor")
      * @Method({"PUT"})
      */
@@ -152,6 +165,12 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for enabling a Vendor
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/enable", name="enableVendor")
      * @Method({"PUT"})
      */
@@ -198,6 +217,12 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for disabling a Vendor
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/disable", name="disableVendor")
      * @Method({"PUT"})
      */
@@ -248,40 +273,40 @@ class VendorController extends Controller
      *
      * TODO: Can not delete Vendor: will not cascade into Package table
      */
-    public function deleteVendorAction(Request $request, $id) {
-        // Get the Vendor repository
-        $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
-
-        // Get the vendor by id
-        $vendor = $vendorRepository->find($id);
-
-        if (empty($vendor)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not find vendor given id: ' . $id,
-                'object' => []
-            );
-
-            return new JsonResponse($results);
-        } else {
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // Push the updated Vendor to database
-            $em->remove($vendor);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Vendor: ' . $vendor->getName(),
-                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-            );
-
-            return new JsonResponse($results);
-        }
-    }
+//    public function deleteVendorAction(Request $request, $id) {
+//        // Get the Vendor repository
+//        $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
+//
+//        // Get the vendor by id
+//        $vendor = $vendorRepository->find($id);
+//
+//        if (empty($vendor)) {
+//            // Set up the response
+//            $results = array(
+//                'result' => 'error',
+//                'message' => 'Can not find vendor given id: ' . $id,
+//                'object' => []
+//            );
+//
+//            return new JsonResponse($results);
+//        } else {
+//            // Get entity manager
+//            $em = $this->get('doctrine.orm.entity_manager');
+//
+//            // Push the updated Vendor to database
+//            $em->remove($vendor);
+//            $em->flush();
+//
+//            // Set up the response
+//            $results = array(
+//                'result' => 'success',
+//                'message' => 'Successfully deleted Vendor: ' . $vendor->getName(),
+//                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+//            );
+//
+//            return new JsonResponse($results);
+//        }
+//    }
 
     /**
      * @Route("/vendors/search", name="searchVendor")

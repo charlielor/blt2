@@ -18,6 +18,14 @@ use Doctrine\ORM\Query\Expr;
 class PackageController extends Controller
 {
     /**
+     * Route for creating a new Package
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @throws \Exception if Receiver/Shipper/Vendor given is not found in the database through Doctrine
+     *
+     * @return JsonResponse $results Results of the call
+     *
      * @Route("/packages/new", name="newPackage")
      * @Method({"POST"})
      */
@@ -67,9 +75,11 @@ class PackageController extends Controller
                 // Set up the response
                 $results = array(
                     'result' => 'error',
-                    'message' => 'Error in processing submitted data',
+                    'message' => 'Error in querying submitted data',
                     'object' => $request->request->all()
                 );
+
+                return new JsonResponse($results);
 
             }
 
@@ -108,7 +118,7 @@ class PackageController extends Controller
             // Get the entity manager
             $em = $this->get('doctrine.orm.entity_manager');
 
-            // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
+            // Foreach uploaded file, move it, create an entry for the packing slips table and link it to Package
             if (!(empty($uploadedFiles))) {
 
                 foreach ($uploadedFiles as $uploadedFile) {
@@ -131,10 +141,6 @@ class PackageController extends Controller
                         return new JsonResponse($results);
                     }
                 }
-
-
-                // Flush packing slips to database
-                $em->flush();
             }
 
             // Push the new Package to database
@@ -150,11 +156,19 @@ class PackageController extends Controller
 
             return new JsonResponse($results);
 
-
         }
     }
 
     /**
+     * Route for creating editing/updating a Package
+     *
+     * @param Request $request Symfony global request variable
+     * @param String $id Tracking number for the Package
+     *
+     * @throws \Exception if Receiver/Shipper/Vendor given is not found in the database through Doctrine
+     *
+     * @return JsonResponse $results Results of the call
+     *
      * @Route("/packages/{id}/update", name="updatePackage")
      * @Method({"POST"})
      */
@@ -188,6 +202,68 @@ class PackageController extends Controller
             // Get the current date
             $currentDate = new \DateTime("NOW");
 
+            // If the vendor changed, update the vendor
+            if (!empty($updatePackage["vendorId"])) {
+                try {
+                    $vendor = $this->getDoctrine()->getRepository('AppBundle:Vendor')->find($updatePackage["vendorId"]);
+
+                    if ($package->getVendor() != $vendor) {
+                        $package->setVendor($vendor, $user);
+                    }
+                } catch(\Exception $e) {
+                    $results = array(
+                        'result' => 'error',
+                        'message' => 'Error in querying Vendor',
+                        'object' => []
+                    );
+
+                    return new JsonResponse($results);
+                }
+            }
+
+            // If the receiver changed, update the receiver
+            if (!empty($updatePackage["receiverId"])) {
+                try {
+                    $receiver = $this->getDoctrine()->getRepository('AppBundle:Receiver')->find($updatePackage["receiverId"]);
+
+                    if ($package->getReceiver() != $receiver) {
+                        $package->setReceiver($receiver, $user);
+                    }
+                } catch (\Exception $e) {
+                    $results = array(
+                        'result' => 'error',
+                        'message' => 'Error in querying Receiver',
+                        'object' => []
+                    );
+
+                    return new JsonResponse($results);
+                }
+            }
+
+            // If the Shipper changed, update the Shipper
+            if (!empty($updatePackage["shipperId"])) {
+                try {
+                    $shipper = $this->getDoctrine()->getRepository('AppBundle:Shipper')->find($updatePackage["shipperId"]);
+
+                    if ($package->getShipper() != $shipper) {
+                        $package->setShipper($shipper, $user);
+                    }
+                } catch (\Exception $e) {
+                    $results = array(
+                        'result' => 'error',
+                        'message' => 'Error in querying Shipper',
+                        'object' => []
+                    );
+
+                    return new JsonResponse($results);
+                }
+            }
+
+            // If the number of packages changed, then update the number of packages
+            if (!empty($updatePackage["numberOfPackages"])) {
+                $package->setNumberOfPackages($updatePackage["numberOfPackages"], $user);
+            }
+
             // For each updatable field
             if (!empty($updatePackage['deletePackingSlipIds'])) {
                 $deletedPackingSlipIDs = $updatePackage['deletePackingSlipIds'];
@@ -215,9 +291,6 @@ class PackageController extends Controller
 
                         // Persist the deleted file
                         $em->persist($deletedPackingSlip);
-
-                        // Commit deleted packing slips to the server
-                        $em->flush();
                     }
                 }
 
@@ -236,9 +309,8 @@ class PackageController extends Controller
                 $uploadedFiles = $this->addPicturesToUploadedFilesArray($uploadedFiles, $updatePackage["packingSlipPictures"]);
             }
 
-            // If the uploadedFiles array isn't empty, then check for errors and move them to the appropriate folder
+            // Foreach uploaded file, move it, create an entry for the packing slips table and link it to Package
             if (!(empty($uploadedFiles))) {
-
                 foreach ($uploadedFiles as $uploadedFile) {
                     $moveUploadedFileLocation = $this->moveUploadedFile($uploadedFile, $id, $currentDate->format('Ymd'));
 
@@ -259,41 +331,6 @@ class PackageController extends Controller
                         return new JsonResponse($results);
                     }
                 }
-
-                // Flush packing slips to database
-                $em->flush();
-            }
-
-            // If the vendor changed, update the vendor
-            if (!empty($updatePackage["vendorId"])) {
-                $vendor = $this->getDoctrine()->getRepository('AppBundle:Vendor')->find($updatePackage["vendorId"]);
-
-                if ($package->getVendor() != $vendor) {
-                    $package->setVendor($vendor, $user);
-                }
-            }
-
-            // If the receiver changed, update the receiver
-            if (!empty($updatePackage["receiverId"])) {
-                $receiver = $this->getDoctrine()->getRepository('AppBundle:Receiver')->find($updatePackage["receiverId"]);
-
-                if ($package->getReceiver() != $receiver) {
-                    $package->setReceiver($receiver, $user);
-                }
-            }
-
-            // If the Shipper changed, update the Shipper
-            if (!empty($updatePackage["shipperId"])) {
-                $shipper = $this->getDoctrine()->getRepository('AppBundle:Shipper')->find($updatePackage["shipperId"]);
-
-                if ($package->getShipper() != $shipper) {
-                    $package->setShipper($shipper, $user);
-                }
-            }
-
-            // If the number of packages changed, then update the number of packages
-            if (!empty($updatePackage["numberOfPackages"])) {
-                $package->setNumberOfPackages($updatePackage["numberOfPackages"], $user);
             }
 
             // Make sure the entity manager sees the entity as a new entity
@@ -314,6 +351,12 @@ class PackageController extends Controller
     }
 
     /**
+     * Route for marking a Package as delivered
+     *
+     * @param String $id Tracking number for Package
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/packages/{id}/deliver", name="deliverPackage")
      * @Method({"PUT"})
      */
@@ -379,6 +422,13 @@ class PackageController extends Controller
     }
 
     /**
+     * Route for marking a Package as picked up
+     *
+     * @param Request $request Symfony global request variable
+     * @param String $id Tracking number for Package
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/packages/{id}/pickup", name="pickupPackage")
      * @Method({"PUT"})
      */
@@ -447,6 +497,12 @@ class PackageController extends Controller
     }
 
     /**
+     * Route for searching up a Package base of tracking number
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/packages/search", name="searchPackage")
      * @Method({"GET"})
      */
@@ -487,6 +543,12 @@ class PackageController extends Controller
     }
 
     /**
+     * Route to search for Packages like term submitted
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/packages/like", name="likePackage")
      * @Method({"Get"})
      */
@@ -530,60 +592,80 @@ class PackageController extends Controller
     }
 
     /**
+     * Route for deleting a Package
+     *
+     * @param String $id Tracking number for Package
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/packages/{id}/delete", name="deletePackage")
      * @Method({"DELETE"})
      *
      */
-    public function deletePackageAction(Request $request, $id) {
+//    public function deletePackageAction($id) {
+//        // Get the Package repository
+//        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
+//
+//        // Get the package by id
+//        $package = $packageRepository->find($id);
+//
+//        if (empty($package)) {
+//            // Set up the response
+//            $results = array(
+//                'result' => 'error',
+//                'message' => 'Can not find package given id: ' . $id,
+//                'object' => []
+//            );
+//
+//            return new JsonResponse($results);
+//        } else {
+//            // Get entity manager
+//            $em = $this->get('doctrine.orm.entity_manager');
+//
+//            // Push the updated Package to database
+//            $em->remove($package);
+//            $em->flush();
+//
+//            // Set up the response
+//            $results = array(
+//                'result' => 'success',
+//                'message' => 'Successfully deleted Package: ' . $package->getTrackingNumber(),
+//                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
+//            );
+//
+//            return new JsonResponse($results);
+//        }
+//    }
+
+    /**
+     * Route to display package information
+     *
+     * @Route("/packages/{id}", name="package")
+     * @Method({"GET"})
+     */
+    public function packageAction($id) {
         // Get the Package repository
         $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
 
         // Get the package by id
         $package = $packageRepository->find($id);
 
-        if (empty($package)) {
+        if (!empty($package)) {
+            return $this->render('entity.html.twig', [
+                "type" => "package",
+                "entity" => $package
+            ]);
+        } else {
             // Set up the response
             $results = array(
                 'result' => 'error',
-                'message' => 'Can not find package given id: ' . $id,
+                'message' => 'No such package' ,
                 'object' => []
             );
 
             return new JsonResponse($results);
-        } else {
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // Push the updated Package to database
-            $em->remove($package);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Package: ' . $package->getTrackingNumber(),
-                'object' => json_decode($this->get('serializer')->serialize($package, 'json'))
-            );
-
-            return new JsonResponse($results);
         }
-    }
 
-    /**
-     * @Route("/packages/{id}", name="package")
-     * @Method({"GET"})
-     */
-    public function packageAction(Request $request, $id) {
-        // Get the Package repository
-        $packageRepository = $this->getDoctrine()->getRepository("AppBundle:Package");
-
-        // Get the package by id
-        $package = $packageRepository->find($id);
-
-        return $this->render('entity.html.twig', [
-            "type" => "package",
-            "entity" => $package
-        ]);
     }
 
     /**

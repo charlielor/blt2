@@ -34,9 +34,9 @@ BLT2 is not tied to the Department of Biochemistry at the University of Wisconsi
 
 [Example Implementation](docs/uwMadisonBiochemistryImplementation.md)
 
-[Developer](docs/developersGuide.md)
+[Developer](docs/developerGuide.md)
 
-[User](docs/usersGuide.md)
+[User](docs/userGuide.md)
 
 ## For anyone who wants to use some sort of authentication/authorization system
 1. Fork project

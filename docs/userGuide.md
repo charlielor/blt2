@@ -1,5 +1,5 @@
-User's guide
-============
+User guide
+==========
 ## Table of contents
 - [Introduction](#introduction)
 - [Entity creation](#entityCreation)

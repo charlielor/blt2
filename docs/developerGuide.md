@@ -1,8 +1,8 @@
-Developer's Guide
-=================
+Developer Guide
+===============
 
 ## Introduction
-
+This guide is a walkthrough on how to use BLT2's API.  
 ## phpDocs
 [API](docs/phpdocs/namespaces/AppBundle.Controller.API.html)
 

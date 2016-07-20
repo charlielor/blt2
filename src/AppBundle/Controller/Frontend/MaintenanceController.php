@@ -11,9 +11,11 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Mapping as ORM;
 
 
-class MaintenanceController extends Controller
-{
+class MaintenanceController extends Controller {
+
     /**
+     * Route to render the maintenance page
+     *
      * @Route("/maintenance", name="maintenance")
      */
     public function renderTemplateAction() {

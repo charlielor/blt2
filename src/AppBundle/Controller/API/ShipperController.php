@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Controls everything related to the Shipper entity from creation, update, search, etc.
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -14,6 +16,8 @@ class ShipperController extends Controller
 {
     /**
      * Route to creating a new Shipper
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      *
@@ -88,6 +92,8 @@ class ShipperController extends Controller
 
     /**
      * Route for updating a Shipper
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      * @param string $id Shipper's ID
@@ -167,6 +173,8 @@ class ShipperController extends Controller
     /**
      * Route for enabling a Shipper
      *
+     * @api
+     *
      * @param string $id Shipper's ID
      *
      * @return JsonResponse Results of the call
@@ -174,7 +182,7 @@ class ShipperController extends Controller
      * @Route("/shippers/{id}/enable", name="enableShipper")
      * @Method({"PUT"})
      */
-    public function enableShipperAction(Request $request, $id) {
+    public function enableShipperAction($id) {
         // Get the Shipper repository
         $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
 
@@ -219,6 +227,8 @@ class ShipperController extends Controller
     /**
      * Route for disabling a Shipper
      *
+     * @api
+     *
      * @param string $id Shipper's ID
      *
      * @return JsonResponse Results of the call
@@ -226,7 +236,7 @@ class ShipperController extends Controller
      * @Route("/shippers/{id}/disable", name="disableShipper")
      * @Method({"PUT"})
      */
-    public function disableShipperAction(Request $request, $id) {
+    public function disableShipperAction($id) {
         // Get the Shipper repository
         $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
 
@@ -269,6 +279,9 @@ class ShipperController extends Controller
 
     /**
      * Route for deleting a Shipper
+     *
+     * @api
+     *
      * @param string $id Shipper's ID
      *
      * @return JsonResponse Results of the call
@@ -315,6 +328,8 @@ class ShipperController extends Controller
 
     /**
      * Route for searching for a Shipper base on term
+     *
+     * @api
      *
      * @param Request $request Shipper's name being searched
      *
@@ -366,6 +381,8 @@ class ShipperController extends Controller
     /**
      * Route for searching for a Shipper like term
      *
+     * @api
+     *
      * @param Request $request Term to use for search
      *
      * @return JsonResponse Results of the call
@@ -411,6 +428,12 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route to get all shippers
+     *
+     * @api
+     *
+     * @returns JsonResponse Results of the call
+     *
      * @Route("/shippers", name="shippers")
      * @Method({"GET"})
      */
@@ -433,6 +456,8 @@ class ShipperController extends Controller
 
     /**
      * Route to display Shipper's information
+     *
+     * @api
      *
      * @param string $id Shipper's ID
      *

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Controls everything related to the Vendor entity from creation, update, search, etc.
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -14,6 +16,8 @@ class VendorController extends Controller
 {
     /**
      * Route to creating a new Vendor
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      *
@@ -88,6 +92,8 @@ class VendorController extends Controller
 
     /**
      * Route for updating a Vendor
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      * @param string $id Vendor's ID
@@ -167,6 +173,8 @@ class VendorController extends Controller
     /**
      * Route for enabling a Vendor
      *
+     * @api
+     *
      * @param string $id Vendor's ID
      *
      * @return JsonResponse Results of the call
@@ -174,7 +182,7 @@ class VendorController extends Controller
      * @Route("/vendors/{id}/enable", name="enableVendor")
      * @Method({"PUT"})
      */
-    public function enableVendorAction(Request $request, $id) {
+    public function enableVendorAction($id) {
         // Get the Vendor repository
         $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
 
@@ -219,6 +227,8 @@ class VendorController extends Controller
     /**
      * Route for disabling a Vendor
      *
+     * @api
+     *
      * @param string $id Vendor's ID
      *
      * @return JsonResponse Results of the call
@@ -226,7 +236,7 @@ class VendorController extends Controller
      * @Route("/vendors/{id}/disable", name="disableVendor")
      * @Method({"PUT"})
      */
-    public function disableVendorAction(Request $request, $id) {
+    public function disableVendorAction($id) {
         // Get the Vendor repository
         $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
 
@@ -268,10 +278,18 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for deleting a Vendor
+     *
+     * @api
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/delete", name="deleteVendor")
      * @Method({"DELETE"})
      *
-     * TODO: Can not delete Vendor: will not cascade into Package table
+     * @todo Can not delete Vendor: will not cascade into Package table
      */
 //    public function deleteVendorAction(Request $request, $id) {
 //        // Get the Vendor repository
@@ -309,6 +327,14 @@ class VendorController extends Controller
 //    }
 
     /**
+     * Route for searching for a Vendor base on term
+     *
+     * @api
+     *
+     * @param Request $request Vendor's name being searched
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/vendors/search", name="searchVendor")
      * @Method({"GET"})
      */
@@ -355,6 +381,14 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for searching for a Vendor like term
+     *
+     * @api
+     *
+     * @param Request $request Term to use for search
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/vendors/like", name="likeVendor")
      * @Method({"GET"})
      */
@@ -395,6 +429,12 @@ class VendorController extends Controller
     }
 
     /**
+     * Route to get all vendors
+     *
+     * @api
+     *
+     * @returns JsonResponse Results of the call
+     *
      * @Route("/vendors", name="vendors")
      * @Method({"GET"})
      */
@@ -416,6 +456,14 @@ class VendorController extends Controller
     }
 
     /**
+     * Route to display Vendor's information
+     *
+     * @api
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return Response Render twig template with Vendor Information
+     *
      * @Route("/vendors/{id}", name="vendor")
      * @Method({"GET"})
      */

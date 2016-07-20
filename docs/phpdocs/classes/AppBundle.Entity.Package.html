@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/AppBundle.html">\AppBundle</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">76</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">3</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1202479962"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1202479962" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-583255170"></a>
+                                <a href="../namespaces/AppBundle.html" style="margin-left: 30px; padding-left: 0">AppBundle</a>
+            </div>
+            <div id="namespace-583255170" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-600048899"></a>
+                                <a href="../namespaces/AppBundle.Controller.html" style="margin-left: 30px; padding-left: 0">Controller</a>
+            </div>
+            <div id="namespace-600048899" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1772650198"></a>
+                                <a href="../namespaces/AppBundle.Controller.API.html" style="margin-left: 30px; padding-left: 0">API</a>
+            </div>
+            <div id="namespace-1772650198" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AppBundle.Controller.API.PackageController.html">PackageController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.API.PackingSlipController.html">PackingSlipController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.API.ReceiverController.html">ReceiverController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.API.ShipperController.html">ShipperController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.API.UserController.html">UserController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.API.VendorController.html">VendorController</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-308404206"></a>
+                                <a href="../namespaces/AppBundle.Controller.Frontend.html" style="margin-left: 30px; padding-left: 0">Frontend</a>
+            </div>
+            <div id="namespace-308404206" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AppBundle.Controller.Frontend.BaseController.html">BaseController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.Frontend.DeliveringController.html">DeliveringController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.Frontend.MaintenanceController.html">MaintenanceController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.Frontend.MenuController.html">MenuController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.Frontend.ReceivingController.html">ReceivingController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.Frontend.ReportingController.html">ReportingController</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Controller.Frontend.ViewController.html">ViewController</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1010991782"></a>
+                                <a href="../namespaces/AppBundle.Entity.html" style="margin-left: 30px; padding-left: 0">Entity</a>
+            </div>
+            <div id="namespace-1010991782" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AppBundle.Entity.Package.html">Package</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Entity.PackingSlip.html">PackingSlip</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Entity.Receiver.html">Receiver</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Entity.Shipper.html">Shipper</a></li>
+                                                    <li class="class"><a href="../classes/AppBundle.Entity.Vendor.html">Vendor</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/AppBundle.Entity.html">\AppBundle\Entity</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\AppBundle\Entity</small>Package</h1>
+                    <p><em></em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setTrackingNumber" class="">setTrackingNumber()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getTrackingNumber" class="">getTrackingNumber()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setNumberOfPackages" class="">setNumberOfPackages()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getNumberOfPackages" class="">getNumberOfPackages()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setDateDelivered" class="">setDateDelivered()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getDateDelivered" class="">getDateDelivered()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setDateReceived" class="">setDateReceived()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getDateReceived" class="">getDateReceived()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setDelivered" class="">setDelivered()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getDelivered" class="">getDelivered()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setShipper" class="">setShipper()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getShipper" class="">getShipper()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setReceiver" class="">setReceiver()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getReceiver" class="">getReceiver()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setVendor" class="">setVendor()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getVendor" class="">getVendor()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setUserWhoReceived" class="">setUserWhoReceived()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getUserWhoReceived" class="">getUserWhoReceived()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setUserWhoDelivered" class="">setUserWhoDelivered()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getUserWhoDelivered" class="">getUserWhoDelivered()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setDatePickedUp" class="">setDatePickedUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getDatePickedUp" class="">getDatePickedUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setUserWhoPickedUp" class="">setUserWhoPickedUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getUserWhoPickedUp" class="">getUserWhoPickedUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setUserWhoAuthorizedPickUp" class="">setUserWhoAuthorizedPickUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getUserWhoAuthorizedPickUp" class="">getUserWhoAuthorizedPickUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setPickedUp" class="">setPickedUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getPickedUp" class="">getPickedUp()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setDateModified" class="">setDateModified()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getDateModified" class="">getDateModified()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_setUserLastModified" class="">setUserLastModified()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getUserLastModified" class="">getUserLastModified()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_addPackingSlip" class="">addPackingSlip()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_removePackingSlips" class="">removePackingSlips()</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#method_getPackingSlips" class="">getPackingSlips()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_trackingNumber" class="">$trackingNumber</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_numberOfPackages" class="">$numberOfPackages</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_packingSlips" class="">$packingSlips</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_dateDelivered" class="">$dateDelivered</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_dateReceived" class="">$dateReceived</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_delivered" class="">$delivered</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_userWhoReceived" class="">$userWhoReceived</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_userWhoDelivered" class="">$userWhoDelivered</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_pickedUp" class="">$pickedUp</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_datePickedUp" class="">$datePickedUp</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_userWhoPickedUp" class="">$userWhoPickedUp</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_userWhoAuthorizedPickUp" class="">$userWhoAuthorizedPickUp</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_dateModified" class="">$dateModified</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_userLastModified" class="">$userLastModified</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_shipper" class="">$shipper</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_receiver" class="">$receiver</a><br />
+                                                                    <a href="../classes/AppBundle.Entity.Package.html#property_vendor" class="">$vendor</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Entity.Package.html"><div class="path-wrapper">Entity/Package.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\AppBundle\Entity\Package</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                ORM\Entity
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                ORM\Table
+                            </th>
+                            <td>
+                                                                    <p>(name=&quot;Package&quot;)</p>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_trackingNumber" name="property_trackingNumber" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$trackingNumber</h3>
+                <pre class="signature">$trackingNumber : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Id
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;string&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_numberOfPackages" name="property_numberOfPackages" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$numberOfPackages</h3>
+                <pre class="signature">$numberOfPackages : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;integer&quot;, length=100)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_packingSlips" name="property_packingSlips" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$packingSlips</h3>
+                <pre class="signature">$packingSlips : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\ManyToMany
+                        </th>
+                        <td>
+                                                            <p>(targetEntity=&quot;PackingSlip&quot;)</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            ORM\JoinTable
+                        </th>
+                        <td>
+                                                            <p>(name=&quot;PackagePackingSlip&quot;,
+joinColumns={
+@ORM\JoinColumn(name=&quot;trackingNumber&quot;, referencedColumnName=&quot;trackingNumber&quot;)
+},
+inverseJoinColumns={
+@ORM\JoinColumn(name=&quot;packingSlipId&quot;, referencedColumnName=&quot;id&quot;, unique=true)
+}
+)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_dateDelivered" name="property_dateDelivered" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$dateDelivered</h3>
+                <pre class="signature">$dateDelivered : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;datetime&quot;, nullable=true)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_dateReceived" name="property_dateReceived" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$dateReceived</h3>
+                <pre class="signature">$dateReceived : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;datetime&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_delivered" name="property_delivered" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$delivered</h3>
+                <pre class="signature">$delivered : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;boolean&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_userWhoReceived" name="property_userWhoReceived" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$userWhoReceived</h3>
+                <pre class="signature">$userWhoReceived : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;string&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_userWhoDelivered" name="property_userWhoDelivered" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$userWhoDelivered</h3>
+                <pre class="signature">$userWhoDelivered : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;string&quot;, nullable=true)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_pickedUp" name="property_pickedUp" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$pickedUp</h3>
+                <pre class="signature">$pickedUp : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;boolean&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_datePickedUp" name="property_datePickedUp" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$datePickedUp</h3>
+                <pre class="signature">$datePickedUp : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;datetime&quot;, nullable=true)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_userWhoPickedUp" name="property_userWhoPickedUp" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$userWhoPickedUp</h3>
+                <pre class="signature">$userWhoPickedUp : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;string&quot;, nullable=true)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_userWhoAuthorizedPickUp" name="property_userWhoAuthorizedPickUp" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$userWhoAuthorizedPickUp</h3>
+                <pre class="signature">$userWhoAuthorizedPickUp : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;string&quot;, nullable=true)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_dateModified" name="property_dateModified" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$dateModified</h3>
+                <pre class="signature">$dateModified : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;datetime&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_userLastModified" name="property_userLastModified" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$userLastModified</h3>
+                <pre class="signature">$userLastModified : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\Column
+                        </th>
+                        <td>
+                                                            <p>(type=&quot;string&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_shipper" name="property_shipper" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$shipper</h3>
+                <pre class="signature">$shipper : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\ManyToOne
+                        </th>
+                        <td>
+                                                            <p>(targetEntity=&quot;Shipper&quot;, cascade={&quot;persist&quot;})</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            ORM\JoinColumn
+                        </th>
+                        <td>
+                                                            <p>(name=&quot;shipperId&quot;, referencedColumnName=&quot;id&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_receiver" name="property_receiver" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$receiver</h3>
+                <pre class="signature">$receiver : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\ManyToOne
+                        </th>
+                        <td>
+                                                            <p>(targetEntity=&quot;Receiver&quot;, cascade={&quot;persist&quot;})</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            ORM\JoinColumn
+                        </th>
+                        <td>
+                                                            <p>(name=&quot;receiverId&quot;, referencedColumnName=&quot;id&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_vendor" name="property_vendor" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$vendor</h3>
+                <pre class="signature">$vendor : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            ORM\ManyToOne
+                        </th>
+                        <td>
+                                                            <p>(targetEntity=&quot;Vendor&quot;, cascade={&quot;persist&quot;})</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            ORM\JoinColumn
+                        </th>
+                        <td>
+                                                            <p>(name=&quot;vendorId&quot;, referencedColumnName=&quot;id&quot;)</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(  <span class="argument">$trackingNumber</span>,   <span class="argument">$numOfPackages</span>,   <span class="argument">$shipper</span>,   <span class="argument">$receiver</span>,   <span class="argument">$vendor</span>,   <span class="argument">$user</span>) </pre>
+                <p><em>Package constructor</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$trackingNumber </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$numOfPackages </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$shipper </td>
+                                <td><p>Shipper object</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$receiver </td>
+                                <td><p>Receiver object</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$vendor </td>
+                                <td><p>Vendor object</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setTrackingNumber" name="method_setTrackingNumber" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setTrackingNumber()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setTrackingNumber(string  <span class="argument">$trackingNumber</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set trackingNumber</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$trackingNumber </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getTrackingNumber" name="method_getTrackingNumber" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getTrackingNumber()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getTrackingNumber() : string</pre>
+                <p><em>Get trackingNumber</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setNumberOfPackages" name="method_setNumberOfPackages" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setNumberOfPackages()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setNumberOfPackages(integer  <span class="argument">$numberOfPackages</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set numberOfPackages</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$numberOfPackages </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getNumberOfPackages" name="method_getNumberOfPackages" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getNumberOfPackages()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getNumberOfPackages() : integer</pre>
+                <p><em>Get numberOfPackages</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDateDelivered" name="method_setDateDelivered" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDateDelivered()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDateDelivered(\DateTime  <span class="argument">$dateDelivered</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set dateDelivered</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\DateTime</td>
+                                <td>$dateDelivered </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDateDelivered" name="method_getDateDelivered" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDateDelivered()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDateDelivered() : \DateTime</pre>
+                <p><em>Get dateDelivered</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \DateTime
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDateReceived" name="method_setDateReceived" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDateReceived()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDateReceived(\DateTime  <span class="argument">$dateReceived</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set dateReceived</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\DateTime</td>
+                                <td>$dateReceived </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDateReceived" name="method_getDateReceived" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDateReceived()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDateReceived() : \DateTime</pre>
+                <p><em>Get dateReceived</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \DateTime
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDelivered" name="method_setDelivered" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDelivered()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDelivered(boolean  <span class="argument">$delivered</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set delivered</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$delivered </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDelivered" name="method_getDelivered" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDelivered()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDelivered() : boolean</pre>
+                <p><em>Get delivered</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setShipper" name="method_setShipper" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setShipper()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setShipper(\AppBundle\Entity\Shipper  <span class="argument">$shipper = null</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set shipper</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/AppBundle.Entity.Shipper.html">\AppBundle\Entity\Shipper</a></td>
+                                <td>$shipper </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getShipper" name="method_getShipper" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getShipper()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getShipper() : \AppBundle\Entity\Shipper</pre>
+                <p><em>Get shipper</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Shipper.html">\AppBundle\Entity\Shipper</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setReceiver" name="method_setReceiver" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setReceiver()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setReceiver(\AppBundle\Entity\Receiver  <span class="argument">$receiver = null</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set receiver</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/AppBundle.Entity.Receiver.html">\AppBundle\Entity\Receiver</a></td>
+                                <td>$receiver </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getReceiver" name="method_getReceiver" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getReceiver()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getReceiver() : \AppBundle\Entity\Receiver</pre>
+                <p><em>Get receiver</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Receiver.html">\AppBundle\Entity\Receiver</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setVendor" name="method_setVendor" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setVendor()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setVendor(\AppBundle\Entity\Vendor  <span class="argument">$vendor = null</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set vendor</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/AppBundle.Entity.Vendor.html">\AppBundle\Entity\Vendor</a></td>
+                                <td>$vendor </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getVendor" name="method_getVendor" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getVendor()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getVendor() : \AppBundle\Entity\Vendor</pre>
+                <p><em>Get vendor</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Vendor.html">\AppBundle\Entity\Vendor</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setUserWhoReceived" name="method_setUserWhoReceived" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setUserWhoReceived()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setUserWhoReceived(string  <span class="argument">$userWhoReceived</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set userWhoReceived</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$userWhoReceived </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUserWhoReceived" name="method_getUserWhoReceived" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getUserWhoReceived()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUserWhoReceived() : string</pre>
+                <p><em>Get userWhoReceived</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setUserWhoDelivered" name="method_setUserWhoDelivered" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setUserWhoDelivered()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setUserWhoDelivered(string  <span class="argument">$userWhoDelivered</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set userWhoDelivered</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$userWhoDelivered </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUserWhoDelivered" name="method_getUserWhoDelivered" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getUserWhoDelivered()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUserWhoDelivered() : string</pre>
+                <p><em>Get userWhoDelivered</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDatePickedUp" name="method_setDatePickedUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDatePickedUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDatePickedUp(\DateTime  <span class="argument">$datePickedUp</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set datePickedUp</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\DateTime</td>
+                                <td>$datePickedUp </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDatePickedUp" name="method_getDatePickedUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDatePickedUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDatePickedUp() : \DateTime</pre>
+                <p><em>Get datePickedUp</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \DateTime
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setUserWhoPickedUp" name="method_setUserWhoPickedUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setUserWhoPickedUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setUserWhoPickedUp(string  <span class="argument">$userWhoPickedUp</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set userWhoPickedUp</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$userWhoPickedUp </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUserWhoPickedUp" name="method_getUserWhoPickedUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getUserWhoPickedUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUserWhoPickedUp() : string</pre>
+                <p><em>Get userWhoPickedUp</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setUserWhoAuthorizedPickUp" name="method_setUserWhoAuthorizedPickUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setUserWhoAuthorizedPickUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setUserWhoAuthorizedPickUp(string  <span class="argument">$userWhoAuthorizedPickUp</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set userWhoAuthorizedPickUp</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$userWhoAuthorizedPickUp </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUserWhoAuthorizedPickUp" name="method_getUserWhoAuthorizedPickUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getUserWhoAuthorizedPickUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUserWhoAuthorizedPickUp() : string</pre>
+                <p><em>Get userWhoAuthorizedPickUp</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setPickedUp" name="method_setPickedUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setPickedUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setPickedUp(boolean  <span class="argument">$pickedUp</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set pickedUp</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$pickedUp </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPickedUp" name="method_getPickedUp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPickedUp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPickedUp() : boolean</pre>
+                <p><em>Get pickedUp</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDateModified" name="method_setDateModified" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDateModified()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDateModified(\DateTime  <span class="argument">$dateModified</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set dateModified</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\DateTime</td>
+                                <td>$dateModified </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDateModified" name="method_getDateModified" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDateModified()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDateModified() : \DateTime</pre>
+                <p><em>Get dateModified</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \DateTime
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setUserLastModified" name="method_setUserLastModified" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setUserLastModified()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setUserLastModified(string  <span class="argument">$userLastModified</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Set userLastModified</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$userLastModified </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUserLastModified" name="method_getUserLastModified" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getUserLastModified()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUserLastModified() : string</pre>
+                <p><em>Get userLastModified</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_addPackingSlip" name="method_addPackingSlip" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">addPackingSlip()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">addPackingSlip(\AppBundle\Entity\PackingSlip  <span class="argument">$packingSlip</span>, string  <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Add a packingSlip</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/AppBundle.Entity.PackingSlip.html">\AppBundle\Entity\PackingSlip</a></td>
+                                <td>$packingSlip </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_removePackingSlips" name="method_removePackingSlips" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">removePackingSlips()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">removePackingSlips(\AppBundle\Entity\PackingSlip  <span class="argument">$packingSlip</span>,   <span class="argument">$user</span>) : \AppBundle\Entity\Package</pre>
+                <p><em>Remove a packingSlips</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/AppBundle.Entity.PackingSlip.html">\AppBundle\Entity\PackingSlip</a></td>
+                                <td>$packingSlip </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AppBundle.Entity.Package.html">\AppBundle\Entity\Package</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPackingSlips" name="method_getPackingSlips" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPackingSlips()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPackingSlips() : \Doctrine\Common\Collections\Collection</pre>
+                <p><em>Get packingSlips</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \Doctrine\Common\Collections\Collection
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Package.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Entity/Package.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/AppBundle.html">\AppBundle</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on July 20th, 2016 at 12:15.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

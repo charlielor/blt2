@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Controls everything related to the Package entity from creation, update, search, etc.
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -19,6 +21,8 @@ class PackageController extends Controller
 {
     /**
      * Route for creating a new Package
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      *
@@ -161,6 +165,8 @@ class PackageController extends Controller
 
     /**
      * Route for creating editing/updating a Package
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      * @param string $id Tracking number for the Package
@@ -353,6 +359,8 @@ class PackageController extends Controller
     /**
      * Route for marking a Package as delivered
      *
+     * @api
+     *
      * @param string $id Tracking number for Package
      *
      * @return JsonResponse Results of the call
@@ -423,6 +431,8 @@ class PackageController extends Controller
 
     /**
      * Route for marking a Package as picked up
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      * @param string $id Tracking number for Package
@@ -499,6 +509,8 @@ class PackageController extends Controller
     /**
      * Route for searching up a Package base of tracking number
      *
+     * @api
+     *
      * @param Request $request Symfony global request variable
      *
      * @return JsonResponse Results of the call
@@ -544,6 +556,8 @@ class PackageController extends Controller
 
     /**
      * Route to search for Packages like term submitted
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      *
@@ -594,6 +608,8 @@ class PackageController extends Controller
     /**
      * Route for deleting a Package
      *
+     * @api
+     *
      * @param string $id Tracking number for Package
      *
      * @return JsonResponse Results of the call
@@ -640,6 +656,8 @@ class PackageController extends Controller
     /**
      * Route to display Package information
      *
+     * @api
+     *
      * @param string $id Tracking number for Package
      *
      * @return Response Render twig template with Package information
@@ -664,6 +682,8 @@ class PackageController extends Controller
 
     /**
      * Route to get a list of Packages based off dates
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      *

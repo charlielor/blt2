@@ -1,4 +1,7 @@
 <?php
+/**
+ * Provides routes to download or preview uploaded packing slips
+ */
 
 namespace AppBundle\Controller\API;
 

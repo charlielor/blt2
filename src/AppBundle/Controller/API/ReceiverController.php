@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Controls everything related to the Receiver entity from creation, update, search, etc.
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -15,6 +17,8 @@ class ReceiverController extends Controller
 {
     /**
      * Route to creating a new Receiver
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      *
@@ -92,6 +96,8 @@ class ReceiverController extends Controller
 
     /**
      * Route for updating a Receiver
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      * @param string $id Receiver's ID
@@ -177,6 +183,8 @@ class ReceiverController extends Controller
     /**
      * Route for enabling a Receiver
      *
+     * @api
+     *
      * @param string $id Receiver's ID
      *
      * @return JsonResponse Results of the call
@@ -229,6 +237,8 @@ class ReceiverController extends Controller
     /**
      * Route for disabling a Receiver
      *
+     * @api
+     *
      * @param string $id Receiver's ID
      *
      * @return JsonResponse Results of the call
@@ -279,6 +289,9 @@ class ReceiverController extends Controller
 
     /**
      * Route for deleting a Receiver
+     *
+     * @api
+     *
      * @param string $id Receiver's ID
      *
      * @return JsonResponse Results of the call
@@ -325,6 +338,8 @@ class ReceiverController extends Controller
 
     /**
      * Route for searching for a Receiver base on term
+     *
+     * @api
      *
      * @param Request $request Receiver's name being searched
      *
@@ -376,6 +391,8 @@ class ReceiverController extends Controller
     /**
      * Route for searching for a Receiver like term
      *
+     * @api
+     *
      * @param Request $request Term to use for search
      *
      * @return JsonResponse Results of the call
@@ -422,6 +439,8 @@ class ReceiverController extends Controller
     /**
      * Route to get all Receivers
      *
+     * @api
+     *
      * @return JsonResponse Results of the call
      *
      * @Route("/receivers", name="receivers")
@@ -446,6 +465,8 @@ class ReceiverController extends Controller
 
     /**
      * Route to get Receiver's undelivered/not picked up Packages
+     *
+     * @api
      *
      * @param Request $request Name of the receiver
      *
@@ -531,6 +552,8 @@ class ReceiverController extends Controller
 
     /**
      * Route to display Receiver's information
+     *
+     * @api
      *
      * @param string $id Receiver's ID
      *

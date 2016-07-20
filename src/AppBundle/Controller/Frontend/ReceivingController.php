@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 class ReceivingController extends Controller {
 
     /**
+     * Route to render the receiving page
+     *
      * @Route("/receiving", name="receiving")
      */
     public function renderTemplateAction() {

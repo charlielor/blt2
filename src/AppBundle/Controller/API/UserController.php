@@ -1,4 +1,7 @@
 <?php
+/**
+ * Provides routes to search users within the Package table in the database since they don't have their own table
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -12,6 +15,8 @@ class UserController extends Controller {
 
     /**
      * Route to get all users in database (no user table or entity)
+     *
+     * @api
      *
      * @return JsonResponse Results of the call
      *
@@ -38,6 +43,8 @@ class UserController extends Controller {
 
     /**
      * Route to search for a user in database base on term
+     *
+     * @api
      *
      * @param Request $request Symfony global request variable
      *
@@ -84,10 +91,12 @@ class UserController extends Controller {
     /**
      * Route to serach for a user in database like term
      *
+     * @api
+     *
      * @param Request $request Symfony global request variable
      *
      * @return JsonResponse Results of the call
-     * 
+     *
      * @Route("/users/like", name="likeUser")
      * @Method({"GET"})
      */

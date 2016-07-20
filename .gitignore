@@ -160,8 +160,9 @@ sftp-config.json
 *.bak
 
 
-### phpDocumentor.phar
+### phpDocumentor ###
 /phpDocumentor.phar
+/docs/phpdocs/phpdoc-*
 
 ### BLT2 ###
 upload/*

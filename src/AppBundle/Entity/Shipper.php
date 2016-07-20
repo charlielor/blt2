@@ -44,6 +44,9 @@ class Shipper
 
     /**
      * Shipper constructor.
+     * @param $name
+     * @param $user
+     *
      */
     public function __construct($name, $user) {
         $this->name = $name;
@@ -71,6 +74,8 @@ class Shipper
      * Set name
      *
      * @param string $name
+     * @param string $user
+     *
      * @return Shipper
      */
     public function setName($name, $user)
@@ -99,6 +104,8 @@ class Shipper
      * Set enabled
      *
      * @param boolean $enabled
+     * @param string $user
+     *
      * @return Shipper
      */
     public function setEnabled($enabled, $user)
@@ -126,6 +133,8 @@ class Shipper
      * Set dateCreated
      *
      * @param \DateTime $dateCreated
+     * @param string $user
+     *
      * @return Shipper
      */
     public function setDateCreated($dateCreated, $user)
@@ -151,6 +160,8 @@ class Shipper
      * Set dateModified
      *
      * @param \DateTime $dateModified
+     * @param string $user
+     *
      * @return Shipper
      */
     public function setDateModified($dateModified, $user)

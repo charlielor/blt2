@@ -9,9 +9,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-class ReportingController extends Controller
-{
+class ReportingController extends Controller {
+
     /**
+     * Route to render the reporting page
+     *
      * @Route("/reporting", name="reporting")
      */
     public function renderTemplateAction() {
@@ -19,6 +21,12 @@ class ReportingController extends Controller
     }
 
     /**
+     * Route to process queries from reporting
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/reporting/query", name="query")
      */
     public function queryAction(Request $request) {

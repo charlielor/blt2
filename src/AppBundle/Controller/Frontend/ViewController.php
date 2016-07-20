@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class ViewController extends Controller
 {
     /**
+     * Route to render the view page
+     *
      * @Route("/view", name="view")
      */
     public function renderTemplateAction() {

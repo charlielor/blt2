@@ -371,51 +371,51 @@ class ShipperControllerTest extends WebTestCase
         $this->assertEmpty($errorResponse['object']);
     }
 
-    public function testDeleteShipperRoute() {
-        echo __METHOD__ . "\n";
-
-        $client = static::createClient();
-
-        // Assert that entity was successfully deleted
-        $client->request('DELETE', '/shippers/2/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $deletedResponse);
-        $this->assertEquals('success', $deletedResponse['result']);
-        $this->assertArrayHasKey('message', $deletedResponse);
-        $this->assertArrayHasKey('object', $deletedResponse);
-        $this->assertNotEmpty($deletedResponse['object']);
-
-        // Assert that route with invalid id gives errors
-        $client->request('DELETE', '/shippers/stuffedchickenwings/delete');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertTrue(
-            $client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-
-        $errorResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey('result', $errorResponse);
-        $this->assertEquals('error', $errorResponse['result']);
-        $this->assertArrayHasKey('message', $errorResponse);
-        $this->assertArrayHasKey('object', $errorResponse);
-        $this->assertEmpty($errorResponse['object']);
-    }
+//    public function testDeleteShipperRoute() {
+//        echo __METHOD__ . "\n";
+//
+//        $client = static::createClient();
+//
+//        // Assert that entity was successfully deleted
+//        $client->request('DELETE', '/shippers/2/delete');
+//
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertTrue(
+//            $client->getResponse()->headers->contains(
+//                'Content-Type',
+//                'application/json'
+//            )
+//        );
+//
+//        $deletedResponse = json_decode($client->getResponse()->getContent(), true);
+//
+//        $this->assertArrayHasKey('result', $deletedResponse);
+//        $this->assertEquals('success', $deletedResponse['result']);
+//        $this->assertArrayHasKey('message', $deletedResponse);
+//        $this->assertArrayHasKey('object', $deletedResponse);
+//        $this->assertNotEmpty($deletedResponse['object']);
+//
+//        // Assert that route with invalid id gives errors
+//        $client->request('DELETE', '/shippers/stuffedchickenwings/delete');
+//
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertTrue(
+//            $client->getResponse()->headers->contains(
+//                'Content-Type',
+//                'application/json'
+//            )
+//        );
+//
+//        $errorResponse = json_decode($client->getResponse()->getContent(), true);
+//
+//        $this->assertArrayHasKey('result', $errorResponse);
+//        $this->assertEquals('error', $errorResponse['result']);
+//        $this->assertArrayHasKey('message', $errorResponse);
+//        $this->assertArrayHasKey('object', $errorResponse);
+//        $this->assertEmpty($errorResponse['object']);
+//    }
 
     public function testAllShippersRoute() {
         echo __METHOD__ . "\n";

@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends Controller {
 
     /**
+     * Route to get all users in database (no user table or entity)
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/users", name="users")
      * @Method({"GET"})
      */
@@ -33,6 +37,12 @@ class UserController extends Controller {
     }
 
     /**
+     * Route to search for a user in database base on term
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/users/search", name="searchUser")
      * @Method({"GET"})
      */
@@ -72,6 +82,12 @@ class UserController extends Controller {
     }
 
     /**
+     * Route to serach for a user in database like term
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/users/like", name="likeUser")
      * @Method({"GET"})
      */

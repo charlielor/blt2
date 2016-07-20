@@ -433,7 +433,7 @@ class VendorController extends Controller
      *
      * @api
      *
-     * @returns JsonResponse Results of the call
+     * @return JsonResponse Results of the call
      *
      * @Route("/vendors", name="vendors")
      * @Method({"GET"})

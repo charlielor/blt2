@@ -432,7 +432,7 @@ class ShipperController extends Controller
      *
      * @api
      *
-     * @returns JsonResponse Results of the call
+     * @return JsonResponse Results of the call
      *
      * @Route("/shippers", name="shippers")
      * @Method({"GET"})

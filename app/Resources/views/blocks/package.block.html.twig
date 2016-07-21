@@ -1,6 +1,6 @@
 {% use 'blocks/newShipper.block.html.twig' %}
 {% use 'blocks/newVendor.block.html.twig' %}
-{% use 'blocks/newReceiver.block.html.twig' %}
+{% use 'blocks/receiver.block.html.twig' %}
 {% use 'blocks/camera.block.html.twig' %}
 
 {% block packageStyleSheets %}
@@ -17,7 +17,7 @@
 {% block package %}
     {{ block('newShipper') }}
     {{ block('newVendor') }}
-    {{ block('newReceiver') }}
+    {{ block('receiver') }}
     {{ block('camera') }}
 
     <div id="noPackingSlipsModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="noPackingSlips">
@@ -91,7 +91,7 @@
                                 <div class="input-group select2-bootstrap-append">
                                     <select name="receiver" id="select2-Receiver" tabindex="3"></select>
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewReceiverModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#receiverModal" data-referer="new" data-select2=true tabindex="-1">New</button>
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
 {% block packageJavascripts %}
     {{ block('newShipperJavascripts') }}
     {{ block('newVendorJavascripts') }}
-    {{ block('newReceiverJavascripts') }}
+    {{ block('receiverJavascripts') }}
     {{ block('cameraJavascripts') }}
 
     {% javascripts

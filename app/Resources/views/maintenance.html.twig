@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% use 'blocks/receiver.block.html.twig' %}
 
 {% block userActions %}
     <li><a href="/" tabindex="-1">Back to menu</a></li>
@@ -16,6 +17,8 @@
 
 {% block body %}
     {{ parent() }}
+    {{ block('receiver') }}
+
     <div id="queryDatabaseErrorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="queryDatabase">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
@@ -151,6 +154,7 @@
                                     {% else %}
                                         <button type="button" id="{{ shipper.getId() }}" class="shipper btn btn-sm btn-success">Enable</button>
                                     {% endif %}
+
                                 </td>
                             </tr>
                         {% endfor %}
@@ -243,6 +247,7 @@
                                     {% else %}
                                         <button type="button" id="{{ receiver.getId() }}" class="receiver btn btn-sm btn-success">Enable</button>
                                     {% endif %}
+                                    <button type="button" id="editReceiver" data-receiver-id="{{ receiver.getId() }}" data-toggle="modal" data-target="#receiverModal" data-referer="edit" data-select2=false data-receiver-name="{{ receiver.getName() }}" data-receiver-delivery-room="{{ receiver.getDeliveryRoom() }}" class="btn btn-sm btn-primary">Edit</button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -259,7 +264,12 @@
     {{ parent() }}
 
     {% javascripts
+    '../vendor/needim/noty/js/noty/jquery.noty.js'
+    '../vendor/needim/noty/js/noty/layouts/top.js'
+    '../vendor/needim/noty/js/noty/themes/bootstrap.js'
     'js/blt2/maintenance.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    {{ block('receiverJavascripts') }}
 {% endblock %}

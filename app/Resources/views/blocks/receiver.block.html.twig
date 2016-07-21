@@ -1,0 +1,41 @@
+{% block receiver %}
+    <div id="receiverModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="receiverModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="receiverTitle">Add a Receiver</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="receiverName" class="control-label col-md-4">Receiver name:</label>
+                            <div id="receiverNameDiv" class="col-md-6">
+                                <input type="text" id="receiverName" class="form-control" placeholder="Ex. Office" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="receiverRoomNumber" class="control-label col-md-4">Receiver room number:</label>
+                            <div id="receiverRoomNumberDiv" class="col-md-6">
+                                <input type="text" id="receiverRoomNumber" class="form-control" placeholder="Ex. 123" />
+                            </div>
+                        </div>
+                        <label id="receiverLabel" class="label center-block">
+                             Receiver name must be unique
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="submitReceiver" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block receiverJavascripts %}
+    {% javascripts
+    'js/blocks/receiver.block.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

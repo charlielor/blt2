@@ -17,8 +17,12 @@ $(document).ready(function() {
     var referer = "";
     // Set the select2 variable (if true then put the results in select2 box)
     var select2 = false;
+    // Set the maintenance variable
+    var maintenance = false;
     // Set the id (with data=id)
     var id = "";
+    // Set up the button from which the modal was launched from
+    var button = null;
 
     // Initialize the existingShipperName
     var existingShipperName = "";
@@ -26,11 +30,12 @@ $(document).ready(function() {
     // If the Shipper modal is to show, set the referer, select2, id and if the modal is used to update an existing Shipper, set those too
     shipperModal.on("show.bs.modal", function(e) {
         // Get the button that launched the modal
-        var button = $(e.relatedTarget);
+        button = $(e.relatedTarget);
 
         // Set the referer/select2/id
         referer = button.data('referer');
         select2 = button.data('select2');
+        maintenance = button.data('maintenance');
         id = button.data('shipper-id');
 
         if (referer === "new") {
@@ -74,7 +79,7 @@ $(document).ready(function() {
         // If the shipper name is null or empty spaces or empty, display error
         if ((shipperName === null) || ((shipperName.replace(/\s/g, "")) == "")) {
             addError("Enter in name for the new Shipper");
-            shipperName.focus();
+            shipperNameText.focus();
         } else {
             if (referer === "new") {
                 // Submit new shipper
@@ -85,13 +90,13 @@ $(document).ready(function() {
                 ).fail(function() {
                         // If connection error, display error
                         addError('There was an connection error; please try again');
-                        shipperName.focus();
+                        shipperNameText.focus();
                     }
                 ).done(function(results) {
                     // If error, append error
                     if (results['result'] == 'error') {
                         addError(results['message']);
-                        shipperName.focus();
+                        shipperNameText.focus();
                     } else if (results['result'] == 'success') {
                         displaySuccess(results['message']);
 
@@ -134,9 +139,15 @@ $(document).ready(function() {
 
                                     // Add the updated Shipper to the select2 input box
                                     if (select2) {
-                                        var option = new Option(results['object'][0]['name'] + " | " + results['object'][0]['deliveryRoom'], results['object'][0]['id']);
+                                        var option = new Option(results['object'][0]['name'], results['object'][0]['id']);
 
                                         $("#select2-Shipper").html(option).trigger("change");
+                                    }
+
+                                    // Update table if from maintenance
+                                    if (maintenance) {
+                                        $(button.parent().parent().children()[1]).text(results['object'][0]['name']);
+                                        button.data('shipper-name', results['object'][0]['name']);
                                     }
 
                                     // Close the modal

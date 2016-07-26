@@ -177,7 +177,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <button type="button" id="editShipper" data-shipper-id="{{ shipper.getId() }}" data-toggle="modal" data-target="#shipperModal" data-referer="edit" data-select2=false data-shipper-name="{{ shipper.getName() }}" class="btn btn-sm btn-primary">Edit</button>
+                                    <button type="button" id="editShipper" data-shipper-id="{{ shipper.getId() }}" data-toggle="modal" data-target="#shipperModal" data-referer="edit" data-select2=false data-maintenance=true data-shipper-name="{{ shipper.getName() }}" class="btn btn-sm btn-primary">Edit</button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -272,7 +272,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <button type="button" id="editReceiver" data-receiver-id="{{ receiver.getId() }}" data-toggle="modal" data-target="#receiverModal" data-referer="edit" data-select2=false data-receiver-name="{{ receiver.getName() }}" data-receiver-delivery-room="{{ receiver.getDeliveryRoom() }}" class="btn btn-sm btn-primary">Edit</button>
+                                    <button type="button" id="editReceiver" data-receiver-id="{{ receiver.getId() }}" data-toggle="modal" data-target="#receiverModal" data-referer="edit" data-select2=false data-maintenance=true data-receiver-name="{{ receiver.getName() }}" data-receiver-delivery-room="{{ receiver.getDeliveryRoom() }}" class="btn btn-sm btn-primary">Edit</button>
                                 </td>
                             </tr>
                         {% endfor %}

@@ -22,8 +22,12 @@ $(document).ready(function() {
     var referer = "";
     // Set the select2 variable (if true then put results in select2 box)
     var select2 = false;
+    // Set the maintenance variable
+    var maintenance = false;
     // Set the id (with data-id)
     var id = "";
+    // Set up the button from which the modal was launched from
+    var button = null;
 
     // Initialize the existingReceiverName and existingReceiverRoomNumber
     var existingReceiverName = "";
@@ -32,11 +36,12 @@ $(document).ready(function() {
     // If the Receiver modal is to show, set the referer, select2, id and if the modal is being used to update an existing Receiver, set those too
     receiverModal.on("show.bs.modal", function(e) {
         // Get the button that launched the modal
-        var button = $(e.relatedTarget);
+        button = $(e.relatedTarget);
 
         // Set the referer/select2/id
         referer = button.data('referer');
         select2 = button.data('select2');
+        maintenance = button.data('maintenance');
         id = button.data('receiver-id');
 
         if (referer === "new") {
@@ -169,6 +174,15 @@ $(document).ready(function() {
                                         var option = new Option(results['object'][0]['name'] + " | " + results['object'][0]['deliveryRoom'], results['object'][0]['id']);
 
                                         $("#select2-Receiver").html(option).trigger("change");
+                                    }
+
+                                    // Update table if from maintenance
+                                    if (maintenance) {
+                                        $(button.parent().parent().children()[1]).text(results['object'][0]['name']);
+                                        $(button.parent().parent().children()[2]).text(results['object'][0]['deliveryRoom']);
+
+                                        button.data('receiver-name', results['object'][0]['name']);
+                                        button.data('receiver-delivery-room', results['object'][0]['deliveryRoom']);
                                     }
 
                                     // Close the modal

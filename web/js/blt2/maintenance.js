@@ -185,7 +185,7 @@ $(document).ready(function() {
                                         '<td>' + vendor.id + '</td>' +
                                         '<td>' + vendor.name + '</td>' +
                                         '<td><button type="button" data-id="'+ vendor.id +'" data-action="disable" class="vendor btn btn-sm btn-danger">Disable</button></td>' +
-                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
+                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-maintenance=true data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
                                         '</tr>'
                                     )
                                 } else {
@@ -194,7 +194,7 @@ $(document).ready(function() {
                                         '<td>' + vendor.id + '</td>' +
                                         '<td>' + vendor.name + '</td>' +
                                         '<td><button type="button" data-id="'+ vendor.id +'" data-action="enable" class="vendor btn btn-sm btn-success">Enable</button></td>' +
-                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
+                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-maintenance=true data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
                                         '</tr>'
                                     )
                                 }
@@ -228,8 +228,6 @@ $(document).ready(function() {
         var id = receiver.data('id');
         // Get the clicked button's value
         var action = receiver.data('action');
-
-        console.log(id + " " + action);
 
         if (id !== "" && id !== undefined && id !== null && action.replace(/\s/g) !== "" && action !== undefined && action !== null) {
             // Make the AJAX call to the server to switch the on or off the receiver
@@ -276,8 +274,6 @@ $(document).ready(function() {
         // Get the clicked button's value
         var action = shipper.data('action');
 
-        console.log(id + " " + action);
-
         if (id !== "" && id !== undefined && id !== null && action.replace(/\s/g) !== "" && action !== undefined && action !== null) {
             // Make the AJAX call to the server to switch the on or off the shipper
             $.ajax({
@@ -322,8 +318,6 @@ $(document).ready(function() {
         var id = vendor.data('id');
         // Get the clicked button's value
         var action = vendor.data('action');
-
-        console.log(id + " " + action);
 
         if (id !== "" && id !== undefined && id !== null && action.replace(/\s/g) !== "" && action !== undefined && action !== null) {
             // Make the AJAX call to the server to switch the on or off the vendor

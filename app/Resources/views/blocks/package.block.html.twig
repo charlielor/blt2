@@ -1,5 +1,5 @@
-{% use 'blocks/newShipper.block.html.twig' %}
-{% use 'blocks/newVendor.block.html.twig' %}
+{% use 'blocks/shipper.block.html.twig' %}
+{% use 'blocks/vendor.block.html.twig' %}
 {% use 'blocks/receiver.block.html.twig' %}
 {% use 'blocks/camera.block.html.twig' %}
 
@@ -15,8 +15,8 @@
 {% endblock %}
 
 {% block package %}
-    {{ block('newShipper') }}
-    {{ block('newVendor') }}
+    {{ block('shipper') }}
+    {{ block('vendor') }}
     {{ block('receiver') }}
     {{ block('camera') }}
 
@@ -53,7 +53,7 @@
                                 <div class="input-group select2-bootstrap-append">
                                     <select name="vendor" id="select2-Shipper" tabindex="1"></select>
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewShipperModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#shipperModal" data-referer="new" data-select2=true tabindex="-1">New</button>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                                 <div class="input-group select2-bootstrap-append">
                                     <select name="vendor" id="select2-Vendor" tabindex="2"></select>
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewVendorModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vendorModal" data-referer="new" data-select2=true tabindex="-1">New</button>
                                     </div>
                                 </div>
                             </div>
@@ -155,8 +155,8 @@
 {% endblock %}
 
 {% block packageJavascripts %}
-    {{ block('newShipperJavascripts') }}
-    {{ block('newVendorJavascripts') }}
+    {{ block('shipperJavascripts') }}
+    {{ block('vendorJavascripts') }}
     {{ block('receiverJavascripts') }}
     {{ block('cameraJavascripts') }}
 

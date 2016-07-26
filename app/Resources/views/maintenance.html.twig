@@ -1,4 +1,6 @@
 {% extends 'base.html.twig' %}
+{% use 'blocks/shipper.block.html.twig' %}
+{% use 'blocks/vendor.block.html.twig' %}
 {% use 'blocks/receiver.block.html.twig' %}
 
 {% block userActions %}
@@ -17,7 +19,26 @@
 
 {% block body %}
     {{ parent() }}
+    {{ block('shipper') }}
+    {{ block('vendor') }}
     {{ block('receiver') }}
+
+    <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="errorTitle">Error</h4>
+                </div>
+                <div class="modal-body">
+                    <p id='errorModalText' class="text-danger center-block text-center"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="queryDatabaseErrorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="queryDatabase">
         <div class="modal-dialog modal-sm" role="document">
@@ -150,11 +171,13 @@
                                 </td>
                                 <td>
                                     {% if shipper.getEnabled() == 1 %}
-                                        <button type="button" id="{{ shipper.getId() }}" class="shipper btn btn-sm btn-danger">Disable</button>
+                                        <button type="button" data-id="{{ shipper.getId() }}" data-action="disable" class="shipper btn btn-sm btn-danger">Disable</button>
                                     {% else %}
-                                        <button type="button" id="{{ shipper.getId() }}" class="shipper btn btn-sm btn-success">Enable</button>
+                                        <button type="button" data-id="{{ shipper.getId() }}" data-action="enable" class="shipper btn btn-sm btn-success">Enable</button>
                                     {% endif %}
-
+                                </td>
+                                <td>
+                                    <button type="button" id="editShipper" data-shipper-id="{{ shipper.getId() }}" data-toggle="modal" data-target="#shipperModal" data-referer="edit" data-select2=false data-shipper-name="{{ shipper.getName() }}" class="btn btn-sm btn-primary">Edit</button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -243,10 +266,12 @@
                                 </td>
                                 <td>
                                     {% if receiver.getEnabled() == 1 %}
-                                        <button type="button" id="{{ receiver.getId() }}" class="receiver btn btn-sm btn-danger">Disable</button>
+                                        <button type="button" data-id="{{ receiver.getId() }}" data-action="disable" class="receiver btn btn-sm btn-danger">Disable</button>
                                     {% else %}
-                                        <button type="button" id="{{ receiver.getId() }}" class="receiver btn btn-sm btn-success">Enable</button>
+                                        <button type="button" data-id="{{ receiver.getId() }}" data-action="enable" class="receiver btn btn-sm btn-success">Enable</button>
                                     {% endif %}
+                                </td>
+                                <td>
                                     <button type="button" id="editReceiver" data-receiver-id="{{ receiver.getId() }}" data-toggle="modal" data-target="#receiverModal" data-referer="edit" data-select2=false data-receiver-name="{{ receiver.getName() }}" data-receiver-delivery-room="{{ receiver.getDeliveryRoom() }}" class="btn btn-sm btn-primary">Edit</button>
                                 </td>
                             </tr>
@@ -271,5 +296,7 @@
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+    {{ block('shipperJavascripts') }}
+    {{ block('vendorJavascripts') }}
     {{ block('receiverJavascripts') }}
 {% endblock %}

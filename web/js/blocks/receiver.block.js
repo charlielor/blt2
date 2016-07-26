@@ -1,25 +1,40 @@
 $(document).ready(function() {
+    // Get the modal for the Receiver
     var receiverModal = $("#receiverModal");
 
+    // Get the div for Receiver's name div
     var receiverNameDiv = $("#receiverNameDiv");
+    // Get the div for Receiver's name input text box
     var receiverNameText = $("#receiverName");
 
+    // Get the div for Receiver's room number div
     var receiverRoomNumberDiv = $("#receiverRoomNumberDiv");
+    // Get the div for Receiver's room number input text box
     var receiverRoomNumberText = $("#receiverRoomNumber");
 
+    // Get the label for the Receiver modal (for errors)
     var receiverLabel = $("#receiverLabel");
 
+    // Get the submit Receiver button
     var submitReceiver = $("#submitReceiver");
 
+    // Set the referer (with data-referer)
     var referer = "";
+    // Set the select2 variable (if true then put results in select2 box)
     var select2 = false;
+    // Set the id (with data-id)
     var id = "";
 
+    // Initialize the existingReceiverName and existingReceiverRoomNumber
     var existingReceiverName = "";
     var existingReceiverRoomNumber = "";
 
+    // If the Receiver modal is to show, set the referer, select2, id and if the modal is being used to update an existing Receiver, set those too
     receiverModal.on("show.bs.modal", function(e) {
+        // Get the button that launched the modal
         var button = $(e.relatedTarget);
+
+        // Set the referer/select2/id
         referer = button.data('referer');
         select2 = button.data('select2');
         id = button.data('receiver-id');
@@ -28,7 +43,7 @@ $(document).ready(function() {
             $("#receiverTitle").text("Add a new Receiver");
         } else if (referer === "edit") {
             $("#receiverTitle").text("Update Receiver");
-            $("#submitReceiver").text("Update");
+            submitReceiver.text("Update");
             existingReceiverName = button.data('receiver-name');
             existingReceiverRoomNumber = button.data('receiver-delivery-room');
 
@@ -37,21 +52,26 @@ $(document).ready(function() {
         }
     });
 
+    // If the Receiver modal is shown, move the modal "up" if there's already another modal up (by editing the z-index)
     receiverModal.on("shown.bs.modal", function() {
         // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
         if ($("#packageModal").hasClass("in")) {
             receiverModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
         }
 
+        // Clear all errors
         clearErrors();
+        // Focus on the name input textbox
         receiverNameText.focus();
     });
 
+    // When the Receiver modal is hidden, clear error and fields
     receiverModal.on("hidden.bs.modal", function() {
         clearFields();
         clearErrors();
     });
 
+    // When the submit Receiver button is clicked
     submitReceiver.on("click", function() {
         // Remove all errors from prior to checking for errors
         clearErrors();
@@ -72,6 +92,7 @@ $(document).ready(function() {
             addError("all", "Enter a name and a room number for the new Receiver");
             receiverNameText.focus();
         } else {
+            // If the referer says that the Receiver is new, submit new Receiver
             if (referer === 'new') {
                 // Submit the receiver information
                 $.post("receivers/new",
@@ -110,21 +131,26 @@ $(document).ready(function() {
                         displayError("Error with creating new Receiver");
                     }
                 });
-            } else if (referer === 'edit') {
+            } else if (referer === 'edit') { // If the referer says it is updating an existing Receiver, update it
+                // If id is null or undefined, then display error
                 if (id === null || id === undefined) {
                     displayError("Cannot retrieve ID of Receiver");
                 } else {
+                    // Create an object that will be sent to the server for updating the Receiver
                     var updateReceiver = {};
 
+                    // If the name of the Receiver has changed, add it to the update object
                     if (receiverName !== existingReceiverName) {
                         updateReceiver['name'] = receiverName;
                     }
 
+                    // If the room number for the Receiver has changed, add it to the update object
                     if (receiverRoomNumber != existingReceiverRoomNumber) {
                         updateReceiver['deliveryRoom'] = receiverRoomNumber;
                     }
 
-                    if (updateReceiver. != 0) {
+                    // If the update object has at least one property (that means that the Recevier object has been updated), update the Receiver
+                    if (Object.getOwnPropertyNames(updateReceiver).length != 0) {
                         $.ajax({
                             type: "PUT",
                             url: "receivers/" + id + "/update",
@@ -138,7 +164,7 @@ $(document).ready(function() {
                                 } else if (results['result'] == 'success') {
                                     displaySuccess(results['message']);
 
-                                    // Add the newly created vendor to the select2 input box
+                                    // Add the updated Receiver to the select2 input box
                                     if (select2) {
                                         var option = new Option(results['object'][0]['name'] + " | " + results['object'][0]['deliveryRoom'], results['object'][0]['id']);
 
@@ -164,12 +190,11 @@ $(document).ready(function() {
             } else {
                 displayError("Unable to determine referer");
             }
-
-
         }
     });
 
-    var addError = function(error, label) {
+    // Add error text and CSS
+    function addError(error, label) {
         receiverLabel.removeClass("label-primary");
         receiverLabel.addClass("label-danger");
         receiverLabel.text(label);
@@ -183,25 +208,28 @@ $(document).ready(function() {
             receiverRoomNumberDiv.addClass("has-error");
         }
 
-    };
+    }
 
-    var clearErrors = function() {
+    // Clear errors and CSS
+    function clearErrors() {
         // Clear all errors
         receiverLabel.removeClass("label-danger");
         receiverLabel.text("New Receiver name must be unique");
 
         receiverNameDiv.removeClass("has-error");
         receiverRoomNumberDiv.removeClass("has-error");
-    };
+    }
 
-    var clearFields = function() {
+    // Clear the input text fields
+    function clearFields() {
         receiverNameText.val("");
         receiverRoomNumberText.val("");
-    };
+    }
     
-    var displaySuccess = function(message) {
+    // Show a successful noty
+    function displaySuccess(message) {
         // Display a noty
-        n = noty({
+        var n = noty({
             layout: "top",
             theme: "bootstrapTheme",
             type: "success",
@@ -211,18 +239,19 @@ $(document).ready(function() {
             killer: true,
             buttons: false
         });
-    };
+    }
     
-    var displayError = function(error) {
-        n = noty({
+    // Show a fail noty
+    function displayError(message) {
+        var n = noty({
             layout: "top",
             theme: "bootstrapTheme",
             type: "error",
-            text: error,
+            text: message,
             maxVisible: 1,
             timeout: 2000,
             killer: true,
             buttons: false
         });
-    };
+    }
 });

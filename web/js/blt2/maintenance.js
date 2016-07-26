@@ -76,7 +76,7 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + pack.trackingNumber + '</td>' +
                                         '<td>' + pack.vendor.name + '</td>' +
-                                        '<td>' + pack.shipper.name + '</td>' +
+                                        '<td>' + pack.vendor.name + '</td>' +
                                         '<td>' + pack.receiver.name + '</td>' +
                                         '<td>' + pack.numberOfPackages + '</td>' +
                                         '<td>' + pack.userWhoReceived + '</td>' +
@@ -102,7 +102,7 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + pack.trackingNumber + '</td>' +
                                         '<td>' + pack.vendor.name + '</td>' +
-                                        '<td>' + pack.shipper.name + '</td>' +
+                                        '<td>' + pack.vendor.name + '</td>' +
                                         '<td>' + pack.receiver.name + '</td>' +
                                         '<td>' + pack.numberOfPackages + '</td>' +
                                         '<td>' + pack.userWhoReceived + '</td>' +
@@ -119,7 +119,7 @@ $(document).ready(function() {
                                         "<tr class='danger'>" +
                                         '<td>' + pack.trackingNumber + '</td>' +
                                         '<td>' + pack.vendor.name + '</td>' +
-                                        '<td>' + pack.shipper.name + '</td>' +
+                                        '<td>' + pack.vendor.name + '</td>' +
                                         '<td>' + pack.receiver.name + '</td>' +
                                         '<td>' + pack.numberOfPackages + '</td>' +
                                         '<td>' + pack.userWhoReceived + '</td>' +
@@ -184,7 +184,8 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + vendor.id + '</td>' +
                                         '<td>' + vendor.name + '</td>' +
-                                        '<td><button type="button" id="'+ vendor.id +'" class="vendor btn btn-sm btn-danger">Disable</button></td>' +
+                                        '<td><button type="button" data-id="'+ vendor.id +'" data-action="disable" class="vendor btn btn-sm btn-danger">Disable</button></td>' +
+                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
                                         '</tr>'
                                     )
                                 } else {
@@ -192,7 +193,8 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + vendor.id + '</td>' +
                                         '<td>' + vendor.name + '</td>' +
-                                        '<td><button type="button" id="'+ vendor.id +'" class="vendor btn btn-sm btn-success">Enable</button></td>' +
+                                        '<td><button type="button" data-id="'+ vendor.id +'" data-action="enable" class="vendor btn btn-sm btn-success">Enable</button></td>' +
+                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
                                         '</tr>'
                                     )
                                 }
@@ -219,100 +221,141 @@ $(document).ready(function() {
 
     // When the user click a button within the receiver table, enable or disable the receiver
     $('.receiver').click(function() {
+        // Get the button that launched the modal
+        var receiver = $(this);
+
         // Get the clicked button's id
-        var id = this.getAttribute('id');
+        var id = receiver.data('id');
         // Get the clicked button's value
-        var action = $(this).text();
-        // Get the clicked button
-        var button = this;
-        // Make the AJAX call to the server to switch the on or off the receiver
-        $.ajax({
+        var action = receiver.data('action');
+
+        console.log(id + " " + action);
+
+        if (id !== "" && id !== undefined && id !== null && action.replace(/\s/g) !== "" && action !== undefined && action !== null) {
+            // Make the AJAX call to the server to switch the on or off the receiver
+            $.ajax({
                 type: "PUT",
                 url: "receivers/" + id + "/" + action.toLowerCase()
             })
-            .done(function(results) {
-                // If the results are successful, change the color and text within the button to reflect the change
-                if (results['result'] == 'success') {
-                    if (action == 'Enable') {
-                        $(button).text("Disable");
-                        $(button).removeClass("btn-success");
-                        $(button).addClass("btn-danger");
-                    } else {
-                        $(button).text("Enable");
-                        $(button).removeClass("btn-danger");
-                        $(button).addClass("btn-success");
+                .done(function(results) {
+                    // If the results are successful, change the color and text within the button to reflect the change
+                    if (results['result'] == 'success') {
+                        if (action ==='enable') {
+                            receiver.text("Disable");
+                            receiver.removeClass("btn-success");
+                            receiver.addClass("btn-danger");
+                            receiver.data('action', 'disable');
+                        } else {
+                            receiver.text("Enable");
+                            receiver.removeClass("btn-danger");
+                            receiver.addClass("btn-success");
+                            receiver.data('action', 'enable')
+                        }
                     }
-                }
-            })
-            .fail(function() {
-                // Display an alert saying that there was an issue with the AJAX call
-                alert('There was an connection error; please try again');
-            });
+                })
+                .fail(function() {
+                    // Display an alert saying that there was an issue with the AJAX call
+                    $("#errorModalText").text("There was an connection error; please try again");
+                    $("#errorModal").modal('show');
+                });
+        } else {
+            // Display an alert saying that there was an issue getting data from button
+            $("#errorModalText").text("Unable to determine Receiver's ID and/or action");
+            $("#errorModal").modal('show');
+        }
+
     });
 
     // When the user click a button within the shipper table, enable or disable the shipper
     $('.shipper').click(function() {
+        // Get the button that launched the modal
+        var shipper = $(this);
+
         // Get the clicked button's id
-        var id = this.getAttribute('id');
+        var id = shipper.data('id');
         // Get the clicked button's value
-        var action = $(this).text();
-        // Get the clicked button
-        var button = this;
-        // Make the AJAX call to the server to switch the on or off the shipper
-        $.ajax({
+        var action = shipper.data('action');
+
+        console.log(id + " " + action);
+
+        if (id !== "" && id !== undefined && id !== null && action.replace(/\s/g) !== "" && action !== undefined && action !== null) {
+            // Make the AJAX call to the server to switch the on or off the shipper
+            $.ajax({
                 type: "PUT",
                 url: "shippers/" + id + "/" + action.toLowerCase()
             })
-            .done(function(results) {
-                // If the results are successful, change the color and text within the button to reflect the change
-                if (results['result'] == 'success') {
-                    if (action == 'Enable') {
-                        $(button).text("Disable");
-                        $(button).removeClass("btn-success");
-                        $(button).addClass("btn-danger");
-                    } else {
-                        $(button).text("Enable");
-                        $(button).removeClass("btn-danger");
-                        $(button).addClass("btn-success");
+                .done(function(results) {
+                    // If the results are successful, change the color and text within the button to reflect the change
+                    if (results['result'] == 'success') {
+                        if (action ==='enable') {
+                            shipper.text("Disable");
+                            shipper.removeClass("btn-success");
+                            shipper.addClass("btn-danger");
+                            shipper.data('action', 'disable');
+                        } else {
+                            shipper.text("Enable");
+                            shipper.removeClass("btn-danger");
+                            shipper.addClass("btn-success");
+                            shipper.data('action', 'enable')
+                        }
                     }
-                }
-            })
-            .fail(function() {
-                // Display an alert saying that there was an issue with the AJAX call
-                alert('There was an connection error; please try again');
-            });
+                })
+                .fail(function() {
+                    // Display an alert saying that there was an issue with the AJAX call
+                    $("#errorModalText").text("There was an connection error; please try again");
+                    $("#errorModal").modal('show');
+                });
+        } else {
+            // Display an alert saying that there was an issue getting data from button
+            $("#errorModalText").text("Unable to determine Shipper's ID and/or action");
+            $("#errorModal").modal('show');
+        }
+
     });
 
     // When the user clicks a button within the vendor table, enable or disable the vendor
     $(document).on("click", ".vendor", function() {
+        // Get the button that launched the modal
+        var vendor = $(this);
+
         // Get the clicked button's id
-        var id = this.getAttribute('id');
+        var id = vendor.data('id');
         // Get the clicked button's value
-        var action = $(this).text();
-        // Get the clicked button
-        var button = this;
-        // Make the AJAX call to the server to switch the on or off the vendor
-        $.ajax({
+        var action = vendor.data('action');
+
+        console.log(id + " " + action);
+
+        if (id !== "" && id !== undefined && id !== null && action.replace(/\s/g) !== "" && action !== undefined && action !== null) {
+            // Make the AJAX call to the server to switch the on or off the vendor
+            $.ajax({
                 type: "PUT",
                 url: "vendors/" + id + "/" + action.toLowerCase()
             })
-            .done(function(results) {
-                // If the results are successful, change the color and text within the button to reflect the change
-                if (results['result'] == 'success') {
-                    if (action == 'Enable') {
-                        $(button).text("Disable");
-                        $(button).removeClass("btn-success");
-                        $(button).addClass("btn-danger");
-                    } else {
-                        $(button).text("Enable");
-                        $(button).removeClass("btn-danger");
-                        $(button).addClass("btn-success");
+                .done(function(results) {
+                    // If the results are successful, change the color and text within the button to reflect the change
+                    if (results['result'] == 'success') {
+                        if (action ==='enable') {
+                            vendor.text("Disable");
+                            vendor.removeClass("btn-success");
+                            vendor.addClass("btn-danger");
+                            vendor.data('action', 'disable');
+                        } else {
+                            vendor.text("Enable");
+                            vendor.removeClass("btn-danger");
+                            vendor.addClass("btn-success");
+                            vendor.data('action', 'enable')
+                        }
                     }
-                }
-            })
-            .fail(function() {
-                // Display an alert saying that there was an issue with the AJAX call
-                alert('There was an connection error; please try again');
-            });
+                })
+                .fail(function() {
+                    // Display an alert saying that there was an issue with the AJAX call
+                    $("#errorModalText").text("There was an connection error; please try again");
+                    $("#errorModal").modal('show');
+                });
+        } else {
+            // Display an alert saying that there was an issue getting data from button
+            $("#errorModalText").text("Unable to determine Vendor's ID and/or action");
+            $("#errorModal").modal('show');
+        }
     });
 });

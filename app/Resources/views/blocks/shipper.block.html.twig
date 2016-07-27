@@ -1,0 +1,36 @@
+{% block shipper %}
+    <div id="shipperModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="shipperModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="shipperTitle">Add a new Shipper</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="shipperName" class="control-label col-md-4">Shipper name:</label>
+                            <div id="shipperNameDiv" class="col-md-6">
+                                <input type="text" id="shipperName" class="form-control" placeholder="Ex. USPS" />
+                            </div>
+                        </div>
+
+                        <label id="shipperLabel" class="label label-primary center-block">
+                            Shipper name must be unique
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="submitShipper" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block shipperJavascripts %}
+    {% javascripts
+    'js/blocks/shipper.block.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

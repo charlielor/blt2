@@ -1,20 +1,28 @@
 $(document).ready(function() {
+    // Get the modal for Package
     var packageModal = $("#packageModal");
 
+    // Get the id for the each of the select2 dropdown boxes
     var select2Shipper = $("#select2-Shipper");
     var select2Vendor = $("#select2-Vendor");
     var select2Receiver = $("#select2-Receiver");
 
+    // Get the input text box for number of packages
     var numberOfPackages = $('#numberOfPackages');
 
+    // Get the input file
     var uploadFiles = $("#uploadFiles");
+    // Set up the deleted packing slips array
     var deletedPackingSlips = [];
 
+    // Get the div for existing packing slips
     var listOfExistingPackingSlips = $("#listOfExistingPackingSlips");
 
+    // Set up noty
     var n = null;
 
-    var formData;
+    // Set up the form data
+    var formData = null;
 
     // Set the dropdownParent for all select2 on this page to the package modal
     $.fn.select2.defaults.set("dropdownParent", $("#packageModal"));

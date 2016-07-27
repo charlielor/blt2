@@ -48,7 +48,8 @@ class Vendor
 
     /**
      * Vendor constructor.
-     * @param $name - Name of the Vendor
+     * @param $name
+     * @param $user
      */
     public function __construct($name, $user) {
         $this->name = $name;
@@ -76,6 +77,8 @@ class Vendor
      * Set name
      *
      * @param string $name
+     * @param string $user
+     *
      * @return Vendor
      */
     public function setName($name, $user)
@@ -104,6 +107,8 @@ class Vendor
      * Set enabled
      *
      * @param boolean $enabled
+     * @param string $user
+     *
      * @return Vendor
      */
     public function setEnabled($enabled, $user)
@@ -132,6 +137,8 @@ class Vendor
      * Set dateCreated
      *
      * @param \DateTime $dateCreated
+     * @param string $user
+     *
      * @return Vendor
      */
     public function setDateCreated($dateCreated, $user)
@@ -156,6 +163,8 @@ class Vendor
      * Set dateModified
      *
      * @param \DateTime $dateModified
+     * @param string $user
+     *
      * @return Vendor
      */
     public function setDateModified($dateModified, $user)

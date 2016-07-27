@@ -1,0 +1,25 @@
+{% block error %}
+    <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="errorTitle">Error</h4>
+                </div>
+                <div class="modal-body">
+                    <p id='errorModalText' class="text-danger center-block text-center"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block errorJavascripts %}
+    {% javascripts
+    'js/blocks/error.block.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

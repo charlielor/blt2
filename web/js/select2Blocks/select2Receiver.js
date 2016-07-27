@@ -24,10 +24,12 @@ $(document).ready(function() {
                     var receiver = data['object'];
 
                     $.each(receiver, function(index) {
-                        results.push({
-                            id: receiver[index]['id'],
-                            text: receiver[index]['name'] + " | " + receiver[index]['deliveryRoom']
-                        })
+                        if (receiver[index]['enabled'] === true) {
+                            results.push({
+                                id: receiver[index]['id'],
+                                text: receiver[index]['name'] + " | " + receiver[index]['deliveryRoom']
+                            })
+                        }
                     });
                 }
 

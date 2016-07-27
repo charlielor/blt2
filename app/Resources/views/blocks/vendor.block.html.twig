@@ -1,0 +1,35 @@
+{% block vendor %}
+    <div id="vendorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="vendorModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="vendorTitle">Add a new Vendor</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="vendorName" class="control-label col-md-4">Vendor name:</label>
+                            <div id="vendorNameDiv" class="col-md-6">
+                                <input type="text" id="vendorName" class="form-control" placeholder="Ex. Amazon" />
+                            </div>
+                        </div>
+                    </div>
+                    <label id="vendorLabel" class="label label-primary center-block">
+                        Vendor name must be unique
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="submitVendor" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block vendorJavascripts %}
+    {% javascripts
+    'js/blocks/vendor.block.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

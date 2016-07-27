@@ -1,4 +1,7 @@
 <?php
+/**
+ * Provides routes to download or preview uploaded packing slips
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -10,6 +13,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class PackingSlipController extends Controller
 {
     /**
+     * Route to download packing slips
+     *
+     * @param string $date Date of when the Package was received (also folder name)
+     * @param string $trackingNumber Tracking number of Package
+     * @param string $filename Filename of file the requested
+     *
+     * @return Response File to be downloaded with the appropriate headers
+     *
      * @Route("/download/{date}/{trackingNumber}/{filename}", name="downloadPackingSlip")
      * @Method({"GET"})
      */
@@ -38,6 +49,14 @@ class PackingSlipController extends Controller
     }
 
     /**
+     * Route to preview packing slips (opens in a new tab instead of downloading)
+     *
+     * @param string $date Date of when the Package was received (also folder name)
+     * @param string $trackingNumber Tracking number of Package
+     * @param string $filename Filename of file the requested
+     *
+     * @return Response File to be previewed with the appropriate headers
+     *
      * @Route("/preview/{date}/{trackingNumber}/{filename}", name="previewPackingSlip")
      * @Method({"GET"})
      */

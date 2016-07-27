@@ -108,6 +108,16 @@ class Package {
      */
     protected $vendor;
 
+    /**
+     * Package constructor
+     *
+     * @param $trackingNumber
+     * @param $numOfPackages
+     * @param $shipper Shipper object
+     * @param $receiver Receiver object
+     * @param $vendor Vendor object
+     * @param $user
+     */
     public function __construct($trackingNumber, $numOfPackages, $shipper, $receiver, $vendor, $user) {
         $this->trackingNumber = $trackingNumber;
         $this->numberOfPackages = $numOfPackages;
@@ -137,6 +147,8 @@ class Package {
      * Set trackingNumber
      *
      * @param string $trackingNumber
+     * @param string $user
+     *
      * @return Package
      */
     public function setTrackingNumber($trackingNumber, $user)
@@ -165,6 +177,8 @@ class Package {
      * Set numberOfPackages
      *
      * @param integer $numberOfPackages
+     * @param string $user
+     *
      * @return Package
      */
     public function setNumberOfPackages($numberOfPackages, $user)
@@ -193,6 +207,8 @@ class Package {
      * Set dateDelivered
      *
      * @param \DateTime $dateDelivered
+     * @param string $user
+     *
      * @return Package
      */
     public function setDateDelivered($dateDelivered, $user)
@@ -221,6 +237,8 @@ class Package {
      * Set dateReceived
      *
      * @param \DateTime $dateReceived
+     * @param string $user
+     *
      * @return Package
      */
     public function setDateReceived($dateReceived, $user)
@@ -249,6 +267,8 @@ class Package {
      * Set delivered
      *
      * @param boolean $delivered
+     * @param string $user
+     *
      * @return Package
      */
     public function setDelivered($delivered, $user)
@@ -283,6 +303,8 @@ class Package {
      * Set shipper
      *
      * @param \AppBundle\Entity\Shipper $shipper
+     * @param string $user
+     *
      * @return Package
      */
     public function setShipper(\AppBundle\Entity\Shipper $shipper = null, $user)
@@ -311,6 +333,8 @@ class Package {
      * Set receiver
      *
      * @param \AppBundle\Entity\Receiver $receiver
+     * @param string $user
+     *
      * @return Package
      */
     public function setReceiver(\AppBundle\Entity\Receiver $receiver = null, $user)
@@ -339,6 +363,8 @@ class Package {
      * Set vendor
      *
      * @param \AppBundle\Entity\Vendor $vendor
+     * @param string $user
+     *
      * @return Package
      */
     public function setVendor(\AppBundle\Entity\Vendor $vendor = null, $user)
@@ -367,6 +393,8 @@ class Package {
      * Set userWhoReceived
      *
      * @param string $userWhoReceived
+     * @param string $user
+     *
      * @return Package
      */
     public function setUserWhoReceived($userWhoReceived, $user)
@@ -395,6 +423,8 @@ class Package {
      * Set userWhoDelivered
      *
      * @param string $userWhoDelivered
+     * @param string $user
+     *
      * @return Package
      */
     public function setUserWhoDelivered($userWhoDelivered, $user)
@@ -423,6 +453,8 @@ class Package {
      * Set datePickedUp
      *
      * @param \DateTime $datePickedUp
+     * @param string $user
+     *
      * @return Package
      */
     public function setDatePickedUp($datePickedUp, $user)
@@ -451,6 +483,8 @@ class Package {
      * Set userWhoPickedUp
      *
      * @param string $userWhoPickedUp
+     * @param string $user
+     *
      * @return Package
      */
     public function setUserWhoPickedUp($userWhoPickedUp, $user)
@@ -479,6 +513,8 @@ class Package {
      * Set userWhoAuthorizedPickUp
      *
      * @param string $userWhoAuthorizedPickUp
+     * @param string $user
+     *
      * @return Package
      */
     public function setUserWhoAuthorizedPickUp($userWhoAuthorizedPickUp, $user)
@@ -507,6 +543,8 @@ class Package {
      * Set pickedUp
      *
      * @param boolean $pickedUp
+     * @param string $user
+     *
      * @return Package
      */
     public function setPickedUp($pickedUp, $user)
@@ -540,6 +578,8 @@ class Package {
      * Set dateModified
      *
      * @param \DateTime $dateModified
+     * @param string $user
+     *
      * @return Package
      */
     public function setDateModified($dateModified, $user)
@@ -588,6 +628,8 @@ class Package {
      * Add a packingSlip
      *
      * @param \AppBundle\Entity\PackingSlip $packingSlip
+     * @param string $user
+     *
      * @return Package
      */
     public function addPackingSlip(\AppBundle\Entity\PackingSlip $packingSlip, $user)
@@ -606,7 +648,9 @@ class Package {
      * Remove a packingSlips
      *
      * @param \AppBundle\Entity\PackingSlip $packingSlip
-     * @parem $user
+     * @param $user
+     *
+     * @return Package
      */
     public function removePackingSlips(\AppBundle\Entity\PackingSlip $packingSlip, $user)
     {

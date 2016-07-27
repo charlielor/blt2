@@ -1,4 +1,7 @@
 <?php
+/**
+ * Provides routes to search users within the Package table in the database since they don't have their own table
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -11,6 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends Controller {
 
     /**
+     * Route to get all users in database (no user table or entity)
+     *
+     * @api
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/users", name="users")
      * @Method({"GET"})
      */
@@ -33,6 +42,14 @@ class UserController extends Controller {
     }
 
     /**
+     * Route to search for a user in database base on term
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/users/search", name="searchUser")
      * @Method({"GET"})
      */
@@ -52,17 +69,34 @@ class UserController extends Controller {
         // Run query and save it
         $users = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($users) . ' User',
-            'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
-        );
+        if (empty($users)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'Retrieved User with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        }
 
         return new JsonResponse($results);
     }
 
     /**
+     * Route to serach for a user in database like term
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/users/like", name="likeUser")
      * @Method({"GET"})
      */
@@ -81,12 +115,22 @@ class UserController extends Controller {
 
         // Run query and save it
         $users = $query->getResult();
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
-        );
+
+        if (empty($users)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No User(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($users) . ' User(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($users, 'json'))
+            );
+        }
 
         return new JsonResponse($results);
     }

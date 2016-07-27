@@ -81,6 +81,8 @@ $(document).ready(function() {
     // If the browser supports getUserMedia, create the camera object
     if (navigator.getUserMedia) {
         var camera = new Camera(cameraWidth, cameraHeight, video, canvas, image, zoom);
+    } else {
+        $("#takePicture").hide();
     }
 
     function createThumbnail(thumbnailNumber, src) {

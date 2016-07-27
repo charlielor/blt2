@@ -1,0 +1,37 @@
+<?php
+
+
+namespace AppBundle\Controller\Frontend;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Mapping as ORM;
+
+
+class MaintenanceController extends Controller {
+
+    /**
+     * Route to render the maintenance page
+     *
+     * @Route("/maintenance", name="maintenance")
+     */
+    public function renderTemplateAction() {
+        // Get the repositories for receiver and shipper
+        $receiverRepository = $this->getDoctrine()->getRepository('AppBundle:Receiver');
+        $shipperRepository = $this->getDoctrine()->getRepository('AppBundle:Shipper');
+
+        // Get an array of receivers
+        $receivers = $receiverRepository->findAll();
+
+        // Get an array of shippers
+        $shippers = $shipperRepository->findAll();
+
+        return $this->render('maintenance.html.twig', array(
+            "receivers" => $receivers,
+            "shippers" => $shippers
+        ));
+    }
+}

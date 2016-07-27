@@ -51,6 +51,8 @@ class Receiver {
      * Receiver constructor.
      * @param $name
      * @param $deliveryRoom
+     * @param string $user
+     *
      */
     public function __construct($name, $deliveryRoom, $user) {
         $this->name = $name;
@@ -79,6 +81,8 @@ class Receiver {
      * Set name
      *
      * @param string $name
+     * @param string $user
+     *
      * @return Receiver
      */
     public function setName($name, $user)
@@ -87,6 +91,8 @@ class Receiver {
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -105,6 +111,8 @@ class Receiver {
      * Set deliveryRoom
      *
      * @param integer $deliveryRoom
+     * @param string $user
+     *
      * @return Receiver
      */
     public function setDeliveryRoom($deliveryRoom, $user)
@@ -113,6 +121,8 @@ class Receiver {
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -131,6 +141,8 @@ class Receiver {
      * Set enabled
      *
      * @param boolean $enabled
+     * @param string $user
+     *
      * @return Receiver
      */
     public function setEnabled($enabled, $user)
@@ -139,6 +151,8 @@ class Receiver {
 
         $now = new \DateTime("NOW");
         $this->dateModified = $now;
+
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -157,11 +171,14 @@ class Receiver {
      * Set dateCreated
      *
      * @param \DateTime $dateCreated
+     * @param string $user
+     *
      * @return Receiver
      */
     public function setDateCreated($dateCreated, $user)
     {
         $this->dateCreated = $dateCreated;
+        $this->userLastModified = $user;
 
         return $this;
     }
@@ -180,11 +197,14 @@ class Receiver {
      * Set dateModified
      *
      * @param \DateTime $dateModified
+     * @param string $user
+     *
      * @return Receiver
      */
     public function setDateModified($dateModified, $user)
     {
         $this->dateModified = $dateModified;
+        $this->userLastModified = $user;
 
         return $this;
     }

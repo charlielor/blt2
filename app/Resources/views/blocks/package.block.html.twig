@@ -1,6 +1,6 @@
-{% use 'blocks/newShipper.block.html.twig' %}
-{% use 'blocks/newVendor.block.html.twig' %}
-{% use 'blocks/newReceiver.block.html.twig' %}
+{% use 'blocks/shipper.block.html.twig' %}
+{% use 'blocks/vendor.block.html.twig' %}
+{% use 'blocks/receiver.block.html.twig' %}
 {% use 'blocks/camera.block.html.twig' %}
 
 {% block packageStyleSheets %}
@@ -15,16 +15,16 @@
 {% endblock %}
 
 {% block package %}
-    {{ block('newShipper') }}
-    {{ block('newVendor') }}
-    {{ block('newReceiver') }}
+    {{ block('shipper') }}
+    {{ block('vendor') }}
+    {{ block('receiver') }}
     {{ block('camera') }}
 
     <div id="noPackingSlipsModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="noPackingSlips">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="noPackingSlipsTitle">No Packing Slip Attached</h4>
+                    <h4 class="modal-title" id="noPackingSlipsTitle">No packing slip attached</h4>
                 </div>
                 <div class="modal-body">
                     <p id="noPackingSlipsAttached" class="text-default center-block text-center">There are no packing slips attached. Is that okay?</p>
@@ -42,7 +42,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex="-1"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="packageModalTitle">Enter in Details</h4>
+                    <h4 class="modal-title" id="packageModalTitle">Enter in details</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-horizontal">
@@ -53,7 +53,7 @@
                                 <div class="input-group select2-bootstrap-append">
                                     <select name="vendor" id="select2-Shipper" tabindex="1"></select>
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewShipperModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#shipperModal" data-referer="new" data-select2=true tabindex="-1">New</button>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="packageTrackingNumber" class="control-label col-md-4">Tracking Number:</label>
+                            <label for="packageTrackingNumber" class="control-label col-md-4">Tracking number:</label>
                             <div id="packageTrackingNumberDiv" class="col-md-6">
                                 <p id="packageTrackingNumber" class="form-control-static"></p>
                             </div>
@@ -79,7 +79,7 @@
                                 <div class="input-group select2-bootstrap-append">
                                     <select name="vendor" id="select2-Vendor" tabindex="2"></select>
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewVendorModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vendorModal" data-referer="new" data-select2=true tabindex="-1">New</button>
                                     </div>
                                 </div>
                             </div>
@@ -91,14 +91,14 @@
                                 <div class="input-group select2-bootstrap-append">
                                     <select name="receiver" id="select2-Receiver" tabindex="3"></select>
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addNewReceiverModal" data-referer="form" data-select2=true tabindex="-1">New</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#receiverModal" data-referer="new" data-select2=true tabindex="-1">New</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="packageNumOfPackages" class="control-label col-md-4">Number of Packages:</label>
+                            <label for="packageNumOfPackages" class="control-label col-md-4">Number of packages:</label>
                             <div id="packageNumOfPackagesDiv" class="col-md-3">
                                 <div class="input-group">
                                     <div class="input-group-btn">
@@ -113,27 +113,27 @@
                         </div>
 
                         <div id="existingPackingSlips" class="form-group existingPackage">
-                            <label for="listOfExistingPackingSlips" class="control-label col-md-4">Existing Packing Slips:</label>
+                            <label for="listOfExistingPackingSlips" class="control-label col-md-4">Existing packing slips:</label>
                             <div id="listOfExistingPackingSlips" class="col-md-6">
 
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="attachedPackingSlips" class="control-label col-md-4">Packing Slips:</label>
+                            <label for="attachedPackingSlips" class="control-label col-md-4">Packing slips:</label>
                             <div class="col-md-5">
                                 <form id="uploadFiles" enctype="multipart/form-data" name="uploadFiles" class="divInForm">
                                     <input id="attachedPackingSlips" class="form-control-static" type="file" name="attachedPackingSlips[]" multiple tabindex="-1" />
                                 </form>
                             </div>
-                            <div class="col-md-1">
-                                <button type="button" id="clearAttachedPackingSlips" class="btn btn-danger btn-sm" tabindex="-1">Clear</button>
-                            </div>
+                            {#<div class="col-md-1">#}
+                                {#<button type="button" id="clearAttachedPackingSlips" class="btn btn-danger btn-sm" tabindex="-1">Clear</button>#}
+                            {#</div>#}
                         </div>
 
-                        <div class="form-group">
-                            <div class="hidden-xs col-md-2 col-md-offset-4">
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cameraModal" tabindex="5">Take a Picture</button>
+                        <div id="takePicture" class="form-group">
+                            <div class="col-md-2 col-md-offset-4">
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cameraModal" tabindex="5">Take a picture</button>
                             </div>
                         </div>
 
@@ -155,9 +155,9 @@
 {% endblock %}
 
 {% block packageJavascripts %}
-    {{ block('newShipperJavascripts') }}
-    {{ block('newVendorJavascripts') }}
-    {{ block('newReceiverJavascripts') }}
+    {{ block('shipperJavascripts') }}
+    {{ block('vendorJavascripts') }}
+    {{ block('receiverJavascripts') }}
     {{ block('cameraJavascripts') }}
 
     {% javascripts

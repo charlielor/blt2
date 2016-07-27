@@ -1,14 +1,30 @@
 {% block pickupPackage %}
+    <div id="moreThanOnePackagesModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="moreThanOnePackages">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="moreThanOnePackagesTitle">More than one package</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="moreThanOnePackages" class="text-default center-block text-center"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="pickupPackageModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="pickupPackageModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="pickupPackageTitle">Scan in Package</h4>
+                    <h4 class="modal-title" id="pickupPackageTitle">Scan in package</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <div id="pickupPackageDiv" class="center-block">
-                            <input type="text" id="pickupTrackingNumber" class="form-control text-center" placeholder="Scan in Package" />
+                            <input type="text" id="pickupTrackingNumber" class="form-control text-center" placeholder="Scan in package" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -29,7 +45,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="pickupPackageResultsTitle">Scan in Package</h4>
+                    <h4 class="modal-title" id="pickupPackageResultsTitle">Scan in package</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -38,12 +54,12 @@
                                 <table id="datatable-PickupResults" class="table table-bordered table-hover table-striped table-condensed">
                                     <thead>
                                     <tr>
-                                        <th>Tracking Number</th>
+                                        <th>Tracking number</th>
                                         <th>Vendor</th>
                                         <th>Shipper</th>
                                         <th>Receiver</th>
-                                        <th>Date Received</th>
-                                        <th>Number of Packages</th>
+                                        <th>Date received</th>
+                                        <th>Number of packages</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -56,7 +72,7 @@
                         <div class="form-group">
                             <label for="userWhoPickedUp" class="col-md-5 control-label">Name of the person picking up:</label>
                             <div id="userWhoPickedUpDiv" class="col-md-6">
-                                <input type="text" id="userWhoPickedUp" class="form-control" placeholder="Ex. Biochem User" />
+                                <input type="text" id="userWhoPickedUp" class="form-control" placeholder="Ex. Charlie" />
                             </div>
                         </div>
                         <div class="form-group">

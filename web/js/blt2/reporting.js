@@ -148,7 +148,7 @@ $(document).ready(function() {
         submitReportRequest.text("Go!");
         submitReportRequest.removeAttr("disabled");
 
-        $("#graphToTable").text("Graph to Table");
+        $("#graphToTable").text("Graph to table");
         $("#graphToTable").removeAttr("disabled");
     }
 
@@ -520,14 +520,14 @@ $(document).ready(function() {
                 }
 
                 if (btn == true) {
-                    $("#graphToTable").text("Graph to Table");
+                    $("#graphToTable").text("Graph to table");
                     $("#graphToTable").removeAttr("disabled");
                 }
             }).fail(function() {
                 $("#queryDatabaseErrorModal").modal('show');
 
                 if (btn == true) {
-                    $("#graphToTable").text("Graph to Table");
+                    $("#graphToTable").text("Graph to table");
                     $("#graphToTable").removeAttr("disabled");
                 }
             });

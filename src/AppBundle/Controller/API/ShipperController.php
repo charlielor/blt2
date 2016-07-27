@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Controls everything related to the Shipper entity from creation, update, search, etc.
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -13,6 +15,14 @@ use AppBundle\Entity\Shipper;
 class ShipperController extends Controller
 {
     /**
+     * Route to creating a new Shipper
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/new", name="newShipper")
      * @Method({"POST"})
      */
@@ -81,6 +91,15 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for updating a Shipper
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/update", name="updateShipper")
      * @Method({"PUT"})
      */
@@ -152,10 +171,18 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for enabling a Shipper
+     *
+     * @api
+     *
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/enable", name="enableShipper")
      * @Method({"PUT"})
      */
-    public function enableShipperAction(Request $request, $id) {
+    public function enableShipperAction($id) {
         // Get the Shipper repository
         $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
 
@@ -198,10 +225,18 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for disabling a Shipper
+     *
+     * @api
+     *
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/disable", name="disableShipper")
      * @Method({"PUT"})
      */
-    public function disableShipperAction(Request $request, $id) {
+    public function disableShipperAction($id) {
         // Get the Shipper repository
         $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
 
@@ -243,47 +278,63 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route for deleting a Shipper
+     *
+     * @api
+     *
+     * @param string $id Shipper's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/{id}/delete", name="deleteShipper")
      * @Method({"DELETE"})
      *
-     * TODO: Can not delete Shipper: will not cascade into Package table
+     * @todo Can not delete Shipper: will not cascade into Package table
      */
-    public function deleteShipperAction(Request $request, $id) {
-        // Get the Shipper repository
-        $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
-
-        // Get the shipper by id
-        $shipper = $shipperRepository->find($id);
-
-        if (empty($shipper)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not find shipper given id: ' . $id,
-                'object' => []
-            );
-
-            return new JsonResponse($results);
-        } else {
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // Push the updated Shipper to database
-            $em->remove($shipper);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Shipper: ' . $shipper->getName(),
-                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-            );
-
-            return new JsonResponse($results);
-        }
-    }
+//    public function deleteShipperAction(Request $request, $id) {
+//        // Get the Shipper repository
+//        $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
+//
+//        // Get the shipper by id
+//        $shipper = $shipperRepository->find($id);
+//
+//        if (empty($shipper)) {
+//            // Set up the response
+//            $results = array(
+//                'result' => 'error',
+//                'message' => 'Can not find shipper given id: ' . $id,
+//                'object' => []
+//            );
+//
+//            return new JsonResponse($results);
+//        } else {
+//            // Get entity manager
+//            $em = $this->get('doctrine.orm.entity_manager');
+//
+//            // Push the updated Shipper to database
+//            $em->remove($shipper);
+//            $em->flush();
+//
+//            // Set up the response
+//            $results = array(
+//                'result' => 'success',
+//                'message' => 'Successfully deleted Shipper: ' . $shipper->getName(),
+//                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+//            );
+//
+//            return new JsonResponse($results);
+//        }
+//    }
 
     /**
+     * Route for searching for a Shipper base on term
+     *
+     * @api
+     *
+     * @param Request $request Shipper's name being searched
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/shippers/search", name="searchShipper")
      * @Method({"GET"})
      */
@@ -307,18 +358,35 @@ class ShipperController extends Controller
         // Run query and save it
         $shipper = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($shipper) . ' Shipper',
-            'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-        );
+        if (empty($shipper)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Shipper with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
     }
 
     /**
+     * Route for searching for a Shipper like term
+     *
+     * @api
+     *
+     * @param Request $request Term to use for search
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/shippers/like", name="likeShipper")
      * @Method({"GET"})
      */
@@ -332,28 +400,40 @@ class ShipperController extends Controller
         // Set up query the database for shippers that is like term
         $query = $em->createQuery(
             'SELECT s FROM AppBundle:Shipper s
-            WHERE s.name LIKE :term
-            AND s.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE s.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $shipper = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
-        );
+        if (empty($shipper)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Shipper(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($shipper) . ' Shipper(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($shipper, 'json'))
+            );
+        }
+
 
         // Return response as JSON
         return new JsonResponse($results);
     }
 
     /**
+     * Route to get all shippers
+     *
+     * @api
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/shippers", name="shippers")
      * @Method({"GET"})
      */
@@ -362,14 +442,12 @@ class ShipperController extends Controller
         $shipperRepository = $this->getDoctrine()->getRepository("AppBundle:Shipper");
 
         // Get the enabled Shippers
-        $shippers = $shipperRepository->findBy([
-            "enabled" => true
-        ]);
+        $shippers = $shipperRepository->findAll();
 
         // Set up the response
         $results = array(
             'result' => 'success',
-            'message' => 'Successfully retrieved all enabled Shippers',
+            'message' => 'Successfully retrieved all Shippers',
             'object' => json_decode($this->get('serializer')->serialize($shippers, 'json'))
         );
 
@@ -377,6 +455,14 @@ class ShipperController extends Controller
     }
 
     /**
+     * Route to display Shipper's information
+     *
+     * @api
+     *
+     * @param string $id Shipper's ID
+     *
+     * @return Response Render twig template with Shipper Information
+     * 
      * @Route("/shippers/{id}", name="shipper")
      * @Method({"GET"})
      */

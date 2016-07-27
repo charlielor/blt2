@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block userActions %}
-    <li><a href="/" tabindex="-1">Back to Menu</a></li>
+    <li><a href="/" tabindex="-1">Back to menu</a></li>
 {% endblock %}
 
 {% block stylesheets %}
@@ -19,16 +19,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="moreThanOnePackageTitle">Select a Package</h4>
+                    <h4 class="modal-title" id="moreThanOnePackageTitle">Select a package</h4>
                 </div>
                 <div class="modal-body">
                     <table id="datatable-MoreThanOnePackage" class="table table-bordered">
                         <thead>
                         <tr>
                             <th></th>
-                            <th data-priority="1">Tracking Number</th>
+                            <th data-priority="1">Tracking number</th>
                             <th data-priority="3">Vendor</th>
-                            <th data-priority="2">Number of Packages</th>
+                            <th data-priority="2">Number of packages</th>
                             <th>Date Received</th>
                         </tr>
                         </thead>
@@ -63,7 +63,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 input-group-lg">
-                <input type="text" id="barcodeTextBox" name="barcode" placeholder="Scan in barcode" class="form-control text-center" />
+                <input type="text" id="barcodeTextBox" name="barcode" placeholder="Scan in package" class="form-control text-center" />
             </div>
         </div>
         <div class="row">
@@ -78,9 +78,9 @@
                     <table id="datatable-Delivering" class="table table-bordered">
                         <thead>
                         <tr>
-                            <th>Tracking Number</th>
+                            <th>Tracking number</th>
                             <th data-priority="1">Vendor</th>
-                            <th data-priority="2">Number of Packages</th>
+                            <th data-priority="2">Number of packages</th>
                             <th>Date Received</th>
                         </tr>
                         </thead>

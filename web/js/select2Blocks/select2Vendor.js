@@ -4,7 +4,7 @@ $(document).ready(function() {
      */
     $("#select2-Vendor").select2({
         theme: "bootstrap",
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         placeholder: "Search for a Vendor",
         width: "off",
         ajax: {
@@ -24,10 +24,12 @@ $(document).ready(function() {
                     var vendors = data['object'];
 
                     $.each(vendors, function(index) {
-                        results.push({
-                            id: vendors[index]['id'],
-                            text: vendors[index]['name']
-                        })
+                        if (vendors[index]['enabled'] === true) {
+                            results.push({
+                                id: vendors[index]['id'],
+                                text: vendors[index]['name']
+                            })
+                        }
                     });
                 }
 

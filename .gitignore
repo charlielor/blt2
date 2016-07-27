@@ -159,6 +159,33 @@ sftp-config.json
 # Notepad++ backups #
 *.bak
 
+
+### phpDocumentor ###
+/phpDocumentor.phar
+/docs/phpdocs/phpdoc-*
+
 ### BLT2 ###
 upload/*
+web/css/*
+web/js/*
+web/images/*
 !upload/.gitkeep
+!web/css/blocks/
+!web/css/blt2/
+!web/css/DataTables/
+!web/css/jquery-ui/
+!web/css/select2-bootstrap-theme/
+!web/css/bootstrap.min.css
+!web/css/bootstrap.min.css.map
+!web/css/breakpoints.less
+!web/js/blocks/
+!web/js/blt2/
+!web/js/chartsjs/
+!web/js/DataTables/
+!web/js/select2Blocks/
+!web/js/bootstrap.min.js
+!web/images/spinner.gif
+!web/images/favicon.ico
+
+output/
+web/images/favicon.ico

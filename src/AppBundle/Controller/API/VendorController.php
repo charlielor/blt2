@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Controls everything related to the Vendor entity from creation, update, search, etc.
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -13,6 +15,14 @@ use AppBundle\Entity\Vendor;
 class VendorController extends Controller
 {
     /**
+     * Route to creating a new Vendor
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/new", name="newVendor")
      * @Method({"POST"})
      */
@@ -81,6 +91,15 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for updating a Vendor
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/update", name="updateVendor")
      * @Method({"PUT"})
      */
@@ -152,10 +171,18 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for enabling a Vendor
+     *
+     * @api
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/enable", name="enableVendor")
      * @Method({"PUT"})
      */
-    public function enableVendorAction(Request $request, $id) {
+    public function enableVendorAction($id) {
         // Get the Vendor repository
         $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
 
@@ -198,10 +225,18 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for disabling a Vendor
+     *
+     * @api
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/disable", name="disableVendor")
      * @Method({"PUT"})
      */
-    public function disableVendorAction(Request $request, $id) {
+    public function disableVendorAction($id) {
         // Get the Vendor repository
         $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
 
@@ -243,47 +278,63 @@ class VendorController extends Controller
     }
 
     /**
+     * Route for deleting a Vendor
+     *
+     * @api
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return JsonResponse Results of the call
+     * 
      * @Route("/vendors/{id}/delete", name="deleteVendor")
      * @Method({"DELETE"})
      *
-     * TODO: Can not delete Vendor: will not cascade into Package table
+     * @todo Can not delete Vendor: will not cascade into Package table
      */
-    public function deleteVendorAction(Request $request, $id) {
-        // Get the Vendor repository
-        $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
-
-        // Get the vendor by id
-        $vendor = $vendorRepository->find($id);
-
-        if (empty($vendor)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not find vendor given id: ' . $id,
-                'object' => []
-            );
-
-            return new JsonResponse($results);
-        } else {
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // Push the updated Vendor to database
-            $em->remove($vendor);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Vendor: ' . $vendor->getName(),
-                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-            );
-
-            return new JsonResponse($results);
-        }
-    }
+//    public function deleteVendorAction(Request $request, $id) {
+//        // Get the Vendor repository
+//        $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
+//
+//        // Get the vendor by id
+//        $vendor = $vendorRepository->find($id);
+//
+//        if (empty($vendor)) {
+//            // Set up the response
+//            $results = array(
+//                'result' => 'error',
+//                'message' => 'Can not find vendor given id: ' . $id,
+//                'object' => []
+//            );
+//
+//            return new JsonResponse($results);
+//        } else {
+//            // Get entity manager
+//            $em = $this->get('doctrine.orm.entity_manager');
+//
+//            // Push the updated Vendor to database
+//            $em->remove($vendor);
+//            $em->flush();
+//
+//            // Set up the response
+//            $results = array(
+//                'result' => 'success',
+//                'message' => 'Successfully deleted Vendor: ' . $vendor->getName(),
+//                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+//            );
+//
+//            return new JsonResponse($results);
+//        }
+//    }
 
     /**
+     * Route for searching for a Vendor base on term
+     *
+     * @api
+     *
+     * @param Request $request Vendor's name being searched
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/vendors/search", name="searchVendor")
      * @Method({"GET"})
      */
@@ -294,7 +345,7 @@ class VendorController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for vendors that is like term
+        // Set up query the database for vendors that is the term
         $query = $em->createQuery(
             'SELECT v FROM AppBundle:Vendor v
             WHERE v.name = :term
@@ -307,18 +358,37 @@ class VendorController extends Controller
         // Run query and save it
         $vendor = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($vendor) . ' Vendor',
-            'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-        );
+        if (empty($vendor)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Vendor with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
     }
 
     /**
+     * Route for searching for a Vendor like term
+     *
+     * @api
+     *
+     * @param Request $request Term to use for search
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/vendors/like", name="likeVendor")
      * @Method({"GET"})
      */
@@ -332,28 +402,39 @@ class VendorController extends Controller
         // Set up query the database for vendors that is like term
         $query = $em->createQuery(
             'SELECT v FROM AppBundle:Vendor v
-            WHERE v.name LIKE :term
-            AND v.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE v.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $vendor = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($vendor) . ' Vendor(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
-        );
+        if (empty($vendor)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Vendor(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($vendor) . ' Vendor(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($vendor, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
     }
 
     /**
+     * Route to get all vendors
+     *
+     * @api
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/vendors", name="vendors")
      * @Method({"GET"})
      */
@@ -362,14 +443,12 @@ class VendorController extends Controller
         $vendorRepository = $this->getDoctrine()->getRepository("AppBundle:Vendor");
 
         // Get all enabled Vendors
-        $vendors = $vendorRepository->findBy([
-            "enabled" => true
-        ]);
+        $vendors = $vendorRepository->findAll();
 
         // Set up the response
         $results = array(
             'result' => 'success',
-            'message' => 'Successfully retrieved all enabled Vendors',
+            'message' => 'Successfully retrieved all Vendors',
             'object' => json_decode($this->get('serializer')->serialize($vendors, 'json'))
         );
 
@@ -377,6 +456,14 @@ class VendorController extends Controller
     }
 
     /**
+     * Route to display Vendor's information
+     *
+     * @api
+     *
+     * @param string $id Vendor's ID
+     *
+     * @return Response Render twig template with Vendor Information
+     *
      * @Route("/vendors/{id}", name="vendor")
      * @Method({"GET"})
      */

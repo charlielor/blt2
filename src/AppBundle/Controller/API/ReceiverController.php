@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Controls everything related to the Receiver entity from creation, update, search, etc.
+ */
 
 namespace AppBundle\Controller\API;
 
@@ -9,10 +11,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Receiver;
+use Zend\Json\Json;
 
 class ReceiverController extends Controller
 {
     /**
+     * Route to creating a new Receiver
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/new", name="newReceiver")
      * @Method({"POST"})
      */
@@ -84,6 +95,15 @@ class ReceiverController extends Controller
     }
 
     /**
+     * Route for updating a Receiver
+     *
+     * @api
+     *
+     * @param Request $request Symfony global request variable
+     * @param string $id Receiver's ID
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/{id}/update", name="updateReceiver")
      * @Method({"PUT"})
      */
@@ -161,10 +181,18 @@ class ReceiverController extends Controller
     }
 
     /**
+     * Route for enabling a Receiver
+     *
+     * @api
+     *
+     * @param string $id Receiver's ID
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/{id}/enable", name="enableReceiver")
      * @Method({"PUT"})
      */
-    public function enableReceiverAction(Request $request, $id) {
+    public function enableReceiverAction($id) {
         // Get the Receiver repository
         $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
 
@@ -207,10 +235,18 @@ class ReceiverController extends Controller
     }
 
     /**
+     * Route for disabling a Receiver
+     *
+     * @api
+     *
+     * @param string $id Receiver's ID
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/{id}/disable", name="disableReceiver")
      * @Method({"PUT"})
      */
-    public function disableReceiverAction(Request $request, $id) {
+    public function disableReceiverAction($id) {
         // Get the Receiver repository
         $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
 
@@ -252,47 +288,63 @@ class ReceiverController extends Controller
     }
 
     /**
+     * Route for deleting a Receiver
+     *
+     * @api
+     *
+     * @param string $id Receiver's ID
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/{id}/delete", name="deleteReceiver")
      * @Method({"DELETE"})
      *
-     * TODO: Can not delete Receiver: will not cascade into Package table
+     * @todo Can not delete Receiver: will not cascade into Package table
      */
-    public function deleteReceiverAction(Request $request, $id) {
-        // Get the Receiver repository
-        $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
-
-        // Get the receiver by id
-        $receiver = $receiverRepository->find($id);
-
-        if (empty($receiver)) {
-            // Set up the response
-            $results = array(
-                'result' => 'error',
-                'message' => 'Can not find receiver given id: ' . $id,
-                'object' => []
-            );
-
-            return new JsonResponse($results);
-        } else {
-            // Get entity manager
-            $em = $this->get('doctrine.orm.entity_manager');
-
-            // Push the updated Receiver to database
-            $em->remove($receiver);
-            $em->flush();
-
-            // Set up the response
-            $results = array(
-                'result' => 'success',
-                'message' => 'Successfully deleted Receiver: ' . $receiver->getName(),
-                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-            );
-
-            return new JsonResponse($results);
-        }
-    }
+//    public function deleteReceiverAction($id) {
+//        // Get the Receiver repository
+//        $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
+//
+//        // Get the receiver by id
+//        $receiver = $receiverRepository->find($id);
+//
+//        if (empty($receiver)) {
+//            // Set up the response
+//            $results = array(
+//                'result' => 'error',
+//                'message' => 'Can not find receiver given id: ' . $id,
+//                'object' => []
+//            );
+//
+//            return new JsonResponse($results);
+//        } else {
+//            // Get entity manager
+//            $em = $this->get('doctrine.orm.entity_manager');
+//
+//            // Push the updated Receiver to database
+//            $em->remove($receiver);
+//            $em->flush();
+//
+//            // Set up the response
+//            $results = array(
+//                'result' => 'success',
+//                'message' => 'Successfully deleted Receiver: ' . $receiver->getName(),
+//                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+//            );
+//
+//            return new JsonResponse($results);
+//        }
+//    }
 
     /**
+     * Route for searching for a Receiver base on term
+     *
+     * @api
+     *
+     * @param Request $request Receiver's name being searched
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/search", name="searchReceiver")
      * @Method({"GET"})
      */
@@ -303,7 +355,7 @@ class ReceiverController extends Controller
         // Get the entity manager
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // Set up query the database for receivers that is like terms
+        // Set up the query for the database for receivers that is the term
         $query = $em->createQuery(
             'SELECT r FROM AppBundle:Receiver r
             WHERE r.name = :term
@@ -316,18 +368,35 @@ class ReceiverController extends Controller
         // Run query and save it
         $receiver = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($receiver) . ' Receiver',
-            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-        );
+        if (empty($receiver)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Receiver with the name: ' . $term,
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
     }
 
     /**
+     * Route for searching for a Receiver like term
+     *
+     * @api
+     *
+     * @param Request $request Term to use for search
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/like", name="likeReceiver")
      * @Method({"GET"})
      */
@@ -341,28 +410,39 @@ class ReceiverController extends Controller
         // Set up query the database for receivers that is like terms
         $query = $em->createQuery(
             'SELECT r FROM AppBundle:Receiver r
-            WHERE r.name LIKE :term
-            AND r.enabled = :enabled'
-        )->setParameters(array(
-                'term' => $term.'%',
-                'enabled' => 1)
-        );
+            WHERE r.name LIKE :term'
+        )->setParameter('term', $term.'%');
 
         // Run query and save it
         $receiver = $query->getResult();
 
-        // Set up response
-        $results = array(
-            'result' => 'success',
-            'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
-            'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
-        );
+        if (empty($receiver)) {
+            // Set up response
+            $results = array(
+                'result' => 'error',
+                'message' => 'No Receiver(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        } else {
+            // Set up response
+            $results = array(
+                'result' => 'success',
+                'message' => 'Retrieved ' . count($receiver) . ' Receiver(s) like \'' . $term . '\'',
+                'object' => json_decode($this->get('serializer')->serialize($receiver, 'json'))
+            );
+        }
 
         // Return response as JSON
         return new JsonResponse($results);
     }
 
     /**
+     * Route to get all Receivers
+     *
+     * @api
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers", name="receivers")
      * @Method({"GET"})
      */
@@ -371,14 +451,12 @@ class ReceiverController extends Controller
         $receiverRepository = $this->getDoctrine()->getRepository("AppBundle:Receiver");
 
         // Get the enabled Receivers
-        $receivers = $receiverRepository->findBy([
-            "enabled" => 1
-        ]);
+        $receivers = $receiverRepository->findAll();
 
         // Set up the response
         $results = array(
             'result' => 'success',
-            'message' => 'Successfully retrieved all enabled Receivers',
+            'message' => 'Successfully retrieved all Receivers',
             'object' => json_decode($this->get('serializer')->serialize($receivers, 'json'))
         );
 
@@ -386,6 +464,14 @@ class ReceiverController extends Controller
     }
 
     /**
+     * Route to get Receiver's undelivered/not picked up Packages
+     *
+     * @api
+     *
+     * @param Request $request Name of the receiver
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/receivers/packages", name="receiverPackages")
      * @Method({"GET"})
      */
@@ -414,7 +500,7 @@ class ReceiverController extends Controller
                 // Set up the response
                 $results = array(
                     'result' => 'error',
-                    'message' => 'No such receiver -> ' . $name ,
+                    'message' => 'No Receiver with the name: ' . $name ,
                     'object' => []
                 );
 
@@ -465,6 +551,14 @@ class ReceiverController extends Controller
     }
 
     /**
+     * Route to display Receiver's information
+     *
+     * @api
+     *
+     * @param string $id Receiver's ID
+     *
+     * @return Response Render twig template with Receiver Information
+     *
      * @Route("/receivers/{id}", name="receiver")
      * @Method({"GET"})
      */

@@ -6,11 +6,14 @@ namespace AppBundle\Controller\Frontend;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-class ReportingController extends Controller
-{
+class ReportingController extends Controller {
+
     /**
+     * Route to render the reporting page
+     *
      * @Route("/reporting", name="reporting")
      */
     public function renderTemplateAction() {
@@ -18,6 +21,12 @@ class ReportingController extends Controller
     }
 
     /**
+     * Route to process queries from reporting
+     *
+     * @param Request $request Symfony global request variable
+     *
+     * @return JsonResponse Results of the call
+     *
      * @Route("/reporting/query", name="query")
      */
     public function queryAction(Request $request) {
@@ -348,7 +357,7 @@ class ReportingController extends Controller
                             'object' => []
                         );
 
-                        return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                        return new JsonResponse($results);
 
                 }
 
@@ -506,6 +515,14 @@ class ReportingController extends Controller
                         }
 
                         break;
+                    default:
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Unable to determine request type',
+                            'object' => []
+                        );
+
+                        return new JsonResponse($results);
                 }
                 break;
             case 'p':
@@ -564,7 +581,13 @@ class ReportingController extends Controller
                         }
                         break;
                     default:
-                        break;
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Unable to determine request type',
+                            'object' => []
+                        );
+
+                        return new JsonResponse($results);
                 }
 
                 break;
@@ -627,7 +650,13 @@ class ReportingController extends Controller
                         }
                         break;
                     default;
-                        break;
+                        $results = array(
+                            'result' => 'error',
+                            'message' => 'Unable to determine request type',
+                            'object' => []
+                        );
+
+                        return new JsonResponse($results);
                 }
 
                 break;
@@ -638,7 +667,7 @@ class ReportingController extends Controller
                     'object' => []
                 );
 
-                return new JsonResponse($this->get('serializer')->serialize($results, 'json'));
+                return new JsonResponse($results);
         }
 
         // Get the results and filter them
@@ -650,7 +679,7 @@ class ReportingController extends Controller
 
 
                 // Create a new response
-                $response = new JsonResponse();
+                $response = new Response();
 
                 // Set the response content type and content disposition
                 $response->headers->set('Content-Type', 'text/xml');
@@ -665,7 +694,7 @@ class ReportingController extends Controller
                 $jsonOutput = $this->get('serializer')->serialize($packages, 'json');
 
                 // Create a new response
-                $response = new JsonResponse();
+                $response = new Response();
 
                 // Set the response content type and content disposition
                 $response->headers->set('Content-Type', 'application/json');
@@ -704,7 +733,7 @@ class ReportingController extends Controller
                 fclose($handle);
 
                 // Create a new response
-                $response = new JsonResponse();
+                $response = new Response();
 
                 // Set the response content
                 $response->setContent(file_get_contents($tmpFileName));

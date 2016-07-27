@@ -34,6 +34,7 @@ $(document).ready(function() {
 
         // Set the referer/select2/id
         referer = button.data('referer');
+
         select2 = button.data('select2');
         maintenance = button.data('maintenance');
         id = button.data('shipper-id');
@@ -49,17 +50,28 @@ $(document).ready(function() {
         }
     });
 
-    // If the Shipper modal is shown, move the modal "up" if there's alrady anothe rmodal up (by editing the z-index)
+    // If the Shipper modal is shown, move the modal "up" if there's already another modal up (by editing the z-index)
     shipperModal.on("shown.bs.modal", function() {
-        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
-        if ($("#packageModal").hasClass("in")) {
-            shipperModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
-        }
+        // If referer or ID is not filled with data from button, close modal and display error
+        if (referer === "") {
+            shipperModal.modal("hide");
+            $("#errorModalText").text("Error in retrieving the referer");
+            $("#errorModal").modal("show");
+        } else if (id === "") {
+            shipperModal.modal("hide");
+            $("#errorModalText").text("Error in retrieving the ID");
+            $("#errorModal").modal("show");
+        } else {
+            // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+            if ($("#packageModal").hasClass("in")) {
+                shipperModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+            }
 
-        // Clear all errors
-        clearErrors();
-        // Focus on the name input textbox
-        shipperNameText.focus();
+            // Clear all errors
+            clearErrors();
+            // Focus on the name input textbox
+            shipperNameText.focus();
+        }
     });
 
     // When the Shipper modal is hidden, clear error and field

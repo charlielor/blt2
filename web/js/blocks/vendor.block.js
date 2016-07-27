@@ -49,17 +49,28 @@ $(document).ready(function() {
         }
     });
 
-    // If the Vendor modal is shown, move the modal "up" if there's alrady anothe rmodal up (by editing the z-index)
+    // If the Vendor modal is shown, move the modal "up" if there's already another modal up (by editing the z-index)
     vendorModal.on("shown.bs.modal", function() {
-        // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
-        if ($("#packageModal").hasClass("in")) {
-            vendorModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
-        }
+        // If referer or ID is not filled with data from button, close modal and display error
+        if (referer === "") {
+            vendorModal.modal("hide");
+            $("#errorModalText").text("Error in retrieving the referer");
+            $("#errorModal").modal("show");
+        } else if (id === "") {
+            vendorModal.modal("hide");
+            $("#errorModalText").text("Error in retrieving the ID");
+            $("#errorModal").modal("show");
+        } else {
+            // If new package modal is shown, increase the z-index so that this modal is on top of the new package modal
+            if ($("#packageModal").hasClass("in")) {
+                vendorModal.css("z-index", parseInt($("#packageModal").css("z-index")) + 30);
+            }
 
-        // Clear all errors
-        clearErrors();
-        // Focus on the name input textbox
-        vendorNameText.focus();
+            // Clear all errors
+            clearErrors();
+            // Focus on the name input textbox
+            vendorNameText.focus();
+        }
     });
 
     // When the Vendor modal is hidden, clear error and field

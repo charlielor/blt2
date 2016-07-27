@@ -245,7 +245,8 @@ $(document).ready(function() {
     function clearErrors() {
         // Clear all errors
         receiverLabel.removeClass("label-danger");
-        receiverLabel.text("New Receiver name must be unique");
+        receiverLabel.addClass("label-primary");
+        receiverLabel.text("Receiver name must be unique");
 
         receiverNameDiv.removeClass("has-error");
         receiverRoomNumberDiv.removeClass("has-error");

@@ -4,20 +4,22 @@ $(document).ready(function() {
 
     var error = "";
 
-    $("#emptyStringModal").on("hidden.bs.modal", function() {
-        if (error == "package") {
+    $("#errorModal").on('hidden.bs.modal', function() {
+        if (error === "package") {
             $("#searchPackageText").val('');
             $("#searchPackageText").focus();
-        } else if (error == "vendor") {
+        } else if (error === "vendor") {
             $("#searchVendorText").val('');
             $("#searchVendorText").focus();
         }
     });
 
+
     $("#searchPackageButton").on("click", function() {
         if ($("#searchPackageText").val().replace(/\s/g, "").length == 0) {
             error = "package";
-            $("#emptyStringModal").modal('show');
+            $("#errorModalText").text("Search parameter can not be empty");
+            $("#errorModal").modal('show');
         } else {
             $("#searchPackageTable").hide();
             $("#spinnerPackage").show();
@@ -155,7 +157,8 @@ $(document).ready(function() {
     $("#searchVendorButton").on("click", function() {
         if ($("#searchVendorText").val().replace(/\s/g, "").length == 0) {
             error = "vendor";
-            $("#emptyStringModal").modal('show');
+            $("#errorModalText").text("Search parameter can not be empty");
+            $("#errorModal").modal('show');
         } else {
             $("#searchVendorTable").hide();
             $("#spinnerVendor").show();
@@ -184,8 +187,8 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + vendor.id + '</td>' +
                                         '<td>' + vendor.name + '</td>' +
-                                        '<td><button type="button" data-id="'+ vendor.id +'" data-action="disable" class="vendor btn btn-sm btn-danger">Disable</button></td>' +
-                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-maintenance=true data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
+                                        '<td><button type="button" data-id="'+ vendor.id +'" data-action="disable" class="vendor btn btn-sm btn-danger maintenance">Disable</button>' +
+                                        '<button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-maintenance=true data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary maintenance">Edit</button></td>' +
                                         '</tr>'
                                     )
                                 } else {
@@ -193,8 +196,8 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + vendor.id + '</td>' +
                                         '<td>' + vendor.name + '</td>' +
-                                        '<td><button type="button" data-id="'+ vendor.id +'" data-action="enable" class="vendor btn btn-sm btn-success">Enable</button></td>' +
-                                        '<td><button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-maintenance=true data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary">Edit</button></td>' +
+                                        '<td><button type="button" data-id="'+ vendor.id +'" data-action="enable" class="vendor btn btn-sm btn-success maintenance">Enable</button>' +
+                                        '<button type="button" id="editVendor" data-vendor-id="' + vendor.id + '" data-toggle="modal" data-target="#vendorModal" data-referer="edit" data-select2=false data-maintenance=true data-vendor-name="' + vendor.name  + '" class="btn btn-sm btn-primary maintenance">Edit</button></td>' +
                                         '</tr>'
                                     )
                                 }
@@ -209,7 +212,7 @@ $(document).ready(function() {
 
                     } else {
                         $("#spinnerVendor").hide();
-                        $("#queryDatabaseErrorModal").modal('show');
+                        $("#emptySetModal").modal('show');
                     }
                 })
                 .fail(function() {

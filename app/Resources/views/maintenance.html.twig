@@ -42,23 +42,6 @@
         </div>
     </div>
 
-    <div id="emptyStringModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="emptyString">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="emptyStringErrorTitle">Error</h4>
-                </div>
-                <div class="modal-body">
-                    <p class="text-danger center-block text-center">Search parameter can not be empty</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="emptySetModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="emptySet">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
@@ -155,14 +138,14 @@
                                     {{ shipper.getName() }}
                                 </td>
                                 <td>
-                                    {% if shipper.getEnabled() == 1 %}
-                                        <button type="button" data-id="{{ shipper.getId() }}" data-action="disable" class="shipper btn btn-sm btn-danger">Disable</button>
-                                    {% else %}
-                                        <button type="button" data-id="{{ shipper.getId() }}" data-action="enable" class="shipper btn btn-sm btn-success">Enable</button>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <button type="button" id="editShipper" data-shipper-id="{{ shipper.getId() }}" data-toggle="modal" data-target="#shipperModal" data-referer="edit" data-select2=false data-maintenance=true data-shipper-name="{{ shipper.getName() }}" class="btn btn-sm btn-primary">Edit</button>
+                                    {% spaceless %}
+                                        {% if shipper.getEnabled() == 1 %}
+                                            <button type="button" data-id="{{ shipper.getId() }}" data-action="disable" class="shipper btn btn-sm btn-danger maintenance">Disable</button>
+                                        {% else %}
+                                            <button type="button" data-id="{{ shipper.getId() }}" data-action="enable" class="shipper btn btn-sm btn-success maintenance">Enable</button>
+                                        {% endif %}
+                                        <button type="button" id="editShipper" data-shipper-id="{{ shipper.getId() }}" data-toggle="modal" data-target="#shipperModal" data-referer="edit" data-select2=false data-maintenance=true data-shipper-name="{{ shipper.getName() }}" class="btn btn-sm btn-primary maintenance">Edit</button>
+                                    {% endspaceless %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -206,7 +189,7 @@
                         <tr>
                             <th>Vendor ID</th>
                             <th>Vendor's name</th>
-                            <th colspan="2">Available actions</th>
+                            <th>Available actions</th>
                         </tr>
                         </thead>
                         <tbody id="searchVendorTableBody">
@@ -234,7 +217,7 @@
                             <th>Receiver ID</th>
                             <th>Receiver's name</th>
                             <th>Receiver's room number</th>
-                            <th colspan="2">Available actions</th>
+                            <th>Available actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -250,14 +233,14 @@
                                     {{ receiver.getDeliveryRoom() }}
                                 </td>
                                 <td>
-                                    {% if receiver.getEnabled() == 1 %}
-                                        <button type="button" data-id="{{ receiver.getId() }}" data-action="disable" class="receiver btn btn-sm btn-danger">Disable</button>
-                                    {% else %}
-                                        <button type="button" data-id="{{ receiver.getId() }}" data-action="enable" class="receiver btn btn-sm btn-success">Enable</button>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <button type="button" id="editReceiver" data-receiver-id="{{ receiver.getId() }}" data-toggle="modal" data-target="#receiverModal" data-referer="edit" data-select2=false data-maintenance=true data-receiver-name="{{ receiver.getName() }}" data-receiver-delivery-room="{{ receiver.getDeliveryRoom() }}" class="btn btn-sm btn-primary">Edit</button>
+                                    {% spaceless %}
+                                        {% if receiver.getEnabled() == 1 %}
+                                            <button type="button" data-id="{{ receiver.getId() }}" data-action="disable" class="receiver btn btn-sm btn-danger maintenance">Disable</button>
+                                        {% else %}
+                                            <button type="button" data-id="{{ receiver.getId() }}" data-action="enable" class="receiver btn btn-sm btn-success maintenance">Enable</button>
+                                        {% endif %}
+                                        <button type="button" id="editReceiver" data-receiver-id="{{ receiver.getId() }}" data-toggle="modal" data-target="#receiverModal" data-referer="edit" data-select2=false data-maintenance=true data-receiver-name="{{ receiver.getName() }}" data-receiver-delivery-room="{{ receiver.getDeliveryRoom() }}" class="btn btn-sm btn-primary maintenance">Edit</button>
+                                    {% endspaceless %}
                                 </td>
                             </tr>
                         {% endfor %}

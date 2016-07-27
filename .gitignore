@@ -185,4 +185,7 @@ web/images/*
 !web/js/select2Blocks/
 !web/js/bootstrap.min.js
 !web/images/spinner.gif
+!web/images/favicon.ico
 
+output/
+web/images/favicon.ico

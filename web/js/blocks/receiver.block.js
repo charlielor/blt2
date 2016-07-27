@@ -133,13 +133,13 @@ $(document).ready(function() {
                         // Close the modal
                         receiverModal.modal('hide');
                     } else {
-                        displayError("Error with creating new Receiver");
+                        addError("none", "Error with creating new Receiver");
                     }
                 });
             } else if (referer === 'edit') { // If the referer says it is updating an existing Receiver, update it
                 // If id is null or undefined, then display error
                 if (id === null || id === undefined) {
-                    displayError("Cannot retrieve ID of Receiver");
+                    addError("none", "Cannot retrieve ID of Receiver");
                 } else {
                     // Create an object that will be sent to the server for updating the Receiver
                     var updateReceiver = {};
@@ -188,21 +188,25 @@ $(document).ready(function() {
                                     // Close the modal
                                     receiverModal.modal('hide');
                                 } else {
-                                    displayError("Error with creating new Receiver");
+                                    addError("none", "Error with creating new Receiver");
+                                    receiverNameText.focus();
                                 }
                             })
                             .fail(function() {
                                 // If connection error, display error
                                 addError("none", 'There was a connection error; please try again');
+                                receiverNameText.focus();
                             });
                     } else {
                         // If connection error, display error
                         addError("none", 'There was nothing to be updated');
+                        receiverNameText.focus();
                     }
 
                 }
             } else {
-                displayError("Unable to determine referer");
+                addError("none", "Unable to determine referer");
+                receiverNameText.focus();
             }
         }
     });

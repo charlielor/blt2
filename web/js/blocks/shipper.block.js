@@ -110,7 +110,7 @@ $(document).ready(function() {
                         // Close the modal
                         shipperModal.modal("hide");
                     } else {
-                        displayError("Error with creating new Shipper");
+                        addError("Error with creating new Shipper");
                     }
                 });
             } else if (referer === "edit") { // If the referer says it is updating an existing Shipper, update it
@@ -153,19 +153,23 @@ $(document).ready(function() {
                                     // Close the modal
                                     shipperModal.modal('hide');
                                 } else {
-                                    displayError("Error with creating new Shipper");
+                                    addError("Error with creating new Shipper");
+                                    shipperNameText.focus();
                                 }
                             })
                             .fail(function() {
                                 // If connection error, display error
                                 addError('There was a connection error; please try again');
+                                shipperNameText.focus();
                             });
                     } else {
                         // If connection error, display error
                         addError('There was nothing to be updated');
+                        shipperNameText.focus();
                     }
             } else {
-                displayError("Unable to determine referer");
+                addError("Unable to determine referer");
+                shipperNameText.focus();
             }
         }
     });
@@ -201,20 +205,6 @@ $(document).ready(function() {
             layout: "top",
             theme: "bootstrapTheme",
             type: "success",
-            text: message,
-            maxVisible: 1,
-            timeout: 2000,
-            killer: true,
-            buttons: false
-        });
-    }
-    
-    // Show a fail noty
-    function displayError(message) {
-        var n = noty({
-            layout: "top",
-            theme: "bootstrapTheme",
-            type: "error",
             text: message,
             maxVisible: 1,
             timeout: 2000,

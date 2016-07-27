@@ -110,7 +110,7 @@ $(document).ready(function() {
                         // Close the modal
                         vendorModal.modal("hide");
                     } else {
-                        displayError("Error with creating new Vendor");
+                        addError("Error with creating new Vendor");
                     }
                 });
             } else if (referer === "edit") { // If the referer says it is updating an existing Vendor, update it
@@ -152,7 +152,7 @@ $(document).ready(function() {
                                     // Close the modal
                                     vendorModal.modal('hide');
                                 } else {
-                                    displayError("Error with creating new Vendor");
+                                    addError("Error with creating new Vendor");
                                 }
                             })
                             .fail(function() {
@@ -163,9 +163,11 @@ $(document).ready(function() {
                     } else {
                         // If connection error, display error
                         addError('There was nothing to be updated');
+                        vendorNameText.focus();
                     }
             } else {
-                displayError("Unable to determine referer");
+                addError("Unable to determine referer");
+                vendorNameText.focus();
             }
         }
     });
@@ -208,19 +210,4 @@ $(document).ready(function() {
             buttons: false
         });
     }
-    
-    // Show a fail noty
-    function displayError(message) {
-        var n = noty({
-            layout: "top",
-            theme: "bootstrapTheme",
-            type: "error",
-            text: message,
-            maxVisible: 1,
-            timeout: 2000,
-            killer: true,
-            buttons: false
-        });
-    }
-        
 });

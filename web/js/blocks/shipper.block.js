@@ -21,6 +21,8 @@ $(document).ready(function() {
     var maintenance = false;
     // Set the id (with data=id)
     var id = "";
+    // Set up the page from which the button was clicked
+    var page = "";
     // Set up the button from which the modal was launched from
     var button = null;
 
@@ -38,6 +40,7 @@ $(document).ready(function() {
         select2 = button.data('select2');
         maintenance = button.data('maintenance');
         id = button.data('shipper-id');
+        page = button.data('page');
 
         if (referer === "new") {
             $("#shipperTitle").text("Add a new Shipper");
@@ -78,6 +81,10 @@ $(document).ready(function() {
     shipperModal.on("hidden.bs.modal", function() {
         clearFields();
         clearErrors();
+
+        if (page === "receiving") {
+            $("#selectShipperModal").modal("show");
+        }
     });
 
     // When the submit Shipper button is clicked

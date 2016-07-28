@@ -194,7 +194,7 @@ To view all Packages received for any selected date, go to the view page (/view)
 ![View Packages 3](usersGuide/view3.png)
 
 ## <a name="maintenance"></a>Enabling/disabling/editing entities
-Entities cannot be deleted but Receivers, Shippers and Vendors can be disabled to have it not display in other parts of the web application. For example, if a Receiver is no longer a part of the department, it can be disabled so that you wouldn't be able to search for it when adding a new Package entity. Entities can be edited to have a new name, in the case of Shipper and Vendor, or to have a new name and/or room number as in the case for Receiver.
+Entities cannot be deleted but Receivers, Shippers and Vendors can be disabled to have it not display in other parts of BLT2. For example, if a Receiver is no longer a part of the department, it can be disabled so that you wouldn't be able to search for it when adding a new Package entity. Entities can be edited to have a new name, in the case of Shipper and Vendor, or to have a new name and/or room number as in the case for Receiver.
     
 #### Steps:
 
@@ -211,7 +211,12 @@ Entities cannot be deleted but Receivers, Shippers and Vendors can be disabled t
 
 ![Maintenance 4](usersGuide/maintenance4.png)
 
-##### 3) To edit an entity, just click on "Edit" next to the entity and proceed to make the necessary changes, then click "Submit"
+##### 3) To edit an entity, just click on "Edit" next to the entity and proceed to make the necessary changes, then click "Update"
+![Maintenance 5](usersGuide/maintenance5.png)
+
+![Maintenance 6](usersGuide/maintenance6.png)
+
+![Maintenance 7](usersGuide/maintenance7.png)
 
 ## <a name="reporting"></a>Reporting
 A simple reporting system has been implemented to help users of BLT2 gather data about Packages received and delivered to their department. It has the ability to call pre-made queries and have the data exported to a CSV file for further processing using a more advance application.

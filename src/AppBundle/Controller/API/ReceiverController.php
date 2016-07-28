@@ -161,7 +161,7 @@ class ReceiverController extends Controller
                 // Set up the response
                 $results = array(
                     'result' => 'success',
-                    'message' => 'Successfully updated ' . $receiverOldName,
+                    'message' => 'Successfully updated ' . $receiver->getName(),
                     'object' => json_decode($this->get('serializer')->serialize($updatedReceiver, 'json'))
                 );
 

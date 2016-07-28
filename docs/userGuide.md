@@ -10,7 +10,7 @@ User guide
 - [Marking a Package for pickup](#pickup)
 - [Editing a Package](#editingPackage)
 - [View a list of packages for a given date](#view)
-- [Enabling/disabling entities](#maintenance)
+- [Enabling/disabling/editing entities](#maintenance)
 - [Reporting](#reporting)
 
 ## <a name="introduction"></a>Introduction

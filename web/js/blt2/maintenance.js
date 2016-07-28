@@ -78,7 +78,7 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + pack.trackingNumber + '</td>' +
                                         '<td>' + pack.vendor.name + '</td>' +
-                                        '<td>' + pack.vendor.name + '</td>' +
+                                        '<td>' + pack.shipper.name + '</td>' +
                                         '<td>' + pack.receiver.name + '</td>' +
                                         '<td>' + pack.numberOfPackages + '</td>' +
                                         '<td>' + pack.userWhoReceived + '</td>' +
@@ -104,7 +104,7 @@ $(document).ready(function() {
                                         '<tr>' +
                                         '<td>' + pack.trackingNumber + '</td>' +
                                         '<td>' + pack.vendor.name + '</td>' +
-                                        '<td>' + pack.vendor.name + '</td>' +
+                                        '<td>' + pack.shipper.name + '</td>' +
                                         '<td>' + pack.receiver.name + '</td>' +
                                         '<td>' + pack.numberOfPackages + '</td>' +
                                         '<td>' + pack.userWhoReceived + '</td>' +
@@ -121,7 +121,7 @@ $(document).ready(function() {
                                         "<tr class='danger'>" +
                                         '<td>' + pack.trackingNumber + '</td>' +
                                         '<td>' + pack.vendor.name + '</td>' +
-                                        '<td>' + pack.vendor.name + '</td>' +
+                                        '<td>' + pack.shipper.name + '</td>' +
                                         '<td>' + pack.receiver.name + '</td>' +
                                         '<td>' + pack.numberOfPackages + '</td>' +
                                         '<td>' + pack.userWhoReceived + '</td>' +

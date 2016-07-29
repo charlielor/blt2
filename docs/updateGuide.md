@@ -1,4 +1,4 @@
-Update Guide
+Update guide
 ============
 
 ## Introduction

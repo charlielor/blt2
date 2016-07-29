@@ -1,4 +1,4 @@
-Setup Guide
+Setup guide
 ===========
 
 ## Introduction

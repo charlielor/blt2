@@ -42,7 +42,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         department: "%department%"
-        version: "v2.0.0"
+        version: "v2.2.0"
 
 # Assetic Configuration
 assetic:

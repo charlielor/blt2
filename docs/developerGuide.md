@@ -201,7 +201,7 @@ Here, at the end of the ```receiverAction($id)``` function where the Twig templa
 BLT2 uses Bootstrap 3 for the majority of its CSS thus only a few templates need additional CSS. For those templates that need additional CSS, they are coupled with a .less file and are usually named after their template. All of the CSS(LESS) files are located in ```/web/css```. 
 
 For example (menu.html.twig):
-```
+```twig
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
@@ -285,7 +285,7 @@ A lot of the functionality of BLT2 comes from JavaScript (more specifically, jQu
 
 jQuery is used throughout (as required by Bootstrap for their JS functionality) BLT2 and the majority of the JS code resides under ```$(document).ready(function() { ... });```. BLT2 also uses a number of third-party, open-sourced libraries to help facilitate the application such as [Charts.js](http://www.chartjs.org), [DataTables](https://datatables.net) and [Select2](http://select2.github.io).
 
-Here is an example from ```maintenance.js``` that, when the enable/disable button has been click, make a call to the server to enable/disable Receiver.
+Here is an example from ```maintenance.js``` that, when the enable/disable button for a Receiver has been click, makes a call to the server to enable/disable a Receiver.
 ```javascript
 // When the user click a button within the receiver table, enable or disable the receiver
 $('.receiver').click(function() {
@@ -332,7 +332,10 @@ $('.receiver').click(function() {
 
 });
 ```
+Here, depending on the data attributes of the button, using $.ajax, enable or disable the selected Receiver. The call is to a route defined in the Receiver API controller and, depending on the route, either enables or disables the Receiver. More on this in the [API](#api) section.
 
+Most of the JS files are commented thoroughly and should be follow-able.
 
 **Any changes to these .js files require them to be compiled into a single file, BLT2.js, by using ```$php bin/console assetic:dump```.**
+
 ## <a name="api"></a>API

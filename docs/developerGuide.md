@@ -147,11 +147,11 @@ For example (entity.html.twig):
     {% endjavascripts %}
 {% endblock %}
 ```
-1) ```menu.html.twig``` extends from ```base.html.twig```
-2) ```{% block userActions %}``` contains all the HTML links that are listed towards the upper right corner of the web application
-3) ```{% block stylesheets %}``` contains all the links to the stylesheets used for this page, along with a ```{{ parent() }}``` call to render everything in the same block from the parent template (in this case, from ```base.html.twig```)
-4) ```{% block body %}``` contains all of the HTML for this page
-5) ```{% block javascripts %}``` contains all the links to the javascript files used for this page, along with a ```{{ parent() }}``` call to render everything in the same block from the parent template (in this case, from ```base.html.twig```) 
+- ```menu.html.twig``` extends from ```base.html.twig```
+- ```{% block userActions %}``` contains all the HTML links that are listed towards the upper right corner of the web application
+- ```{% block stylesheets %}``` contains all the links to the stylesheets used for this page, along with a ```{{ parent() }}``` call to render everything in the same block from the parent template (in this case, from ```base.html.twig```)
+- ```{% block body %}``` contains all of the HTML for this page
+- ```{% block javascripts %}``` contains all the links to the javascript files used for this page, along with a ```{{ parent() }}``` call to render everything in the same block from the parent template (in this case, from ```base.html.twig```) 
 
 You can also have logic in Twig templating.
 

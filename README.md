@@ -7,6 +7,12 @@ master:
 dev:  
 [![dev](https://travis-ci.org/charlielor/blt2.svg?branch=dev)](https://travis-ci.org/charlielor/blt2)
 
+## Browser compatibility
+- All modern browsers (Chrome, Edge, Firefox, IE 11+, Opera, Safari) support BLT2 at its most basic functionality
+- Only Chrome 51+ is compatible with the camera functionality (to take pictures of packing slips) with a high video resolution
+- All browsers with WebRTC's MediaDevice API can use the camera functionality (to take pictures of packing slips) but video resolution might be limited
+- All other browsers can use the upload functionality to upload packing slips, if needed
+
 ## Summary
 This web application is a simple logistics tool to help employees in the receiving and shipping unit of the Department of Biochemistry at the University of Wisconsin - Madison.
 

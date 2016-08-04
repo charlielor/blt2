@@ -753,7 +753,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorSameDateResponse);
         $this->assertArrayHasKey('object', $errorSameDateResponse);
         $this->assertCount(0, $errorSameDateResponse['object']);
-        $this->assertEquals('error', $errorSameDateResponse['result']);
+        $this->assertEquals('success', $errorSameDateResponse['result']);
 
         // Assert that getting packages for any other, different, dates yields 0 packages
         $client->request('GET', '/packages', [
@@ -776,7 +776,7 @@ class PackageControllerTest extends WebTestCase
         $this->assertArrayHasKey('message', $errorDiffDateResponse);
         $this->assertArrayHasKey('object', $errorDiffDateResponse);
         $this->assertCount(0, $errorDiffDateResponse['object']);
-        $this->assertEquals('error', $errorDiffDateResponse['result']);
+        $this->assertEquals('success', $errorDiffDateResponse['result']);
     }
 
     public function testGetPackageRoute() {

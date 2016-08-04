@@ -129,7 +129,7 @@ $(document).ready(function() {
             dataTable.clear().draw();
 
             $.get('packages', date, function(response) {
-                if (response['result'] == 'success') {
+                if (response['result'] == 'success' && response['object'].length > 0) {
                     // For however long the array is from the JSON parse, add the data to the DataTable
                     for (var i = 0; i < response['object'].length; i++) {
                         dataTable.row.add(response['object'][i]).draw();
@@ -163,7 +163,7 @@ $(document).ready(function() {
         dataTable.clear().draw();
 
         $.get('/packages', date, function(response) {
-            if (response['result'] == 'success') {
+            if (response['result'] == 'success' && response['object'].length > 0) {
                 for (var i = 0; i < response['object'].length; i++) {
                     dataTable.row.add(response['object'][i]).draw();
                 }

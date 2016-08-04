@@ -722,21 +722,6 @@ class PackageController extends Controller
 
         $query = $qb->getQuery();
 
-        if ($request->query->get('dateBegin') === $request->query->get('dateEnd')) {
-            $results = array(
-                'result' => 'error',
-                'message' => 'No Packages for ' . $dateTimeBegin->format("Y-m-d"),
-                'object' => []
-            );
-        } else {
-            $results = array(
-                'result' => 'error',
-                'message' => 'No Packages between ' . $dateTimeBegin->format("Y-m-d") . ' and ' . $dateTimeEnd->format("Y-m-d"),
-                'object' => []
-            );
-        }
-
-
         $queryResults = $query->getResult();
 
         if (!(empty($queryResults))) {
@@ -745,9 +730,25 @@ class PackageController extends Controller
                 'message' => 'Retrieved ' . count($queryResults) . ' Packages',
                 'object' => json_decode($this->get('serializer')->serialize($queryResults, 'json'))
             );
-        }
 
-        return new JsonResponse($results);
+            return new JsonResponse($results);
+        } else {
+            if ($request->query->get('dateBegin') === $request->query->get('dateEnd')) {
+                $results = array(
+                    'result' => 'success',
+                    'message' => 'No Packages for ' . $dateTimeBegin->format("Y-m-d"),
+                    'object' => []
+                );
+            } else {
+                $results = array(
+                    'result' => 'success',
+                    'message' => 'No Packages between ' . $dateTimeBegin->format("Y-m-d") . ' and ' . $dateTimeEnd->format("Y-m-d"),
+                    'object' => []
+                );
+            }
+
+            return new JsonResponse($results);
+        }
     }
 
     /**

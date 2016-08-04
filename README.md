@@ -28,7 +28,7 @@ BLT2 is not tied to the Department of Biochemistry at the University of Wisconsi
 * One template for each page, all compatible with desktop and mobile devices
 * Select2 3.* --> Select2 4.0+
 * Backend Rewritten
-    * Backend RestFUL API calls to entities (Package, Receiver, Shipper, Vendor)
+    * REST API calls to entities (Package, Receiver, Shipper, Vendor)
     * Frontend now has its own controllers
 * Tests for Backend, Entity and Frontend Controllers (PHPUnit)
 * Using LESS with Bootstrap breakpoints to help with templates for desktop/mobile devices

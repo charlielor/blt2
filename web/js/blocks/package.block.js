@@ -24,6 +24,9 @@ $(document).ready(function() {
     // Set up the form data
     var formData = null;
 
+    // Set up the button from which the modal was launched from
+    var button = null;
+
     // Set the dropdownParent for all select2 on this page to the package modal
     $.fn.select2.defaults.set("dropdownParent", $("#packageModal"));
 
@@ -36,10 +39,16 @@ $(document).ready(function() {
         select2Receiver.select2("open");
     });
 
-    packageModal.on("show.bs.modal", function() {
+    packageModal.on("show.bs.modal", function(e) {
+        // Get the button that launched the modal
+        button = $(e.relatedTarget);
+
+        // Set the
+        var newPackage = button.data('existing');
+
         // When the dialogForm opens, check to see if it is an existing packageObject.
         // If so then show the shipper select2 div, create a new packageObject and fill the information
-        if (window.newPackage === false) {
+        if (newPackage === false) {
             // Display the shipper select2
             $(".existingPackage").show();
 

@@ -6,7 +6,7 @@
 namespace AppBundle\Controller\API;
 
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -17,7 +17,7 @@ use AppBundle\Entity\Package;
 use AppBundle\Entity\PackingSlip;
 use Doctrine\ORM\Query\Expr;
 
-class PackageController extends Controller
+class PackageController extends FOSRestController
 {
     /**
      * Route for creating a new Package
@@ -674,10 +674,11 @@ class PackageController extends Controller
         // Get the package by id
         $package = $packageRepository->find($id);
 
-        return $this->render('entity.html.twig', [
-            "type" => "package",
-            "entity" => $package
-        ]);
+        $view = $this->view($package, 200)
+        ->setTemplate("api.html.twig");
+
+        return $this->handleView($view);
+
     }
 
     /**

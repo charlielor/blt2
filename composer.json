@@ -22,7 +22,6 @@
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
-        "symfony/swiftmailer-bundle": "^2.3",
         "symfony/monolog-bundle": "^2.8",
         "symfony/assetic-bundle": "^2.8",
         "sensio/distribution-bundle": "^5.0",
@@ -35,7 +34,8 @@
         "needim/noty": "^2.3",
         "components/jqueryui": "^1.11",
         "components/jquery": "^2.2",
-        "ivaynberg/select2": "^4.0"
+        "ivaynberg/select2": "^4.0",
+        "friendsofsymfony/rest-bundle": "^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

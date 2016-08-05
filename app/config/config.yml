@@ -42,7 +42,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         department: "%department%"
-        version: "v2.0.0"
+        version: "v2.5.0"
 
 # Assetic Configuration
 assetic:
@@ -95,10 +95,17 @@ monolog:
             path: %kernel.root_dir%/logs/%kernel.environment%.%department%.log
             channels: app
 
-# Swiftmailer Configuration
-#swiftmailer:
-#    transport: "%mailer_transport%"
-#    host:      "%mailer_host%"
-#    username:  "%mailer_user%"
-#    password:  "%mailer_password%"
-#    spool:     { type: memory }
+# FriendsOfSymfony REST Bundle
+fos_rest:
+    view:
+        formats:
+            json: true
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        mime_types:
+            json: ['application/json', 'application/x-json', 'application/vnd.api+json']
+        failed_validation: HTTP_BAD_REQUEST
+        empty_content: 204
+        default_engine: twig

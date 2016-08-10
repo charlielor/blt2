@@ -33,16 +33,8 @@ BLT2 is not tied to the Department of Biochemistry at the University of Wisconsi
 * Tests for Backend, Entity and Frontend Controllers (PHPUnit)
 * Using LESS with Bootstrap breakpoints to help with templates for desktop/mobile devices
 
-## Docs
-[Setup](docs/setupGuide.md)
-
-[Update](docs/updateGuide.md)
-
-[Example Implementation](docs/uwMadisonBiochemistryImplementation.md)
-
-[Developer](docs/developerGuide.md)
-
-[User](docs/userGuide.md)
+## Wiki
+Almost everything about BLT2 can be located in the [wiki](https://github.com/charlielor/blt2/wiki)
 
 ## For anyone who wants to use some sort of authentication/authorization system
 1. Fork project

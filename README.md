@@ -34,7 +34,7 @@ BLT2 is not tied to the Department of Biochemistry at the University of Wisconsi
 * Using LESS with Bootstrap breakpoints to help with templates for desktop/mobile devices
 
 ## Wiki
-Almost everything about BLT2 can be located in the [wiki](https://github.com/charlielor/blt2/wiki)
+Almost everything about BLT2 can be located in the [wiki](https://github.com/charlielor/blt2/wiki).
 
 ## For anyone who wants to use some sort of authentication/authorization system
 1. Fork project

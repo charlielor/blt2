@@ -28,59 +28,60 @@ var Camera = Camera || function(minWidth, minHeight, video, canvas, image, scale
         this.on = false;
 
         // Start Camera
-        this.startCamera = function(success, error) {
+                this.startCamera = function(success, error) {
             var self = this;
-
-            navigator.getUserMedia(
+			
+            navigator.mediaDevices.getUserMedia(
                 {
                     audio: false,
                     video: self.resolution
-                },
-                function successCallBack(stream) {
-                    var retryCount = 0;
-                    var retryLimit = 50;
+                })
+            .then(function successCallBack(stream) {
+				
+				var retryCount = 0;
+				var retryLimit = 50;
 
-                    self.mediaStream = stream;
+				self.mediaStream = stream;
+			
+				self.video.srcObject = stream;
 
-                    self.video.src = (window.URL && window.URL.createObjectURL(stream));
+				self.video.play();
 
-                    self.video.play();
+				self.video.onloadedmetadata = function(e) {
+					var videoWidth = this.videoWidth;
+					var videoHeight = this.videoHeight;
+					self.video.width = videoWidth * self.scale;
+					self.video.height = videoHeight * self.scale;
 
-                    self.video.onplaying = function(e) {
-                        var videoWidth = this.videoWidth;
-                        var videoHeight = this.videoHeight;
-                        self.video.width = videoWidth * self.scale;
-                        self.video.height = videoHeight * self.scale;
+					if (!videoWidth || !videoHeight) {
+						if (retryCount < retryLimit) {
+							retryCount++;
+							window.setTimeout(function () {
+								self.video.pause();
+								self.video.play();
+							}, 100);
+						}
 
-                        if (!videoWidth || !videoHeight) {
-                            if (retryCount < retryLimit) {
-                                retryCount++;
-                                window.setTimeout(function () {
-                                    self.video.pause();
-                                    self.video.play();
-                                }, 100);
-                            }
+					} else if (videoWidth && videoHeight) {
+						self.image.height = self.video.videoHeight;
+						self.image.width = self.video.videoWidth;
 
-                        } else if (videoWidth && videoHeight) {
-                            self.image.height = self.video.videoHeight;
-                            self.image.width = self.video.videoWidth;
+						self.canvas.width = videoWidth;
+						self.canvas.height = videoHeight;
 
-                            self.canvas.width = videoWidth;
-                            self.canvas.height = videoHeight;
+						self.on = true;
 
-                            self.on = true;
+						success();
+					} else {
+						console.log("An error has occurred: Can't retrieve video width and height");
 
-                            success();
-                        } else {
-                            console.log("An error has occurred: Can't retrieve video width and height");
-
-                            error();
-                        }
-                    };
-                }, function errorCallback(e) {
-                    error();
-                }
-            );
+						error();
+					}
+				}
+            })
+            .catch(function errorCallback(e) {
+                error();
+            });
         };
 
         // Stop Camera
